@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn English - Vocabulario y Verbos</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-sans); padding: 1rem; background: var(--page-bg); }
+    
+    :root {
+      --page-bg: #ffffff;
+      --surface-0: #f8f8f8;
+      --surface-1: #f0f0f0;
+      --surface-2: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --text-muted: #999999;
+      --text-accent: #3b82f6;
+      --border: #e0e0e0;
+      --border-strong: #d0d0d0;
+      --fill-accent: #3b82f6;
+      --on-accent: #ffffff;
+      --bg-accent: #e0eeff;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page-bg: #1a1a1a;
+        --surface-0: #252525;
+        --surface-1: #2d2d2d;
+        --surface-2: #333333;
+        --text-primary: #e8e8e8;
+        --text-secondary: #a0a0a0;
+        --text-muted: #777777;
+        --text-accent: #60a5fa;
+        --border: #404040;
+        --border-strong: #505050;
+        --fill-accent: #3b82f6;
+        --on-accent: #ffffff;
+        --bg-accent: #1e3a8a;
+      }
+    }
+    
+    .container { max-width: 700px; margin: 0 auto; }
+    
+    .header { margin-bottom: 2rem; }
+    
+    h1 { font-size: 28px; margin-bottom: 0.5rem; color: var(--text-primary); }
+    
+    .subtitle { color: var(--text-secondary); font-size: 14px; }
+    
+    .nav-main {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 2rem;
+      border-bottom: 0.5px solid var(--border);
+      padding-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .nav-tab {
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .nav-tab:hover { color: var(--text-primary); }
+    .nav-tab.active { color: var(--text-accent); border-bottom-color: var(--fill-accent); }
+    .nav-tab.coming-soon { opacity: 0.5; cursor: not-allowed; }
+    
+    .section { display: none; }
+    .section.active { display: block; }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: var(--surface-1);
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      border: 0.5px solid var(--border);
+    }
+    
+    .stat-number {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-accent);
+    }
+    
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 2rem;
+    }
+    
+    .theme-card {
+      padding: 16px;
+      border: 0.5px solid var(--border);
+      background: var(--surface-2);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      color: var(--text-primary);
+      transition: all 0.2s;
+    }
+    
+    .theme-card:hover {
+      background: var(--surface-1);
+      border-color: var(--border-strong);
+    }
+    
+    .theme-card.active {
+      background: var(--fill-accent);
+      color: var(--on-accent);
+      border-color: var(--fill-accent);
+    }
+    
+    .learning-card {
+      background: var(--surface-2);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .learning-card.flipped {
+      background: var(--bg-accent);
+    }
+    
+    .card-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .word-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .word-english {
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    .word-pronunciation {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+    
+    .learning-card.flipped .word-english {
+      color: var(--text-accent);
+    }
+    
+    .learning-card.flipped .word-pronunciation {
+      color: var(--text-accent);
+    }
+    
+    .conjugation-box {
+      display: none;
+      background: var(--surface-1);
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      text-align: left;
+    }
+    
+    .learning-card.flipped .conjugation-box {
+      display: block;
+    }
+    
+    .conjugation-item {
+      padding: 8px 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 14px;
+    }
+    
+    .conjugation-item:last-child {
+      border-bottom: none;
+    }
+    
+    .conjugation-person {
+      font-weight: 500;
+      color: var(--text-accent);
+      margin-bottom: 4px;
+    }
+    
+    .conjugation-form {
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+    
+    .conjugation-spanish {
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    
+    .translation {
+      display: none;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-accent);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 0.5px solid var(--border);
+    }
+    
+    .learning-card.flipped .translation {
+      display: block;
+    }
+    
+    .progress {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+    
+    button {
+      padding: 10px 16px;
+      border: 0.5px solid var(--border);
+      background: var(--surface-1);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-primary);
+      transition: all 0.2s;
+    }
+    
+    button:hover:not(:disabled) {
+      border-color: var(--border-strong);
+      background: var(--surface-0);
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    button.primary {
+      background: var(--fill-accent);
+      color: var(--on-accent);
+      border-color: var(--fill-accent);
+    }
+    
+    button.primary:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+    
+    .navigation {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    
+    .nav-btn {
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+    
+    .coming-soon-section {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-secondary);
+    }
+    
+    .coming-soon-section h3 {
+      font-size: 18px;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Learn English</h1>
+    <p class="subtitle">Aprende vocabulario, verbos y más en inglés</p>
+  </div>
+
+  <div class="nav-main">
+    <button class="nav-tab active" onclick="switchSection('vocabulary')">Vocabulario</button>
+    <button class="nav-tab" onclick="switchSection('verbos')">Verbos</button>
+    <button class="nav-tab coming-soon" title="Próximamente">Frases (próximamente)</button>
+  </div>
+
+  <div class="stats" id="stats">
+    <div class="stat-card">
+      <div class="stat-number" id="totalWords">0</div>
+      <div class="stat-label">Total palabras</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="learned">0</div>
+      <div class="stat-label">Aprendidas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="currentStreak">0</div>
+      <div class="stat-label">Racha</div>
+    </div>
+  </div>
+
+  <div id="vocabulary" class="section active">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">ELIGE UN TEMA</h3>
+    <div class="theme-grid" id="themeGrid"></div>
+    <div id="vocabContent"></div>
+  </div>
+
+  <div id="verbos" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">VERBOS MÁS USADOS (CON CONJUGACIONES)</h3>
+    <div style="background: var(--bg-accent); padding: 12px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">65 verbos esenciales en inglés</p>
+    </div>
+    <div id="verbosContent"></div>
+  </div>
+
+  <div id="frases" class="section">
+    <div class="coming-soon-section">
+      <h3>Frases útiles</h3>
+      <p>Próximamente: aprende frases comunes para conversaciones diarias</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const vocabularyData = {
+  "Informática": [
+    { en: "Computer", pro: "Compiúter", es: "Ordenador" },
+    { en: "Mouse", pro: "Maus", es: "Ratón" },
+    { en: "Keyboard", pro: "Queibord", es: "Teclado" },
+    { en: "Monitor", pro: "Monitor", es: "Monitor" },
+    { en: "Software", pro: "Sófguer", es: "Software" },
+    { en: "Hardware", pro: "Jardguer", es: "Hardware" },
+    { en: "Internet", pro: "Intérnet", es: "Internet" },
+    { en: "Email", pro: "Imeil", es: "Correo electrónico" },
+    { en: "File", pro: "Fail", es: "Archivo" },
+    { en: "Folder", pro: "Fólder", es: "Carpeta" },
+    { en: "Database", pro: "Deibabeis", es: "Base de datos" },
+    { en: "Password", pro: "Passgüord", es: "Contraseña" }
+  ],
+  "Familia y amigos": [
+    { en: "Mother", pro: "Mázer", es: "Madre" },
+    { en: "Father", pro: "Fázer", es: "Padre" },
+    { en: "Mom", pro: "Mom", es: "Mamá" },
+    { en: "Dad", pro: "Dad", es: "Papá" },
+    { en: "Sister", pro: "Síster", es: "Hermana" },
+    { en: "Brother", pro: "Brázer", es: "Hermano" },
+    { en: "Grandmother", pro: "Grángmázer", es: "Abuela" },
+    { en: "Grandfather", pro: "Grángfázer", es: "Abuelo" },
+    { en: "Aunt", pro: "Ant", es: "Tía" },
+    { en: "Uncle", pro: "Ankl", es: "Tío" },
+    { en: "Cousin", pro: "Cósin", es: "Primo/Prima" },
+    { en: "Friend", pro: "Frend", es: "Amigo/Amiga" },
+    { en: "Daughter", pro: "Dóter", es: "Hija" },
+    { en: "Son", pro: "San", es: "Hijo" }
+  ],
+  "Casa": [
+    { en: "House", pro: "Haus", es: "Casa" },
+    { en: "Door", pro: "Dor", es: "Puerta" },
+    { en: "Window", pro: "Guindou", es: "Ventana" },
+    { en: "Kitchen", pro: "Kítchen", es: "Cocina" },
+    { en: "Bedroom", pro: "Bédrum", es: "Dormitorio" },
+    { en: "Bathroom", pro: "Bázerum", es: "Baño" },
+    { en: "Living room", pro: "Líving rum", es: "Salón" },
+    { en: "Table", pro: "Teibel", es: "Mesa" },
+    { en: "Chair", pro: "Cher", es: "Silla" },
+    { en: "Bed", pro: "Bed", es: "Cama" },
+    { en: "Lamp", pro: "Lamp", es: "Lámpara" },
+    { en: "Roof", pro: "Ruf", es: "Techo" }
+  ],
+  "Comida": [
+    { en: "Apple", pro: "Ápel", es: "Manzana" },
+    { en: "Bread", pro: "Bred", es: "Pan" },
+    { en: "Cheese", pro: "Chis", es: "Queso" },
+    { en: "Chicken", pro: "Chiken", es: "Pollo" },
+    { en: "Coffee", pro: "Cofi", es: "Café" },
+    { en: "Egg", pro: "Eg", es: "Huevo" },
+    { en: "Fish", pro: "Fish", es: "Pescado" },
+    { en: "Milk", pro: "Milk", es: "Leche" },
+    { en: "Rice", pro: "Rais", es: "Arroz" },
+    { en: "Soup", pro: "Sup", es: "Sopa" },
+    { en: "Tea", pro: "Ti", es: "Té" },
+    { en: "Water", pro: "Góter", es: "Agua" }
+  ],
+  "Viajes": [
+    { en: "Airport", pro: "Érport", es: "Aeropuerto" },
+    { en: "Train", pro: "Trein", es: "Tren" },
+    { en: "Bus", pro: "Bas", es: "Autobús" },
+    { en: "Taxi", pro: "Taksi", es: "Taxi" },
+    { en: "Hotel", pro: "Jotel", es: "Hotel" },
+    { en: "Passport", pro: "Páspor", es: "Pasaporte" },
+    { en: "Ticket", pro: "Tiquet", es: "Billete" },
+    { en: "Luggage", pro: "Lógach", es: "Equipaje" },
+    { en: "Beach", pro: "Bich", es: "Playa" },
+    { en: "Mountain", pro: "Mauntin", es: "Montaña" },
+    { en: "City", pro: "Síti", es: "Ciudad" },
+    { en: "Country", pro: "Cántri", es: "País" }
+  ],
+  "Deportes": [
+    { en: "Football", pro: "Futbol", es: "Fútbol" },
+    { en: "Basketball", pro: "Básquetbol", es: "Baloncesto" },
+    { en: "Tennis", pro: "Tenis", es: "Tenis" },
+    { en: "Swimming", pro: "Suímming", es: "Natación" },
+    { en: "Running", pro: "Raning", es: "Correr" },
+    { en: "Cycling", pro: "Sailkling", es: "Ciclismo" },
+    { en: "Ball", pro: "Bol", es: "Pelota" },
+    { en: "Goal", pro: "Gol", es: "Gol" },
+    { en: "Score", pro: "Scor", es: "Puntuación" },
+    { en: "Team", pro: "Tim", es: "Equipo" },
+    { en: "Coach", pro: "Couch", es: "Entrenador" },
+    { en: "Victory", pro: "Víctori", es: "Victoria" }
+  ],
+  "Números": [
+    { en: "One", pro: "Uan", es: "Uno" },
+    { en: "Two", pro: "Tu", es: "Dos" },
+    { en: "Three", pro: "Zri", es: "Tres" },
+    { en: "Four", pro: "For", es: "Cuatro" },
+    { en: "Five", pro: "Faif", es: "Cinco" },
+    { en: "Six", pro: "Siks", es: "Seis" },
+    { en: "Seven", pro: "Séven", es: "Siete" },
+    { en: "Eight", pro: "Eit", es: "Ocho" },
+    { en: "Nine", pro: "Nain", es: "Nueve" },
+    { en: "Ten", pro: "Ten", es: "Diez" },
+    { en: "Eleven", pro: "Iléven", es: "Once" },
+    { en: "Twelve", pro: "Twelv", es: "Doce" },
+    { en: "Thirteen", pro: "Zertín", es: "Trece" },
+    { en: "Fourteen", pro: "Fortín", es: "Catorce" },
+    { en: "Fifteen", pro: "Fiftín", es: "Quince" },
+    { en: "Sixteen", pro: "Sikstín", es: "Dieciséis" },
+    { en: "Seventeen", pro: "Seventín", es: "Diecisiete" },
+    { en: "Eighteen", pro: "Eitín", es: "Dieciocho" },
+    { en: "Nineteen", pro: "Naintín", es: "Diecinueve" },
+    { en: "Twenty", pro: "Tuenti", es: "Veinte" }
+  ],
+  "Días de la semana": [
+    { en: "Monday", pro: "Mondei", es: "Lunes" },
+    { en: "Tuesday", pro: "Tiu(s)dei", es: "Martes" },
+    { en: "Wednesday", pro: "Guénzday", es: "Miércoles" },
+    { en: "Thursday", pro: "Zursday", es: "Jueves" },
+    { en: "Friday", pro: "Fraidei", es: "Viernes" },
+    { en: "Saturday", pro: "Sáterdey", es: "Sábado" },
+    { en: "Sunday", pro: "Sandei", es: "Domingo" }
+  ],
+  "Meses": [
+    { en: "January", pro: "Yánuari", es: "Enero" },
+    { en: "February", pro: "Fébruari", es: "Febrero" },
+    { en: "March", pro: "March", es: "Marzo" },
+    { en: "April", pro: "Épril", es: "Abril" },
+    { en: "May", pro: "Mei", es: "Mayo" },
+    { en: "June", pro: "Yun", es: "Junio" },
+    { en: "July", pro: "Yulái", es: "Julio" },
+    { en: "August", pro: "Ógast", es: "Agosto" },
+    { en: "September", pro: "Septémber", es: "Septiembre" },
+    { en: "October", pro: "Octóber", es: "Octubre" },
+    { en: "November", pro: "Novémber", es: "Noviembre" },
+    { en: "December", pro: "Dicémber", es: "Diciembre" }
+  ],
+  "Estaciones": [
+    { en: "Spring", pro: "Spring", es: "Primavera" },
+    { en: "Summer", pro: "Sámer", es: "Verano" },
+    { en: "Autumn", pro: "Ótam", es: "Otoño" },
+    { en: "Fall", pro: "Fol", es: "Otoño (USA)" },
+    { en: "Winter", pro: "Guínter", es: "Invierno" }
+  ]
+};
+
+const verbsData = [
+  { 
+    en: "To be", pro: "Tu bi", es: "Ser/Estar",
+    conjugations: [
+      { pronoun: "I", form: "am", pro: "am", es: "Yo soy/estoy" },
+      { pronoun: "You", form: "are", pro: "ar", es: "Tú eres/estás" },
+      { pronoun: "He/She/It", form: "is", pro: "is", es: "Él/Ella/Eso es/está" },
+      { pronoun: "We", form: "are", pro: "ar", es: "Nosotros somos/estamos" },
+      { pronoun: "They", form: "are", pro: "ar", es: "Ellos son/están" }
+    ]
+  },
+  { 
+    en: "To have", pro: "Tu jáf", es: "Tener",
+    conjugations: [
+      { pronoun: "I", form: "have", pro: "jáf", es: "Yo tengo" },
+      { pronoun: "You", form: "have", pro: "jáf", es: "Tú tienes" },
+      { pronoun: "He/She/It", form: "has", pro: "jas", es: "Él/Ella tiene" },
+      { pronoun: "We", form: "have", pro: "jáf", es: "Nosotros tenemos" },
+      { pronoun: "They", form: "have", pro: "jáf", es: "Ellos tienen" }
+    ]
+  },
+  { 
+    en: "To do", pro: "Tu du", es: "Hacer",
+    conjugations: [
+      { pronoun: "I", form: "do", pro: "du", es: "Yo hago" },
+      { pronoun: "You", form: "do", pro: "du", es: "Tú haces" },
+      { pronoun: "He/She/It", form: "does", pro: "daz", es: "Él/Ella hace" },
+      { pronoun: "We", form: "do", pro: "du", es: "Nosotros hacemos" },
+      { pronoun: "They", form: "do", pro: "du", es: "Ellos hacen" }
+    ]
+  },
+  { 
+    en: "To go", pro: "Tu gou", es: "Ir",
+    conjugations: [
+      { pronoun: "I", form: "go", pro: "gou", es: "Yo voy" },
+      { pronoun: "You", form: "go", pro: "gou", es: "Tú vas" },
+      { pronoun: "He/She/It", form: "goes", pro: "gouz", es: "Él/Ella va" },
+      { pronoun: "We", form: "go", pro: "gou", es: "Nosotros vamos" },
+      { pronoun: "They", form: "go", pro: "gou", es: "Ellos van" }
+    ]
+  },
+  { 
+    en: "To get", pro: "Tu guet", es: "Obtener",
+    conjugations: [
+      { pronoun: "I", form: "get", pro: "guet", es: "Yo obtengo" },
+      { pronoun: "You", form: "get", pro: "guet", es: "Tú obtienes" },
+      { pronoun: "He/She/It", form: "gets", pro: "guets", es: "Él/Ella obtiene" },
+      { pronoun: "We", form: "get", pro: "guet", es: "Nosotros obtenemos" },
+      { pronoun: "They", form: "get", pro: "guet", es: "Ellos obtienen" }
+    ]
+  },
+  { 
+    en: "To make", pro: "Tu meik", es: "Hacer",
+    conjugations: [
+      { pronoun: "I", form: "make", pro: "meik", es: "Yo hago" },
+      { pronoun: "You", form: "make", pro: "meik", es: "Tú haces" },
+      { pronoun: "He/She/It", form: "makes", pro: "meiks", es: "Él/Ella hace" },
+      { pronoun: "We", form: "make", pro: "meik", es: "Nosotros hacemos" },
+      { pronoun: "They", form: "make", pro: "meik", es: "Ellos hacen" }
+    ]
+  },
+  { 
+    en: "To know", pro: "Tu nou", es: "Saber",
+    conjugations: [
+      { pronoun: "I", form: "know", pro: "nou", es: "Yo sé" },
+      { pronoun: "You", form: "know", pro: "nou", es: "Tú sabes" },
+      { pronoun: "He/She/It", form: "knows", pro: "nouz", es: "Él/Ella sabe" },
+      { pronoun: "We", form: "know", pro: "nou", es: "Nosotros sabemos" },
+      { pronoun: "They", form: "know", pro: "nou", es: "Ellos saben" }
+    ]
+  },
+  { 
+    en: "To think", pro: "Tu zink", es: "Pensar",
+    conjugations: [
+      { pronoun: "I", form: "think", pro: "zink", es: "Yo pienso" },
+      { pronoun: "You", form: "think", pro: "zink", es: "Tú piensas" },
+      { pronoun: "He/She/It", form: "thinks", pro: "zinks", es: "Él/Ella piensa" },
+      { pronoun: "We", form: "think", pro: "zink", es: "Nosotros pensamos" },
+      { pronoun: "They", form: "think", pro: "zink", es: "Ellos piensan" }
+    ]
+  },
+  { 
+    en: "To see", pro: "Tu si", es: "Ver",
+    conjugations: [
+      { pronoun: "I", form: "see", pro: "si", es: "Yo veo" },
+      { pronoun: "You", form: "see", pro: "si", es: "Tú ves" },
+      { pronoun: "He/She/It", form: "sees", pro: "sis", es: "Él/Ella ve" },
+      { pronoun: "We", form: "see", pro: "si", es: "Nosotros vemos" },
+      { pronoun: "They", form: "see", pro: "si", es: "Ellos ven" }
+    ]
+  },
+  { 
+    en: "To come", pro: "Tu cam", es: "Venir",
+    conjugations: [
+      { pronoun: "I", form: "come", pro: "cam", es: "Yo vengo" },
+      { pronoun: "You", form: "come", pro: "cam", es: "Tú vienes" },
+      { pronoun: "He/She/It", form: "comes", pro: "cams", es: "Él/Ella viene" },
+      { pronoun: "We", form: "come", pro: "cam", es: "Nosotros venimos" },
+      { pronoun: "They", form: "come", pro: "cam", es: "Ellos vienen" }
+    ]
+  },
+  { en: "To want", pro: "Tu gánt", es: "Querer" },
+  { en: "To use", pro: "Tu ius", es: "Usar" },
+  { en: "To find", pro: "Tu faind", es: "Encontrar" },
+  { en: "To tell", pro: "Tu tel", es: "Decir" },
+  { en: "To ask", pro: "Tu ásk", es: "Preguntar" },
+  { en: "To work", pro: "Tu guérk", es: "Trabajar" },
+  { en: "To seem", pro: "Tu sim", es: "Parecer" },
+  { en: "To feel", pro: "Tu fil", es: "Sentir" },
+  { en: "To try", pro: "Tu trai", es: "Intentar" },
+  { en: "To leave", pro: "Tu lif", es: "Dejar" },
+  { en: "To put", pro: "Tu put", es: "Poner" },
+  { en: "To mean", pro: "Tu min", es: "Significar" },
+  { en: "To keep", pro: "Tu kip", es: "Mantener" },
+  { en: "To let", pro: "Tu let", es: "Dejar" },
+  { en: "To begin", pro: "Tu biguín", es: "Comenzar" },
+  { en: "To help", pro: "Tu jelp", es: "Ayudar" },
+  { en: "To talk", pro: "Tu tok", es: "Hablar" },
+  { en: "To turn", pro: "Tu tern", es: "Girar" },
+  { en: "To start", pro: "Tu start", es: "Empezar" },
+  { en: "To show", pro: "Tu shou", es: "Mostrar" },
+  { en: "To give", pro: "Tu guif", es: "Dar" },
+  { en: "To watch", pro: "Tu guách", es: "Ver" },
+  { en: "To run", pro: "Tu ran", es: "Correr" },
+  { en: "To move", pro: "Tu muv", es: "Mover" },
+  { en: "To like", pro: "Tu laik", es: "Gustar" },
+  { en: "To live", pro: "Tu lif", es: "Vivir" },
+  { en: "To believe", pro: "Tu bilif", es: "Creer" },
+  { en: "To hold", pro: "Tu jould", es: "Sostener" },
+  { en: "To bring", pro: "Tu bring", es: "Traer" },
+  { en: "To happen", pro: "Tu jápen", es: "Ocurrir" },
+  { en: "To say", pro: "Tu sei", es: "Decir" },
+  { en: "To take", pro: "Tu teik", es: "Tomar" },
+  { en: "To write", pro: "Tu rait", es: "Escribir" },
+  { en: "To read", pro: "Tu rid", es: "Leer" },
+  { en: "To listen", pro: "Tu lísen", es: "Escuchar" },
+  { en: "To understand", pro: "Tu anderstánd", es: "Entender" },
+  { en: "To remember", pro: "Tu rimémber", es: "Recordar" },
+  { en: "To forget", pro: "Tu forguét", es: "Olvidar" },
+  { en: "To learn", pro: "Tu lern", es: "Aprender" },
+  { en: "To teach", pro: "Tu tich", es: "Enseñar" },
+  { en: "To call", pro: "Tu col", es: "Llamar" },
+  { en: "To meet", pro: "Tu mit", es: "Encontrar" },
+  { en: "To love", pro: "Tu lav", es: "Amar" },
+  { en: "To wait", pro: "Tu gueit", es: "Esperar" },
+  { en: "To need", pro: "Tu nid", es: "Necesitar" },
+  { en: "To open", pro: "Tu ópen", es: "Abrir" },
+  { en: "To close", pro: "Tu clous", es: "Cerrar" },
+  { en: "To eat", pro: "Tu it", es: "Comer" },
+  { en: "To drink", pro: "Tu drink", es: "Beber" },
+  { en: "To sleep", pro: "Tu slip", es: "Dormir" },
+  { en: "To play", pro: "Tu plei", es: "Jugar" },
+  { en: "To buy", pro: "Tu bái", es: "Comprar" },
+  { en: "To walk", pro: "Tu gok", es: "Caminar" },
+  { en: "To laugh", pro: "Tu laf", es: "Reír" },
+  { en: "To smile", pro: "Tu smail", es: "Sonreír" }
+];
+
+let currentTheme = null;
+let currentIndex = 0;
+let cardState = {};
+let cardFlipped = {};
+let currentStreak = 0;
+let currentSection = 'vocabulary';
+
+const themeGrid = document.getElementById('themeGrid');
+const vocabContent = document.getElementById('vocabContent');
+const verbosContent = document.getElementById('verbosContent');
+
+function renderThemes() {
+  themeGrid.innerHTML = '';
+  Object.keys(vocabularyData).forEach(theme => {
+    const card = document.createElement('button');
+    card.className = 'theme-card';
+    card.textContent = theme;
+    card.onclick = () => selectTheme(theme);
+    themeGrid.appendChild(card);
+  });
+}
+
+function selectTheme(theme) {
+  currentTheme = theme;
+  currentIndex = 0;
+  cardState = {};
+  cardFlipped = {};
+  currentStreak = 0;
+  
+  document.querySelectorAll('.theme-card').forEach(card => {
+    card.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  renderContent();
+  updateStats();
+}
+
+function renderContent() {
+  if (!currentTheme) {
+    vocabContent.innerHTML = '';
+    return;
+  }
+  
+  const words = vocabularyData[currentTheme];
+  const total = words.length;
+  const word = words[currentIndex];
+  const isFlipped = cardFlipped[currentIndex];
+  const isLearned = cardState[currentIndex];
+  
+  vocabContent.innerHTML = `
+    <div class="progress" style="margin-top: 2rem;">Palabra ${currentIndex + 1} de ${total}</div>
+    
+    <div class="learning-card ${isFlipped ? 'flipped' : ''}">
+      <div class="card-label">PALABRA EN INGLÉS</div>
+      <div class="card-content">
+        <div class="word-row">
+          <div class="word-english">${word.en}</div>
+          <div class="word-pronunciation">/${word.pro}/</div>
+        </div>
+        <div class="translation">${word.es}</div>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      ${!isFlipped ? `<button onclick="toggleFlip()">Revelar respuesta</button>` : ''}
+      ${isFlipped && !isLearned ? `<button onclick="markAsLearned()" class="primary">Marcado como aprendido ✓</button>` : ''}
+      ${isLearned ? `<button disabled>Aprendida ✓</button>` : ''}
+    </div>
+    
+    <div class="navigation">
+      <button class="nav-btn" onclick="previousCard()" ${currentIndex === 0 ? 'disabled' : ''}>← Anterior</button>
+      <button class="nav-btn" onclick="shuffleCards()">🔀 Mezclar</button>
+      <button class="nav-btn" onclick="nextCard()" ${currentIndex === total - 1 ? 'disabled' : ''}>Siguiente →</button>
+    </div>
+  `;
+}
+
+function renderVerbsContent() {
+  if (currentSection !== 'verbos') return;
+  
+  const total = verbsData.length;
+  const verb = verbsData[currentIndex];
+  const isFlipped = cardFlipped[currentIndex];
+  const isLearned = cardState[currentIndex];
+  
+  let conjugationHtml = '';
+  if (verb.conjugations) {
+    conjugationHtml = '<div class="conjugation-box">';
+    verb.conjugations.forEach(conj => {
+      conjugationHtml += `
+        <div class="conjugation-item">
+          <div class="conjugation-person">${conj.pronoun} <span style="color: var(--text-primary); font-weight: normal;">${conj.form}</span></div>
+          <div class="conjugation-form">/${conj.pro}/</div>
+          <div class="conjugation-spanish">${conj.es}</div>
+        </div>
+      `;
+    });
+    conjugationHtml += '</div>';
+  }
+  
+  verbosContent.innerHTML = `
+    <div class="progress">Verbo ${currentIndex + 1} de ${total}</div>
+    
+    <div class="learning-card ${isFlipped ? 'flipped' : ''}">
+      <div class="card-label">VERBO EN INGLÉS (INFINITIVO)</div>
+      <div class="card-content">
+        <div class="word-row">
+          <div class="word-english">${verb.en}</div>
+          <div class="word-pronunciation">/${verb.pro}/</div>
+        </div>
+        ${conjugationHtml}
+        <div class="translation">Significado: ${verb.es}</div>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      ${!isFlipped ? `<button onclick="toggleFlipVerb()">Ver conjugaciones</button>` : ''}
+      ${isFlipped && !isLearned ? `<button onclick="markAsLearnedVerb()" class="primary">Marcado como aprendido ✓</button>` : ''}
+      ${isLearned ? `<button disabled>Aprendido ✓</button>` : ''}
+    </div>
+    
+    <div class="navigation">
+      <button class="nav-btn" onclick="previousCardVerb()" ${currentIndex === 0 ? 'disabled' : ''}>← Anterior</button>
+      <button class="nav-btn" onclick="shuffleVerbs()">🔀 Mezclar</button>
+      <button class="nav-btn" onclick="nextCardVerb()" ${currentIndex === total - 1 ? 'disabled' : ''}>Siguiente →</button>
+    </div>
+  `;
+}
+
+function toggleFlip() {
+  cardFlipped[currentIndex] = !cardFlipped[currentIndex];
+  renderContent();
+}
+
+function toggleFlipVerb() {
+  cardFlipped[currentIndex] = !cardFlipped[currentIndex];
+  renderVerbsContent();
+}
+
+function markAsLearned() {
+  cardState[currentIndex] = true;
+  currentStreak++;
+  updateStats();
+  
+  if (currentIndex < vocabularyData[currentTheme].length - 1) {
+    currentIndex++;
+    cardFlipped = {};
+  }
+  renderContent();
+}
+
+function markAsLearnedVerb() {
+  cardState[currentIndex] = true;
+  currentStreak++;
+  updateStats();
+  
+  if (currentIndex < verbsData.length - 1) {
+    currentIndex++;
+    cardFlipped = {};
+  }
+  renderVerbsContent();
+}
+
+function nextCard() {
+  if (currentIndex < vocabularyData[currentTheme].length - 1) {
+    currentIndex++;
+    cardFlipped = {};
+    renderContent();
+  }
+}
+
+function nextCardVerb() {
+  if (currentIndex < verbsData.length - 1) {
+    currentIndex++;
+    cardFlipped = {};
+    renderVerbsContent();
+  }
+}
+
+function previousCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    cardFlipped = {};
+    renderContent();
+  }
+}
+
+function previousCardVerb() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    cardFlipped = {};
+    renderVerbsContent();
+  }
+}
+
+function shuffleCards() {
+  const words = vocabularyData[currentTheme];
+  for (let i = words.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [words[i], words[j]] = [words[j], words[i]];
+  }
+  currentIndex = 0;
+  cardFlipped = {};
+  renderContent();
+}
+
+function shuffleVerbs() {
+  for (let i = verbsData.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [verbsData[i], verbsData[j]] = [verbsData[j], verbsData[i]];
+  }
+  currentIndex = 0;
+  cardFlipped = {};
+  renderVerbsContent();
+}
+
+function updateStats() {
+  let learned = 0;
+  let total = 0;
+  
+  if (currentSection === 'vocabulary' && currentTheme) {
+    learned = Object.keys(cardState).filter(k => parseInt(k) < vocabularyData[currentTheme].length).length;
+    total = vocabularyData[currentTheme].length;
+  } else if (currentSection === 'verbos') {
+    learned = Object.keys(cardState).filter(k => parseInt(k) < verbsData.length).length;
+    total = verbsData.length;
+  }
+  
+  document.getElementById('learned').textContent = learned;
+  document.getElementById('totalWords').textContent = total;
+  document.getElementById('currentStreak').textContent = currentStreak;
+}
+
+function switchSection(section) {
+  currentSection = section;
+  currentIndex = 0;
+  cardFlipped = {};
+  cardState = {};
+  currentStreak = 0;
+  
+  document.querySelectorAll('.section').forEach(s => {
+    s.classList.remove('active');
+  });
+  document.getElementById(section).classList.add('active');
+  
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  if (section === 'vocabulary') {
+    updateStats();
+  } else if (section === 'verbos') {
+    renderVerbsContent();
+    updateStats();
+  }
+}
+
+renderThemes();
+</script>
+
+</body>
+</html>
