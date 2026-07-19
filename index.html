@@ -321,6 +321,23 @@
 </head>
 <body>
 
+<div id="activationScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--page-bg); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+  <div style="max-width: 400px; width: 90%; text-align: center;">
+    <h2 style="font-size: 24px; margin-bottom: 16px; color: var(--text-primary);">Learn English</h2>
+    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;">Ingresa la clave de activación para acceder</p>
+    
+    <input type="password" id="activationInput" placeholder="Clave de activación" 
+      style="width: 100%; padding: 12px; border: 0.5px solid var(--border); border-radius: 8px; font-size: 14px; background: var(--surface-2); color: var(--text-primary); margin-bottom: 12px; font-family: inherit;"
+      onkeypress="if(event.key==='Enter') checkActivation()" />
+    
+    <button onclick="checkActivation()" style="width: 100%; padding: 12px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer;">Activar</button>
+    
+    <div id="activationError" style="margin-top: 12px; color: #dc3545; font-size: 12px; display: none;"></div>
+  </div>
+</div>
+
+<div id="appContent" style="display: none;">
+
 <div class="container">
   <div class="header">
     <h1>Learn English</h1>
@@ -1129,7 +1146,41 @@ function previousFrase() {
 }
 
 renderThemes();
+
+// Sistema de activación
+const ACTIVATION_KEY = 'vbg08051963';
+const ACTIVATION_STORAGE = 'englishAppActivated';
+
+function checkActivation() {
+  const input = document.getElementById('activationInput').value.trim();
+  const errorDiv = document.getElementById('activationError');
+  
+  if (input === ACTIVATION_KEY) {
+    localStorage.setItem(ACTIVATION_STORAGE, 'true');
+    document.getElementById('activationScreen').style.display = 'none';
+    document.getElementById('appContent').style.display = 'block';
+    errorDiv.style.display = 'none';
+  } else {
+    errorDiv.textContent = 'Clave incorrecta';
+    errorDiv.style.display = 'block';
+    document.getElementById('activationInput').value = '';
+  }
+}
+
+// Verificar si ya está activado
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem(ACTIVATION_STORAGE) === 'true') {
+    document.getElementById('activationScreen').style.display = 'none';
+    document.getElementById('appContent').style.display = 'block';
+  } else {
+    document.getElementById('activationScreen').style.display = 'flex';
+    document.getElementById('appContent').style.display = 'none';
+    document.getElementById('activationInput').focus();
+  }
+});
 </script>
+
+</div>
 
 </body>
 </html>
