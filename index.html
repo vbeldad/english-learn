@@ -348,6 +348,10 @@
     <button class="nav-tab active" onclick="switchSection('vocabulary')">Vocabulario</button>
     <button class="nav-tab" onclick="switchSection('verbos')">Verbos</button>
     <button class="nav-tab" onclick="switchSection('frases')">Frases</button>
+    <button class="nav-tab" onclick="switchSection('paresPalabras')">Pares Palabras</button>
+    <button class="nav-tab" onclick="switchSection('multipleWords')">Opción Múltiple</button>
+    <button class="nav-tab" onclick="switchSection('paresFrases')">Pares Frases</button>
+    <button class="nav-tab" onclick="switchSection('multipleFrases')">Opción Múltiple Frases</button>
   </div>
 
   <div class="stats" id="stats">
@@ -395,6 +399,30 @@
 
     <div id="frasesThemeGrid"></div>
     <div id="frasesContent"></div>
+  </div>
+
+  <div id="paresPalabras" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">ELIGE UN TEMA</h3>
+    <div class="theme-grid" id="paresPalabrasGrid"></div>
+    <div id="paresPalabrasContent"></div>
+  </div>
+
+  <div id="multipleWords" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">ELIGE UN TEMA</h3>
+    <div class="theme-grid" id="multipleWordsGrid"></div>
+    <div id="multipleWordsContent"></div>
+  </div>
+
+  <div id="paresFrases" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">ELIGE UN TEMA</h3>
+    <div class="theme-grid" id="paresFrasesGrid"></div>
+    <div id="paresFrasesContent"></div>
+  </div>
+
+  <div id="multipleFrases" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">ELIGE UN TEMA</h3>
+    <div class="theme-grid" id="multipleFrasesGrid"></div>
+    <div id="multipleFrasesContent"></div>
   </div>
 </div>
 
@@ -775,6 +803,14 @@ let frasesMode = null;
 let frasesCurrentTheme = null;
 let frasesCurrentIndex = 0;
 let frasesUserAnswer = '';
+let paresPalabrasTheme = null;
+let paresPalabrasMatches = {};
+let multipleWordsTheme = null;
+let multipleWordsIndex = 0;
+let paresFrasesTheme = null;
+let paresFrasesMatches = {};
+let multipleFrasesTheme = null;
+let multipleFrasesIndex = 0;
 
 const themeGrid = document.getElementById('themeGrid');
 const vocabContent = document.getElementById('vocabContent');
@@ -1025,6 +1061,517 @@ function switchSection(section) {
   } else if (section === 'verbos') {
     renderVerbsContent();
     updateStats();
+  } else if (section === 'paresPalabras') {
+    renderParesPalabrasGrid();
+  } else if (section === 'multipleWords') {
+    renderMultipleWordsGrid();
+  } else if (section === 'paresFrases') {
+    renderParesFrasesGrid();
+  } else if (section === 'multipleFrases') {
+    renderMultipleFrasesGrid();
+  }
+}
+
+// PARES DE PALABRAS
+function renderParesPalabrasGrid() {
+  const grid = document.getElementById('paresPalabrasGrid');
+  grid.innerHTML = '';
+  Object.keys(vocabularyData).forEach(theme => {
+    const card = document.createElement('button');
+    card.className = 'theme-card';
+    card.textContent = theme;
+    card.onclick = () => selectParesPalabrasTheme(theme);
+    grid.appendChild(card);
+  });
+}
+
+function selectParesPalabrasTheme(theme) {
+  paresPalabrasTheme = theme;
+  paresPalabrasMatches = {};
+  
+  document.querySelectorAll('#paresPalabrasGrid .theme-card').forEach(card => {
+    card.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  renderParesPalabrasExercise();
+}
+
+function renderParesPalabrasExercise() {
+  if (!paresPalabrasTheme) return;
+  
+  const words = vocabularyData[paresPalabrasTheme];
+  const Spanish = words.map(w => w.es);
+  const English = words.map(w => w.en);
+  const shuffledEnglish = [...English].sort(() => Math.random() - 0.5);
+  
+  const content = document.getElementById('paresPalabrasContent');
+  
+  let html = `
+    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar palabras</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 1.5rem;">
+      <div>
+        <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
+        <div id="spanishList" style="display: flex; flex-direction: column; gap: 8px;">
+  `;
+  
+  Spanish.forEach((word, idx) => {
+    html += `
+      <button onclick="selectPairingSpanish(${idx}, '${word}')" data-idx="${idx}" 
+        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 14px; transition: all 0.2s;"
+        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        ${word}
+      </button>
+    `;
+  });
+  
+  html += `
+        </div>
+      </div>
+      
+      <div>
+        <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Inglés</div>
+        <div id="englishList" style="display: flex; flex-direction: column; gap: 8px;">
+  `;
+  
+  shuffledEnglish.forEach((word, idx) => {
+    html += `
+      <button onclick="selectPairingEnglish('${word}')" 
+        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 14px; transition: all 0.2s;"
+        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        ${word}
+      </button>
+    `;
+  });
+  
+  html += `
+        </div>
+      </div>
+    </div>
+    
+    <div id="paresPalabrasResult"></div>
+  `;
+  
+  content.innerHTML = html;
+}
+
+function selectPairingSpanish(idx, word) {
+  const resultDiv = document.getElementById('paresPalabrasResult');
+  resultDiv.innerHTML = `<p style="color: var(--text-secondary); font-size: 13px;">Seleccionaste: <strong>${word}</strong> - Ahora selecciona su traducción</p>`;
+  
+  window.selectedSpanish = { idx, word };
+  
+  document.querySelectorAll('#spanishList button').forEach(btn => {
+    btn.style.background = 'var(--surface-2)';
+  });
+  
+  document.querySelector(`[data-idx="${idx}"]`).style.background = 'var(--bg-accent)';
+}
+
+function selectPairingEnglish(word) {
+  if (!window.selectedSpanish) return;
+  
+  const words = vocabularyData[paresPalabrasTheme];
+  const correct = words[window.selectedSpanish.idx].en === word;
+  const resultDiv = document.getElementById('paresPalabrasResult');
+  
+  if (correct) {
+    paresPalabrasMatches[window.selectedSpanish.idx] = true;
+    resultDiv.innerHTML = `
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 14px; text-align: center;">
+        ✓ ¡Correcto! ${window.selectedSpanish.word} = ${word}
+      </div>
+    `;
+    
+    setTimeout(() => {
+      if (Object.keys(paresPalabrasMatches).length === words.length) {
+        resultDiv.innerHTML = `
+          <div style="background: var(--bg-accent); padding: 16px; border-radius: 8px; text-align: center; color: var(--text-accent); font-weight: 500;">
+            ✓ ¡Ejercicio completado!
+          </div>
+        `;
+      } else {
+        renderParesPalabrasExercise();
+      }
+    }, 800);
+  } else {
+    resultDiv.innerHTML = `
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 14px; text-align: center;">
+        ✗ Incorrecto. Intenta de nuevo.
+      </div>
+    `;
+  }
+  
+  window.selectedSpanish = null;
+}
+
+// OPCIÓN MÚLTIPLE PALABRAS
+function renderMultipleWordsGrid() {
+  const grid = document.getElementById('multipleWordsGrid');
+  grid.innerHTML = '';
+  Object.keys(vocabularyData).forEach(theme => {
+    const card = document.createElement('button');
+    card.className = 'theme-card';
+    card.textContent = theme;
+    card.onclick = () => selectMultipleWordsTheme(theme);
+    grid.appendChild(card);
+  });
+}
+
+function selectMultipleWordsTheme(theme) {
+  multipleWordsTheme = theme;
+  multipleWordsIndex = 0;
+  
+  document.querySelectorAll('#multipleWordsGrid .theme-card').forEach(card => {
+    card.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  renderMultipleWordsExercise();
+}
+
+function renderMultipleWordsExercise() {
+  if (!multipleWordsTheme) return;
+  
+  const words = vocabularyData[multipleWordsTheme];
+  const word = words[multipleWordsIndex];
+  const allWords = words.map(w => w.en);
+  const options = [word.en];
+  
+  while (options.length < 4) {
+    const random = allWords[Math.floor(Math.random() * allWords.length)];
+    if (!options.includes(random)) options.push(random);
+  }
+  
+  const shuffled = options.sort(() => Math.random() - 0.5);
+  
+  let html = `
+    <div class="progress">Palabra ${multipleWordsIndex + 1} de ${words.length}</div>
+    
+    <div class="learning-card">
+      <div class="card-label">¿CUÁL ES LA TRADUCCIÓN?</div>
+      <div class="card-content">
+        <div class="word-row">
+          <div class="word-english" style="font-size: 24px;">${word.es}</div>
+          <div class="word-pronunciation">/${word.pro}/</div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem;">
+  `;
+  
+  shuffled.forEach((option, idx) => {
+    const isCorrect = option === word.en;
+    html += `
+      <button onclick="checkMultipleWordsAnswer('${option}', ${isCorrect})" 
+        style="padding: 16px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-size: 14px; font-weight: 500; transition: all 0.2s;"
+        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        ${option}
+      </button>
+    `;
+  });
+  
+  html += `
+    </div>
+    
+    <div id="multipleWordsResult"></div>
+    
+    <div class="navigation">
+      <button class="nav-btn" onclick="previousMultipleWords()" ${multipleWordsIndex === 0 ? 'disabled' : ''}>← Anterior</button>
+      <button class="nav-btn" onclick="nextMultipleWords()" ${multipleWordsIndex === words.length - 1 ? 'disabled' : ''}>Siguiente →</button>
+    </div>
+  `;
+  
+  document.getElementById('multipleWordsContent').innerHTML = html;
+}
+
+function checkMultipleWordsAnswer(answer, isCorrect) {
+  const resultDiv = document.getElementById('multipleWordsResult');
+  const words = vocabularyData[multipleWordsTheme];
+  const word = words[multipleWordsIndex];
+  
+  if (isCorrect) {
+    resultDiv.innerHTML = `
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 14px; text-align: center;">
+        ✓ ¡Correcto!
+      </div>
+    `;
+  } else {
+    resultDiv.innerHTML = `
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 14px; text-align: center;">
+        ✗ Incorrecto. La respuesta correcta es: <strong>${word.en}</strong>
+      </div>
+    `;
+  }
+}
+
+function nextMultipleWords() {
+  const words = vocabularyData[multipleWordsTheme];
+  if (multipleWordsIndex < words.length - 1) {
+    multipleWordsIndex++;
+    renderMultipleWordsExercise();
+  }
+}
+
+function previousMultipleWords() {
+  if (multipleWordsIndex > 0) {
+    multipleWordsIndex--;
+    renderMultipleWordsExercise();
+  }
+}
+
+// PARES DE FRASES
+function renderParesFrasesGrid() {
+  const grid = document.getElementById('paresFrasesGrid');
+  grid.innerHTML = '';
+  Object.keys(frasesData).forEach(theme => {
+    const card = document.createElement('button');
+    card.className = 'theme-card';
+    card.textContent = theme;
+    card.onclick = () => selectParesFrasesTheme(theme);
+    grid.appendChild(card);
+  });
+}
+
+function selectParesFrasesTheme(theme) {
+  paresFrasesTheme = theme;
+  paresFrasesMatches = {};
+  
+  document.querySelectorAll('#paresFrasesGrid .theme-card').forEach(card => {
+    card.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  renderParesFrasesExercise();
+}
+
+function renderParesFrasesExercise() {
+  if (!paresFrasesTheme) return;
+  
+  const frases = frasesData[paresFrasesTheme];
+  const Spanish = frases.map(f => f.es);
+  const English = frases.map(f => f.en);
+  const shuffledEnglish = [...English].sort(() => Math.random() - 0.5);
+  
+  const content = document.getElementById('paresFrasesContent');
+  
+  let html = `
+    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar frases</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 1.5rem;">
+      <div>
+        <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
+        <div id="spanishFrasesList" style="display: flex; flex-direction: column; gap: 8px;">
+  `;
+  
+  Spanish.forEach((frase, idx) => {
+    html += `
+      <button onclick="selectPairingSpanishFrase(${idx}, '${frase.replace(/'/g, "\\'")}')" data-idx="${idx}" 
+        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
+        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        ${frase}
+      </button>
+    `;
+  });
+  
+  html += `
+        </div>
+      </div>
+      
+      <div>
+        <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Inglés</div>
+        <div id="englishFrasesList" style="display: flex; flex-direction: column; gap: 8px;">
+  `;
+  
+  shuffledEnglish.forEach((frase, idx) => {
+    html += `
+      <button onclick="selectPairingEnglishFrase('${frase.replace(/'/g, "\\'")}')" 
+        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
+        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        ${frase}
+      </button>
+    `;
+  });
+  
+  html += `
+        </div>
+      </div>
+    </div>
+    
+    <div id="paresFrasesResult"></div>
+  `;
+  
+  content.innerHTML = html;
+}
+
+function selectPairingSpanishFrase(idx, frase) {
+  const resultDiv = document.getElementById('paresFrasesResult');
+  resultDiv.innerHTML = `<p style="color: var(--text-secondary); font-size: 13px;">Seleccionaste: <strong>${frase}</strong> - Ahora selecciona su traducción</p>`;
+  
+  window.selectedSpanishFrase = { idx, frase };
+  
+  document.querySelectorAll('#spanishFrasesList button').forEach(btn => {
+    btn.style.background = 'var(--surface-2)';
+  });
+  
+  document.querySelector(`[data-idx="${idx}"]`).style.background = 'var(--bg-accent)';
+}
+
+function selectPairingEnglishFrase(frase) {
+  if (!window.selectedSpanishFrase) return;
+  
+  const frases = frasesData[paresFrasesTheme];
+  const correct = frases[window.selectedSpanishFrase.idx].en === frase;
+  const resultDiv = document.getElementById('paresFrasesResult');
+  
+  if (correct) {
+    paresFrasesMatches[window.selectedSpanishFrase.idx] = true;
+    resultDiv.innerHTML = `
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 14px; text-align: center;">
+        ✓ ¡Correcto!
+      </div>
+    `;
+    
+    setTimeout(() => {
+      if (Object.keys(paresFrasesMatches).length === frases.length) {
+        resultDiv.innerHTML = `
+          <div style="background: var(--bg-accent); padding: 16px; border-radius: 8px; text-align: center; color: var(--text-accent); font-weight: 500;">
+            ✓ ¡Ejercicio completado!
+          </div>
+        `;
+      } else {
+        renderParesFrasesExercise();
+      }
+    }, 800);
+  } else {
+    resultDiv.innerHTML = `
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 14px; text-align: center;">
+        ✗ Incorrecto. Intenta de nuevo.
+      </div>
+    `;
+  }
+  
+  window.selectedSpanishFrase = null;
+}
+
+// OPCIÓN MÚLTIPLE FRASES
+function renderMultipleFrasesGrid() {
+  const grid = document.getElementById('multipleFrasesGrid');
+  grid.innerHTML = '';
+  Object.keys(frasesData).forEach(theme => {
+    const card = document.createElement('button');
+    card.className = 'theme-card';
+    card.textContent = theme;
+    card.onclick = () => selectMultipleFrasesTheme(theme);
+    grid.appendChild(card);
+  });
+}
+
+function selectMultipleFrasesTheme(theme) {
+  multipleFrasesTheme = theme;
+  multipleFrasesIndex = 0;
+  
+  document.querySelectorAll('#multipleFrasesGrid .theme-card').forEach(card => {
+    card.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  renderMultipleFrasesExercise();
+}
+
+function renderMultipleFrasesExercise() {
+  if (!multipleFrasesTheme) return;
+  
+  const frases = frasesData[multipleFrasesTheme];
+  const frase = frases[multipleFrasesIndex];
+  const allFrases = frases.map(f => f.en);
+  const options = [frase.en];
+  
+  while (options.length < 4) {
+    const random = allFrases[Math.floor(Math.random() * allFrases.length)];
+    if (!options.includes(random)) options.push(random);
+  }
+  
+  const shuffled = options.sort(() => Math.random() - 0.5);
+  
+  let html = `
+    <div class="progress">Frase ${multipleFrasesIndex + 1} de ${frases.length}</div>
+    
+    <div class="learning-card">
+      <div class="card-label">¿CUÁL ES LA TRADUCCIÓN?</div>
+      <div class="card-content">
+        <div class="word-row">
+          <div class="word-english" style="font-size: 18px;">${frase.es}</div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem;">
+  `;
+  
+  shuffled.forEach((option) => {
+    const isCorrect = option === frase.en;
+    html += `
+      <button onclick="checkMultipleFrasesAnswer('${option.replace(/'/g, "\\'")}', ${isCorrect})" 
+        style="padding: 14px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500; transition: all 0.2s; text-align: left;"
+        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        ${option}
+      </button>
+    `;
+  });
+  
+  html += `
+    </div>
+    
+    <div id="multipleFrasesResult"></div>
+    
+    <div class="navigation">
+      <button class="nav-btn" onclick="previousMultipleFrases()" ${multipleFrasesIndex === 0 ? 'disabled' : ''}>← Anterior</button>
+      <button class="nav-btn" onclick="nextMultipleFrases()" ${multipleFrasesIndex === frases.length - 1 ? 'disabled' : ''}>Siguiente →</button>
+    </div>
+  `;
+  
+  document.getElementById('multipleFrasesContent').innerHTML = html;
+}
+
+function checkMultipleFrasesAnswer(answer, isCorrect) {
+  const resultDiv = document.getElementById('multipleFrasesResult');
+  const frases = frasesData[multipleFrasesTheme];
+  const frase = frases[multipleFrasesIndex];
+  
+  if (isCorrect) {
+    resultDiv.innerHTML = `
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 14px; text-align: center;">
+        ✓ ¡Correcto!
+      </div>
+    `;
+  } else {
+    resultDiv.innerHTML = `
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 14px; text-align: center;">
+        ✗ Incorrecto. La respuesta correcta es: <strong>${frase.en}</strong>
+      </div>
+    `;
+  }
+}
+
+function nextMultipleFrases() {
+  const frases = frasesData[multipleFrasesTheme];
+  if (multipleFrasesIndex < frases.length - 1) {
+    multipleFrasesIndex++;
+    renderMultipleFrasesExercise();
+  }
+}
+
+function previousMultipleFrases() {
+  if (multipleFrasesIndex > 0) {
+    multipleFrasesIndex--;
+    renderMultipleFrasesExercise();
   }
 }
 
