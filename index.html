@@ -1088,12 +1088,20 @@ function renderParesPalabrasGrid() {
 function selectParesPalabrasTheme(theme) {
   paresPalabrasTheme = theme;
   paresPalabrasMatches = {};
+  document.getElementById('paresPalabrasGrid').style.display = 'none';
   renderParesPalabrasExercise();
   setTimeout(() => {
     const content = document.getElementById('paresPalabrasContent');
     const offsetTop = content.getBoundingClientRect().top + window.pageYOffset - 100;
     window.scrollTo({ top: offsetTop, behavior: 'smooth' });
   }, 100);
+}
+
+function returnToParesPalabrasThemes() {
+  paresPalabrasTheme = null;
+  paresPalabrasMatches = {};
+  document.getElementById('paresPalabrasGrid').style.display = 'grid';
+  document.getElementById('paresPalabrasContent').innerHTML = '';
 }
 
 function renderParesPalabrasExercise() {
@@ -1112,6 +1120,8 @@ function renderParesPalabrasExercise() {
   const content = document.getElementById('paresPalabrasContent');
   
   let html = `
+    <button onclick="returnToParesPalabrasThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
+    
     <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar palabras</p>
     </div>
@@ -1342,12 +1352,20 @@ function renderParesFrasesGrid() {
 function selectParesFrasesTheme(theme) {
   paresFrasesTheme = theme;
   paresFrasesMatches = {};
+  document.getElementById('paresFrasesGrid').style.display = 'none';
   renderParesFrasesExercise();
   setTimeout(() => {
     const content = document.getElementById('paresFrasesContent');
     const offsetTop = content.getBoundingClientRect().top + window.pageYOffset - 100;
     window.scrollTo({ top: offsetTop, behavior: 'smooth' });
   }, 100);
+}
+
+function returnToParesFreasesThemes() {
+  paresFrasesTheme = null;
+  paresFrasesMatches = {};
+  document.getElementById('paresFrasesGrid').style.display = 'grid';
+  document.getElementById('paresFrasesContent').innerHTML = '';
 }
 
 function renderParesFrasesExercise() {
@@ -1366,6 +1384,8 @@ function renderParesFrasesExercise() {
   const content = document.getElementById('paresFrasesContent');
   
   let html = `
+    <button onclick="returnToParesFreasesThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
+    
     <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar frases</p>
     </div>
