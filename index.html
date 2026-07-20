@@ -1089,6 +1089,7 @@ function selectParesPalabrasTheme(theme) {
   paresPalabrasTheme = theme;
   paresPalabrasMatches = {};
   document.getElementById('paresPalabrasGrid').style.display = 'none';
+  document.getElementById('stats').style.display = 'none';
   renderParesPalabrasExercise();
   setTimeout(() => {
     const content = document.getElementById('paresPalabrasContent');
@@ -1101,6 +1102,7 @@ function returnToParesPalabrasThemes() {
   paresPalabrasTheme = null;
   paresPalabrasMatches = {};
   document.getElementById('paresPalabrasGrid').style.display = 'grid';
+  document.getElementById('stats').style.display = '';
   document.getElementById('paresPalabrasContent').innerHTML = '';
 }
 
@@ -1353,6 +1355,7 @@ function selectParesFrasesTheme(theme) {
   paresFrasesTheme = theme;
   paresFrasesMatches = {};
   document.getElementById('paresFrasesGrid').style.display = 'none';
+  document.getElementById('stats').style.display = 'none';
   renderParesFrasesExercise();
   setTimeout(() => {
     const content = document.getElementById('paresFrasesContent');
@@ -1365,6 +1368,7 @@ function returnToParesFreasesThemes() {
   paresFrasesTheme = null;
   paresFrasesMatches = {};
   document.getElementById('paresFrasesGrid').style.display = 'grid';
+  document.getElementById('stats').style.display = '';
   document.getElementById('paresFrasesContent').innerHTML = '';
 }
 
