@@ -1088,16 +1088,10 @@ function renderParesPalabrasGrid() {
 function selectParesPalabrasTheme(theme) {
   paresPalabrasTheme = theme;
   paresPalabrasMatches = {};
-  
-  document.getElementById('paresPalabrasGrid').style.display = 'none';
   renderParesPalabrasExercise();
-}
-
-function returnFromParesPalabras() {
-  paresPalabrasTheme = null;
-  paresPalabrasMatches = {};
-  document.getElementById('paresPalabrasGrid').style.display = 'grid';
-  document.getElementById('paresPalabrasContent').innerHTML = '';
+  setTimeout(() => {
+    document.getElementById('paresPalabrasContent').scrollIntoView({ behavior: 'smooth' });
+  }, 100);
 }
 
 function renderParesPalabrasExercise() {
@@ -1111,8 +1105,6 @@ function renderParesPalabrasExercise() {
   const content = document.getElementById('paresPalabrasContent');
   
   let html = `
-    <button onclick="returnFromParesPalabras()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
-    
     <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar palabras</p>
     </div>
@@ -1229,16 +1221,10 @@ function renderMultipleWordsGrid() {
 function selectMultipleWordsTheme(theme) {
   multipleWordsTheme = theme;
   multipleWordsIndex = 0;
-  
-  document.getElementById('multipleWordsGrid').style.display = 'none';
   renderMultipleWordsExercise();
-}
-
-function returnFromMultipleWords() {
-  multipleWordsTheme = null;
-  multipleWordsIndex = 0;
-  document.getElementById('multipleWordsGrid').style.display = 'grid';
-  document.getElementById('multipleWordsContent').innerHTML = '';
+  setTimeout(() => {
+    document.getElementById('multipleWordsContent').scrollIntoView({ behavior: 'smooth' });
+  }, 100);
 }
 
 function renderMultipleWordsExercise() {
@@ -1257,8 +1243,6 @@ function renderMultipleWordsExercise() {
   const shuffled = options.sort(() => Math.random() - 0.5);
   
   let html = `
-    <button onclick="returnFromMultipleWords()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
-    
     <div class="progress">Palabra ${multipleWordsIndex + 1} de ${words.length}</div>
     
     <div class="learning-card">
@@ -1350,16 +1334,10 @@ function renderParesFrasesGrid() {
 function selectParesFrasesTheme(theme) {
   paresFrasesTheme = theme;
   paresFrasesMatches = {};
-  
-  document.getElementById('paresFrasesGrid').style.display = 'none';
   renderParesFrasesExercise();
-}
-
-function returnFromParesFrases() {
-  paresFrasesTheme = null;
-  paresFrasesMatches = {};
-  document.getElementById('paresFrasesGrid').style.display = 'grid';
-  document.getElementById('paresFrasesContent').innerHTML = '';
+  setTimeout(() => {
+    document.getElementById('paresFrasesContent').scrollIntoView({ behavior: 'smooth' });
+  }, 100);
 }
 
 function renderParesFrasesExercise() {
@@ -1373,8 +1351,6 @@ function renderParesFrasesExercise() {
   const content = document.getElementById('paresFrasesContent');
   
   let html = `
-    <button onclick="returnFromParesFrases()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
-    
     <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar frases</p>
     </div>
@@ -1491,16 +1467,10 @@ function renderMultipleFrasesGrid() {
 function selectMultipleFrasesTheme(theme) {
   multipleFrasesTheme = theme;
   multipleFrasesIndex = 0;
-  
-  document.getElementById('multipleFrasesGrid').style.display = 'none';
   renderMultipleFrasesExercise();
-}
-
-function returnFromMultipleFrases() {
-  multipleFrasesTheme = null;
-  multipleFrasesIndex = 0;
-  document.getElementById('multipleFrasesGrid').style.display = 'grid';
-  document.getElementById('multipleFrasesContent').innerHTML = '';
+  setTimeout(() => {
+    document.getElementById('multipleFrasesContent').scrollIntoView({ behavior: 'smooth' });
+  }, 100);
 }
 
 function renderMultipleFrasesExercise() {
@@ -1519,8 +1489,6 @@ function renderMultipleFrasesExercise() {
   const shuffled = options.sort(() => Math.random() - 0.5);
   
   let html = `
-    <button onclick="returnFromMultipleFrases()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
-    
     <div class="progress">Frase ${multipleFrasesIndex + 1} de ${frases.length}</div>
     
     <div class="learning-card">
