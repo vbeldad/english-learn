@@ -1090,7 +1090,9 @@ function selectParesPalabrasTheme(theme) {
   paresPalabrasMatches = {};
   renderParesPalabrasExercise();
   setTimeout(() => {
-    document.querySelector('.learning-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const content = document.getElementById('paresPalabrasContent');
+    const offsetTop = content.getBoundingClientRect().top + window.pageYOffset - 100;
+    window.scrollTo({ top: offsetTop, behavior: 'smooth' });
   }, 100);
 }
 
@@ -1100,7 +1102,12 @@ function renderParesPalabrasExercise() {
   const words = vocabularyData[paresPalabrasTheme];
   const Spanish = words.map(w => w.es);
   const English = words.map(w => w.en);
-  const shuffledEnglish = [...English].sort(() => Math.random() - 0.5);
+  
+  // Filtrar solo las palabras que no han sido emparejadas
+  const pendingIndices = Spanish.map((_, idx) => paresPalabrasMatches[idx] ? null : idx).filter(i => i !== null);
+  const pendingSpanish = pendingIndices.map(idx => Spanish[idx]);
+  const pendingEnglish = pendingIndices.map(idx => English[idx]);
+  const shuffledEnglish = [...pendingEnglish].sort(() => Math.random() - 0.5);
   
   const content = document.getElementById('paresPalabrasContent');
   
@@ -1115,9 +1122,10 @@ function renderParesPalabrasExercise() {
         <div id="spanishList" style="display: flex; flex-direction: column; gap: 8px;">
   `;
   
-  Spanish.forEach((word, idx) => {
+  pendingSpanish.forEach((word, i) => {
+    const actualIdx = pendingIndices[i];
     html += `
-      <button onclick="selectPairingSpanish(${idx}, '${word}')" data-idx="${idx}" 
+      <button onclick="selectPairingSpanish(${actualIdx}, '${word}')" data-idx="${actualIdx}" 
         style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 14px; transition: all 0.2s;"
         onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
         ${word}
@@ -1179,7 +1187,7 @@ function selectPairingEnglish(word) {
     paresPalabrasMatches[window.selectedSpanish.idx] = true;
     resultDiv.innerHTML = `
       <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 14px; text-align: center;">
-        ✓ ¡Correcto! ${window.selectedSpanish.word} = ${word}
+        ✓ ¡Correcto! (${Object.keys(paresPalabrasMatches).length}/${words.length})
       </div>
     `;
     
@@ -1193,7 +1201,7 @@ function selectPairingEnglish(word) {
       } else {
         renderParesPalabrasExercise();
       }
-    }, 800);
+    }, 500);
   } else {
     resultDiv.innerHTML = `
       <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 14px; text-align: center;">
@@ -1336,7 +1344,9 @@ function selectParesFrasesTheme(theme) {
   paresFrasesMatches = {};
   renderParesFrasesExercise();
   setTimeout(() => {
-    document.querySelector('#paresFrasesContent [style*="grid-template-columns"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const content = document.getElementById('paresFrasesContent');
+    const offsetTop = content.getBoundingClientRect().top + window.pageYOffset - 100;
+    window.scrollTo({ top: offsetTop, behavior: 'smooth' });
   }, 100);
 }
 
@@ -1346,7 +1356,12 @@ function renderParesFrasesExercise() {
   const frases = frasesData[paresFrasesTheme];
   const Spanish = frases.map(f => f.es);
   const English = frases.map(f => f.en);
-  const shuffledEnglish = [...English].sort(() => Math.random() - 0.5);
+  
+  // Filtrar solo las frases que no han sido emparejadas
+  const pendingIndices = Spanish.map((_, idx) => paresFrasesMatches[idx] ? null : idx).filter(i => i !== null);
+  const pendingSpanish = pendingIndices.map(idx => Spanish[idx]);
+  const pendingEnglish = pendingIndices.map(idx => English[idx]);
+  const shuffledEnglish = [...pendingEnglish].sort(() => Math.random() - 0.5);
   
   const content = document.getElementById('paresFrasesContent');
   
@@ -1361,9 +1376,10 @@ function renderParesFrasesExercise() {
         <div id="spanishFrasesList" style="display: flex; flex-direction: column; gap: 8px;">
   `;
   
-  Spanish.forEach((frase, idx) => {
+  pendingSpanish.forEach((frase, i) => {
+    const actualIdx = pendingIndices[i];
     html += `
-      <button onclick="selectPairingSpanishFrase(${idx}, '${frase.replace(/'/g, "\\'")}')" data-idx="${idx}" 
+      <button onclick="selectPairingSpanishFrase(${actualIdx}, '${frase.replace(/'/g, "\\'")}')" data-idx="${actualIdx}" 
         style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
         onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
         ${frase}
@@ -1423,9 +1439,10 @@ function selectPairingEnglishFrase(frase) {
   
   if (correct) {
     paresFrasesMatches[window.selectedSpanishFrase.idx] = true;
+    const frases = frasesData[paresFrasesTheme];
     resultDiv.innerHTML = `
       <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 14px; text-align: center;">
-        ✓ ¡Correcto!
+        ✓ ¡Correcto! (${Object.keys(paresFrasesMatches).length}/${frases.length})
       </div>
     `;
     
@@ -1439,7 +1456,7 @@ function selectPairingEnglishFrase(frase) {
       } else {
         renderParesFrasesExercise();
       }
-    }, 800);
+    }, 500);
   } else {
     resultDiv.innerHTML = `
       <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 14px; text-align: center;">
