@@ -1090,7 +1090,7 @@ function selectParesPalabrasTheme(theme) {
   paresPalabrasMatches = {};
   renderParesPalabrasExercise();
   setTimeout(() => {
-    document.getElementById('paresPalabrasContent').scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('.learning-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 100);
 }
 
@@ -1223,7 +1223,7 @@ function selectMultipleWordsTheme(theme) {
   multipleWordsIndex = 0;
   renderMultipleWordsExercise();
   setTimeout(() => {
-    document.getElementById('multipleWordsContent').scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('#multipleWordsContent .learning-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 100);
 }
 
@@ -1336,7 +1336,7 @@ function selectParesFrasesTheme(theme) {
   paresFrasesMatches = {};
   renderParesFrasesExercise();
   setTimeout(() => {
-    document.getElementById('paresFrasesContent').scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('#paresFrasesContent [style*="grid-template-columns"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 100);
 }
 
@@ -1469,7 +1469,7 @@ function selectMultipleFrasesTheme(theme) {
   multipleFrasesIndex = 0;
   renderMultipleFrasesExercise();
   setTimeout(() => {
-    document.getElementById('multipleFrasesContent').scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('#multipleFrasesContent .learning-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 100);
 }
 
