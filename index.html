@@ -352,6 +352,8 @@
     <button class="nav-tab" onclick="switchSection('multipleWords')">Opción Múltiple</button>
     <button class="nav-tab" onclick="switchSection('paresFrases')">Pares Frases</button>
     <button class="nav-tab" onclick="switchSection('multipleFrases')">Opción Múltiple Frases</button>
+    <button class="nav-tab" onclick="switchSection('multipleVerbos')">Opción Múltiple Verbos</button>
+    <button class="nav-tab" onclick="switchSection('paresVerbos')">Pares Verbos</button>
   </div>
 
   <div class="stats" id="stats">
@@ -423,6 +425,17 @@
     <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">ELIGE UN TEMA</h3>
     <div class="theme-grid" id="multipleFrasesGrid"></div>
     <div id="multipleFrasesContent"></div>
+  </div>
+
+  <div id="multipleVerbos" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">ELIGE UN VERBO</h3>
+    <div id="multipleVerbosContent"></div>
+  </div>
+
+  <div id="paresVerbos" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">ELIGE UN VERBO</h3>
+    <div id="paresVerbosGrid"></div>
+    <div id="paresVerbosContent"></div>
   </div>
 </div>
 
@@ -1069,6 +1082,10 @@ function switchSection(section) {
     renderParesFrasesGrid();
   } else if (section === 'multipleFrases') {
     renderMultipleFrasesGrid();
+  } else if (section === 'multipleVerbos') {
+    renderMultipleVerbosGrid();
+  } else if (section === 'paresVerbos') {
+    renderParesVerbosGrid();
   }
 }
 
@@ -1741,6 +1758,262 @@ function checkActivation() {
     errorDiv.style.display = 'block';
     document.getElementById('activationInput').value = '';
   }
+}
+
+// OPCIÓN MÚLTIPLE VERBOS
+function renderMultipleVerbosGrid() {
+  const content = document.getElementById('multipleVerbosContent');
+  
+  if (verbsData.length === 0) {
+    content.innerHTML = '<p>No hay verbos disponibles</p>';
+    return;
+  }
+  
+  let multipleVerbosIndex = 0;
+  const verb = verbsData[multipleVerbosIndex];
+  const allVerbs = verbsData.map(v => v.es);
+  const options = [verb.es];
+  
+  while (options.length < 4) {
+    const random = allVerbs[Math.floor(Math.random() * allVerbs.length)];
+    if (!options.includes(random)) options.push(random);
+  }
+  
+  const shuffled = options.sort(() => Math.random() - 0.5);
+  
+  window.multipleVerbosIndex = 0;
+  
+  renderMultipleVerbosExercise();
+}
+
+function renderMultipleVerbosExercise() {
+  if (window.multipleVerbosIndex === undefined) window.multipleVerbosIndex = 0;
+  
+  const verb = verbsData[window.multipleVerbosIndex];
+  const allVerbs = verbsData.map(v => v.es);
+  const options = [verb.es];
+  
+  while (options.length < 4) {
+    const random = allVerbs[Math.floor(Math.random() * allVerbs.length)];
+    if (!options.includes(random)) options.push(random);
+  }
+  
+  const shuffled = options.sort(() => Math.random() - 0.5);
+  
+  let html = `
+    <div class="progress">Verbo ${window.multipleVerbosIndex + 1} de ${verbsData.length}</div>
+    
+    <div class="learning-card">
+      <div class="card-label">¿CUÁL ES LA TRADUCCIÓN?</div>
+      <div class="card-content">
+        <div class="word-row">
+          <div class="word-english" style="font-size: 24px;">${verb.en}</div>
+          <div class="word-pronunciation">/${verb.pro}/</div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem;">
+  `;
+  
+  shuffled.forEach((option) => {
+    const isCorrect = option === verb.es;
+    html += `
+      <button onclick="checkMultipleVerbosAnswer('${option.replace(/'/g, "\\'")}', ${isCorrect})" 
+        style="padding: 16px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-size: 14px; font-weight: 500; transition: all 0.2s;"
+        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        ${option}
+      </button>
+    `;
+  });
+  
+  html += `
+    </div>
+    
+    <div id="multipleVerbosResult"></div>
+    
+    <div class="navigation">
+      <button class="nav-btn" onclick="previousMultipleVerbos()" ${window.multipleVerbosIndex === 0 ? 'disabled' : ''}>← Anterior</button>
+      <button class="nav-btn" onclick="nextMultipleVerbos()" ${window.multipleVerbosIndex === verbsData.length - 1 ? 'disabled' : ''}>Siguiente →</button>
+    </div>
+  `;
+  
+  document.getElementById('multipleVerbosContent').innerHTML = html;
+}
+
+function checkMultipleVerbosAnswer(answer, isCorrect) {
+  const resultDiv = document.getElementById('multipleVerbosResult');
+  
+  if (isCorrect) {
+    resultDiv.innerHTML = `
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 14px; text-align: center;">
+        ✓ ¡Correcto!
+      </div>
+    `;
+  } else {
+    resultDiv.innerHTML = `
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 14px; text-align: center;">
+        ✗ Incorrecto. Intenta de nuevo.
+      </div>
+    `;
+  }
+}
+
+function nextMultipleVerbos() {
+  if (window.multipleVerbosIndex < verbsData.length - 1) {
+    window.multipleVerbosIndex++;
+    renderMultipleVerbosExercise();
+  }
+}
+
+function previousMultipleVerbos() {
+  if (window.multipleVerbosIndex > 0) {
+    window.multipleVerbosIndex--;
+    renderMultipleVerbosExercise();
+  }
+}
+
+// PARES DE VERBOS
+function renderParesVerbosGrid() {
+  const grid = document.getElementById('paresVerbosGrid');
+  const content = document.getElementById('paresVerbosContent');
+  
+  grid.innerHTML = '';
+  content.innerHTML = '';
+  
+  verbsData.forEach((verb, idx) => {
+    const card = document.createElement('button');
+    card.className = 'theme-card';
+    card.textContent = verb.en.replace('To ', '').substring(0, 15);
+    card.onclick = () => selectParesVerbosVerb(verb.en);
+    grid.appendChild(card);
+  });
+}
+
+function selectParesVerbosVerb(verbName) {
+  window.paresVerbosMatch = {};
+  window.selectedParesVerb = verbName;
+  document.getElementById('paresVerbosGrid').style.display = 'none';
+  renderParesVerbosExercise();
+  setTimeout(() => {
+    const content = document.getElementById('paresVerbosContent');
+    const offsetTop = content.getBoundingClientRect().top + window.pageYOffset - 100;
+    window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+  }, 100);
+}
+
+function returnFromParesVerbos() {
+  window.paresVerbosMatch = null;
+  window.selectedParesVerb = null;
+  document.getElementById('paresVerbosGrid').style.display = 'grid';
+  document.getElementById('paresVerbosContent').innerHTML = '';
+  renderParesVerbosGrid();
+}
+
+function renderParesVerbosExercise() {
+  if (!window.selectedParesVerb) return;
+  
+  const verb = verbsData.find(v => v.en === window.selectedParesVerb);
+  if (!verb || !verb.conjugations) return;
+  
+  const Spanish = verb.conjugations.map(c => c.es);
+  const English = verb.conjugations.map(c => c.form);
+  const shuffledEnglish = [...English].sort(() => Math.random() - 0.5);
+  
+  let html = `
+    <button onclick="returnFromParesVerbos()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
+    
+    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Emparejar conjugaciones de: <strong>${verb.en}</strong></p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 1.5rem;">
+      <div>
+        <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
+        <div id="spanishConjList" style="display: flex; flex-direction: column; gap: 8px;">
+  `;
+  
+  Spanish.forEach((spanish, idx) => {
+    if (window.paresVerbosMatch && window.paresVerbosMatch[idx]) return;
+    html += `
+      <button onclick="selectParesVerbosSpanish(${idx}, '${spanish.replace(/'/g, "\\'")}')" data-idx="${idx}" 
+        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
+        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        ${spanish}
+      </button>
+    `;
+  });
+  
+  html += `
+        </div>
+      </div>
+      
+      <div>
+        <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Inglés</div>
+        <div id="englishConjList" style="display: flex; flex-direction: column; gap: 8px;">
+  `;
+  
+  shuffledEnglish.forEach((english) => {
+    html += `
+      <button onclick="selectParesVerbosEnglish('${english.replace(/'/g, "\\'")}')" 
+        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
+        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        ${english}
+      </button>
+    `;
+  });
+  
+  html += `
+        </div>
+      </div>
+    </div>
+    
+    <div id="paresVerbosResult"></div>
+  `;
+  
+  document.getElementById('paresVerbosContent').innerHTML = html;
+}
+
+function selectParesVerbosSpanish(idx, spanish) {
+  window.selectedParesVerbosSpanish = { idx, spanish };
+}
+
+function selectParesVerbosEnglish(english) {
+  if (!window.selectedParesVerbosSpanish) return;
+  
+  const verb = verbsData.find(v => v.en === window.selectedParesVerb);
+  const correct = verb.conjugations[window.selectedParesVerbosSpanish.idx].form === english;
+  const resultDiv = document.getElementById('paresVerbosResult');
+  
+  if (correct) {
+    window.paresVerbosMatch = window.paresVerbosMatch || {};
+    window.paresVerbosMatch[window.selectedParesVerbosSpanish.idx] = true;
+    resultDiv.innerHTML = `
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 14px; text-align: center;">
+        ✓ ¡Correcto! (${Object.keys(window.paresVerbosMatch).length}/${verb.conjugations.length})
+      </div>
+    `;
+    
+    setTimeout(() => {
+      if (Object.keys(window.paresVerbosMatch).length === verb.conjugations.length) {
+        resultDiv.innerHTML = `
+          <div style="background: var(--bg-accent); padding: 16px; border-radius: 8px; text-align: center; color: var(--text-accent); font-weight: 500;">
+            ✓ ¡Ejercicio completado!
+          </div>
+        `;
+      } else {
+        renderParesVerbosExercise();
+      }
+    }, 500);
+  } else {
+    resultDiv.innerHTML = `
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 14px; text-align: center;">
+        ✗ Incorrecto. Intenta de nuevo.
+      </div>
+    `;
+  }
+  
+  window.selectedParesVerbosSpanish = null;
 }
 
 // Verificar si ya está activado
