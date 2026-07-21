@@ -141,13 +141,13 @@
       background: var(--surface-2);
       border: 0.5px solid var(--border);
       border-radius: 12px;
-      padding: 1rem;
+      padding: 0.6rem;
       text-align: center;
-      min-height: 180px;
+      min-height: 120px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     
     .learning-card.flipped {
@@ -159,13 +159,13 @@
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.4rem;
     }
     
     .card-content {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
     }
     
     .word-row {
@@ -175,13 +175,13 @@
     }
     
     .word-english {
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 500;
       color: var(--text-primary);
     }
     
     .word-pronunciation {
-      font-size: 14px;
+      font-size: 12px;
       color: var(--text-secondary);
       font-style: italic;
     }
@@ -252,7 +252,7 @@
     .progress {
       font-size: 12px;
       color: var(--text-secondary);
-      margin-bottom: 1rem;
+      margin-bottom: 0.6rem;
     }
     
     .button-group {
@@ -379,7 +379,7 @@
 
   <div id="verbos" class="section">
     <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">VERBOS MÁS USADOS (CON CONJUGACIONES)</h3>
-    <div style="background: var(--bg-accent); padding: 12px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+    <div style="background: var(--bg-accent); padding: 12px; border-radius: 8px; margin-bottom: 0.8rem; text-align: center;">
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">65 verbos esenciales en inglés</p>
     </div>
     <div id="verbosContent"></div>
@@ -1139,11 +1139,11 @@ function renderParesPalabrasExercise() {
   let html = `
     <button onclick="returnToParesPalabrasThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
     
-    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 0.8rem; text-align: center;">
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar palabras</p>
     </div>
     
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 1.5rem;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0.8rem;">
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
         <div id="spanishList" style="display: flex; flex-direction: column; gap: 8px;">
@@ -1290,7 +1290,7 @@ function renderMultipleWordsExercise() {
       </div>
     </div>
     
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0.8rem;">
   `;
   
   shuffled.forEach((option, idx) => {
@@ -1403,11 +1403,11 @@ function renderParesFrasesExercise() {
   let html = `
     <button onclick="returnToParesFreasesThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
     
-    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 0.8rem; text-align: center;">
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar frases</p>
     </div>
     
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 1.5rem;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0.8rem;">
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
         <div id="spanishFrasesList" style="display: flex; flex-direction: column; gap: 8px;">
@@ -1554,7 +1554,7 @@ function renderMultipleFrasesExercise() {
       </div>
     </div>
     
-    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem;">
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 0.8rem;">
   `;
   
   shuffled.forEach((option) => {
@@ -1672,7 +1672,7 @@ function renderFrasesExercise() {
       </div>
     </div>
     
-    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; border: 0.5px solid var(--border);">
+    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 0.8rem; border: 0.5px solid var(--border);">
       <label style="display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase;">Tu respuesta:</label>
       <input type="text" id="frasesInput" placeholder="Escribe tu traducción aquí..." 
         style="width: 100%; padding: 12px; border: 0.5px solid var(--border); border-radius: 6px; font-size: 14px; background: var(--surface-2); color: var(--text-primary); font-family: inherit;"
@@ -1813,7 +1813,7 @@ function renderMultipleVerbosExercise() {
       </div>
     </div>
     
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0.8rem;">
   `;
   
   shuffled.forEach((option) => {
@@ -1923,11 +1923,11 @@ function renderParesVerbosExercise() {
   let html = `
     <button onclick="returnFromParesVerbos()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
     
-    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+    <div style="background: var(--surface-1); padding: 16px; border-radius: 8px; margin-bottom: 0.8rem; text-align: center;">
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Emparejar conjugaciones de: <strong>${verb.en}</strong></p>
     </div>
     
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 1.5rem;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0.8rem;">
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
         <div id="spanishConjList" style="display: flex; flex-direction: column; gap: 8px;">
