@@ -2062,8 +2062,8 @@ function generarEjercicioVocabulario() {
     });
   });
   
-  // Mostrar 20 palabras
-  const selectedWords = allWords.slice(0, 20);
+  // Mostrar TODAS las palabras
+  const selectedWords = allWords;
   
   doc.setFontSize(12);
   selectedWords.forEach((word, idx) => {
@@ -2115,8 +2115,8 @@ function generarEjercicioVerbos() {
   doc.text('Instrucciones: Escribe las conjugaciones. Las soluciones aparecen abajo.', margin, yPos);
   yPos += 8;
   
-  // Mostrar 10 verbos
-  const selectedVerbs = verbsData.slice(0, 10);
+  // Mostrar TODOS los verbos
+  const selectedVerbs = verbsData;
   
   doc.setFontSize(11);
   selectedVerbs.forEach((verb, idx) => {
@@ -2193,8 +2193,8 @@ function generarEjercicioFrases() {
     });
   });
   
-  // Mostrar 20 frases
-  const selectedFrases = allFrases.slice(0, 20);
+  // Mostrar TODAS las frases
+  const selectedFrases = allFrases;
   
   doc.setFontSize(11);
   selectedFrases.forEach((frase, idx) => {
