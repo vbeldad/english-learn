@@ -2051,7 +2051,7 @@ function generarEjercicioVocabulario() {
   yPos += 10;
   
   doc.setFontSize(10);
-  doc.text('Instrucciones: Escribe la palabra inglesa en las líneas', margin, yPos);
+  doc.text('Instrucciones: Escribe la palabra inglesa en las líneas. La solución aparece abajo.', margin, yPos);
   yPos += 8;
   
   // Recolectar todas las palabras
@@ -2067,21 +2067,31 @@ function generarEjercicioVocabulario() {
   
   doc.setFontSize(12);
   selectedWords.forEach((word, idx) => {
-    if (yPos > pageHeight - 20) {
+    if (yPos > pageHeight - 30) {
       doc.addPage();
       yPos = 15;
     }
     
     // Español
+    doc.setFont(undefined, 'bold');
     doc.text((idx + 1) + '. ' + word.es, margin, yPos);
     yPos += 6;
     
     // Líneas para escribir
+    doc.setFont(undefined, 'normal');
     doc.setDrawColor(200);
-    doc.line(margin + 30, yPos, 200 - margin, yPos);
+    doc.line(margin + 25, yPos, 200 - margin, yPos);
     yPos += 8;
-    doc.line(margin + 30, yPos, 200 - margin, yPos);
-    yPos += 10;
+    doc.line(margin + 25, yPos, 200 - margin, yPos);
+    yPos += 8;
+    
+    // Solución
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text('✓ ' + word.en, margin + 25, yPos);
+    doc.setTextColor(0, 0, 0);
+    yPos += 8;
+    doc.setFontSize(12);
   });
   
   doc.save('Ejercicios_Vocabulario.pdf');
@@ -2102,7 +2112,7 @@ function generarEjercicioVerbos() {
   yPos += 10;
   
   doc.setFontSize(10);
-  doc.text('Instrucciones: Escribe las conjugaciones del verbo', margin, yPos);
+  doc.text('Instrucciones: Escribe las conjugaciones. Las soluciones aparecen abajo.', margin, yPos);
   yPos += 8;
   
   // Mostrar 10 verbos
@@ -2110,27 +2120,44 @@ function generarEjercicioVerbos() {
   
   doc.setFontSize(11);
   selectedVerbs.forEach((verb, idx) => {
-    if (yPos > pageHeight - 30) {
+    if (yPos > pageHeight - 40) {
       doc.addPage();
       yPos = 15;
     }
     
     // Verbo infinitivo
     doc.setFont(undefined, 'bold');
-    doc.text((idx + 1) + '. ' + verb.en, margin, yPos);
+    doc.text((idx + 1) + '. ' + verb.en + ' (traducción: ' + verb.es + ')', margin, yPos);
     yPos += 6;
     
     doc.setFont(undefined, 'normal');
-    doc.setFontSize(9);
+    doc.setFontSize(10);
     
     if (verb.conjugations) {
-      verb.conjugations.forEach(conj => {
-        doc.text('- ' + conj.form + ': _________________________', margin + 5, yPos);
+      // Líneas para escribir
+      verb.conjugations.forEach((conj, i) => {
+        doc.text('   ' + conj.es + ': ________________', margin + 5, yPos);
         yPos += 5;
       });
+      
+      yPos += 3;
+      
+      // Soluciones
+      doc.setTextColor(100, 100, 100);
+      doc.setFont(undefined, 'italic');
+      verb.conjugations.forEach((conj) => {
+        doc.text('   ✓ ' + conj.form, margin + 5, yPos);
+        yPos += 4;
+      });
+      doc.setTextColor(0, 0, 0);
+      doc.setFont(undefined, 'normal');
     } else {
-      doc.text('Traducción: _________________________ ', margin + 5, yPos);
-      yPos += 5;
+      doc.text('   Traducción: _________________________ ', margin + 5, yPos);
+      yPos += 6;
+      doc.setTextColor(100, 100, 100);
+      doc.text('   ✓ ' + verb.es, margin + 5, yPos);
+      doc.setTextColor(0, 0, 0);
+      yPos += 6;
     }
     
     doc.setFontSize(11);
@@ -2155,7 +2182,7 @@ function generarEjercicioFrases() {
   yPos += 10;
   
   doc.setFontSize(10);
-  doc.text('Instrucciones: Escribe la frase en inglés', margin, yPos);
+  doc.text('Instrucciones: Escribe la frase en inglés. La solución aparece abajo.', margin, yPos);
   yPos += 8;
   
   // Recolectar todas las frases
@@ -2171,21 +2198,32 @@ function generarEjercicioFrases() {
   
   doc.setFontSize(11);
   selectedFrases.forEach((frase, idx) => {
-    if (yPos > pageHeight - 25) {
+    if (yPos > pageHeight - 35) {
       doc.addPage();
       yPos = 15;
     }
     
     // Frase en español
+    doc.setFont(undefined, 'bold');
     doc.text((idx + 1) + '. ' + frase.es, margin, yPos);
     yPos += 6;
     
     // Líneas para escribir
+    doc.setFont(undefined, 'normal');
     doc.setDrawColor(200);
-    doc.line(margin + 30, yPos, 200 - margin, yPos);
+    doc.line(margin + 25, yPos, 200 - margin, yPos);
     yPos += 7;
-    doc.line(margin + 30, yPos, 200 - margin, yPos);
-    yPos += 10;
+    doc.line(margin + 25, yPos, 200 - margin, yPos);
+    yPos += 8;
+    
+    // Solución
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text('✓ ' + frase.en, margin + 25, yPos);
+    doc.setTextColor(0, 0, 0);
+    yPos += 8;
+    
+    doc.setFontSize(11);
   });
   
   doc.save('Ejercicios_Frases.pdf');
