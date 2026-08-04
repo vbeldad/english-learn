@@ -318,6 +318,7 @@
       margin-bottom: 0.5rem;
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -354,6 +355,7 @@
     <button class="nav-tab" onclick="switchSection('multipleFrases')">Opción Múltiple Frases</button>
     <button class="nav-tab" onclick="switchSection('multipleVerbos')">Opción Múltiple Verbos</button>
     <button class="nav-tab" onclick="switchSection('paresVerbos')">Pares Verbos</button>
+    <button class="nav-tab" onclick="switchSection('ejerciciosEscritura')">Ejercicios de Escritura</button>
   </div>
 
   <div class="stats" id="stats">
@@ -436,6 +438,21 @@
     <h3 style="font-size: 12px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">ELIGE UN VERBO</h3>
     <div id="paresVerbosGrid"></div>
     <div id="paresVerbosContent"></div>
+  </div>
+
+  <div id="ejerciciosEscritura" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">EJERCICIOS DE ESCRITURA</h3>
+    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem;">Selecciona un tipo de ejercicio para generar un PDF imprimible</p>
+    
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem;">
+      <button onclick="generarEjercicioVocabulario()" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-weight: 500;">📝 Vocabulario - Escribir Palabras</button>
+      
+      <button onclick="generarEjercicioVerbos()" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-weight: 500;">📝 Verbos - Escribir Conjugaciones</button>
+      
+      <button onclick="generarEjercicioFrases()" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-weight: 500;">📝 Frases - Escribir Oraciones</button>
+    </div>
+    
+    <div id="ejerciciosInfo" style="font-size: 12px; color: var(--text-secondary); text-align: center;"></div>
   </div>
 </div>
 
@@ -1086,6 +1103,8 @@ function switchSection(section) {
     renderMultipleVerbosGrid();
   } else if (section === 'paresVerbos') {
     renderParesVerbosGrid();
+  } else if (section === 'ejerciciosEscritura') {
+    // Ejercicios de escritura ya tiene contenido estático
   }
 }
 
@@ -2014,6 +2033,163 @@ function selectParesVerbosEnglish(english) {
   }
   
   window.selectedParesVerbosSpanish = null;
+}
+
+// EJERCICIOS DE ESCRITURA - PDF
+
+function generarEjercicioVocabulario() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  let yPos = 15;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 10;
+  
+  // Título
+  doc.setFontSize(16);
+  doc.text('Ejercicios de Escritura - Vocabulario', margin, yPos);
+  yPos += 10;
+  
+  doc.setFontSize(10);
+  doc.text('Instrucciones: Escribe la palabra inglesa en las líneas', margin, yPos);
+  yPos += 8;
+  
+  // Recolectar todas las palabras
+  const allWords = [];
+  Object.keys(vocabularyData).forEach(tema => {
+    vocabularyData[tema].forEach(word => {
+      allWords.push(word);
+    });
+  });
+  
+  // Mostrar 20 palabras
+  const selectedWords = allWords.slice(0, 20);
+  
+  doc.setFontSize(12);
+  selectedWords.forEach((word, idx) => {
+    if (yPos > pageHeight - 20) {
+      doc.addPage();
+      yPos = 15;
+    }
+    
+    // Español
+    doc.text((idx + 1) + '. ' + word.es, margin, yPos);
+    yPos += 6;
+    
+    // Líneas para escribir
+    doc.setDrawColor(200);
+    doc.line(margin + 30, yPos, 200 - margin, yPos);
+    yPos += 8;
+    doc.line(margin + 30, yPos, 200 - margin, yPos);
+    yPos += 10;
+  });
+  
+  doc.save('Ejercicios_Vocabulario.pdf');
+  document.getElementById('ejerciciosInfo').innerHTML = '✓ PDF descargado: Ejercicios_Vocabulario.pdf';
+}
+
+function generarEjercicioVerbos() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  let yPos = 15;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 10;
+  
+  // Título
+  doc.setFontSize(16);
+  doc.text('Ejercicios de Escritura - Verbos', margin, yPos);
+  yPos += 10;
+  
+  doc.setFontSize(10);
+  doc.text('Instrucciones: Escribe las conjugaciones del verbo', margin, yPos);
+  yPos += 8;
+  
+  // Mostrar 10 verbos
+  const selectedVerbs = verbsData.slice(0, 10);
+  
+  doc.setFontSize(11);
+  selectedVerbs.forEach((verb, idx) => {
+    if (yPos > pageHeight - 30) {
+      doc.addPage();
+      yPos = 15;
+    }
+    
+    // Verbo infinitivo
+    doc.setFont(undefined, 'bold');
+    doc.text((idx + 1) + '. ' + verb.en, margin, yPos);
+    yPos += 6;
+    
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(9);
+    
+    if (verb.conjugations) {
+      verb.conjugations.forEach(conj => {
+        doc.text('- ' + conj.form + ': _________________________', margin + 5, yPos);
+        yPos += 5;
+      });
+    } else {
+      doc.text('Traducción: _________________________ ', margin + 5, yPos);
+      yPos += 5;
+    }
+    
+    doc.setFontSize(11);
+    yPos += 4;
+  });
+  
+  doc.save('Ejercicios_Verbos.pdf');
+  document.getElementById('ejerciciosInfo').innerHTML = '✓ PDF descargado: Ejercicios_Verbos.pdf';
+}
+
+function generarEjercicioFrases() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  let yPos = 15;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 10;
+  
+  // Título
+  doc.setFontSize(16);
+  doc.text('Ejercicios de Escritura - Frases', margin, yPos);
+  yPos += 10;
+  
+  doc.setFontSize(10);
+  doc.text('Instrucciones: Escribe la frase en inglés', margin, yPos);
+  yPos += 8;
+  
+  // Recolectar todas las frases
+  const allFrases = [];
+  Object.keys(frasesData).forEach(tema => {
+    frasesData[tema].forEach(frase => {
+      allFrases.push(frase);
+    });
+  });
+  
+  // Mostrar 20 frases
+  const selectedFrases = allFrases.slice(0, 20);
+  
+  doc.setFontSize(11);
+  selectedFrases.forEach((frase, idx) => {
+    if (yPos > pageHeight - 25) {
+      doc.addPage();
+      yPos = 15;
+    }
+    
+    // Frase en español
+    doc.text((idx + 1) + '. ' + frase.es, margin, yPos);
+    yPos += 6;
+    
+    // Líneas para escribir
+    doc.setDrawColor(200);
+    doc.line(margin + 30, yPos, 200 - margin, yPos);
+    yPos += 7;
+    doc.line(margin + 30, yPos, 200 - margin, yPos);
+    yPos += 10;
+  });
+  
+  doc.save('Ejercicios_Frases.pdf');
+  document.getElementById('ejerciciosInfo').innerHTML = '✓ PDF descargado: Ejercicios_Frases.pdf';
 }
 
 // Verificar si ya está activado
