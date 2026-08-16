@@ -450,6 +450,8 @@
     <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem;">
       <button onclick="generarEjercicioVocabulario()" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-weight: 500;">📝 Vocabulario - Escribir Palabras</button>
       
+      <button onclick="generarVocabularioCompleto()" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-weight: 500;">📋 Vocabulario Completo - Inglés/Español</button>
+      
       <button onclick="generarEjercicioVerbos()" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-weight: 500;">📝 Verbos - Escribir Conjugaciones</button>
       
       <button onclick="generarEjercicioFrases()" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-weight: 500;">📝 Frases - Escribir Oraciones</button>
@@ -2137,6 +2139,68 @@ function selectParesVerbosEnglish(english) {
 }
 
 // EJERCICIOS DE ESCRITURA - PDF
+
+function generarVocabularioCompleto() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  let yPos = 15;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 10;
+  
+  // Título
+  doc.setFontSize(16);
+  doc.text('Vocabulario Completo - Inglés / Español', margin, yPos);
+  yPos += 10;
+  
+  doc.setFontSize(10);
+  doc.text('Referencia rápida de todo el vocabulario', margin, yPos);
+  yPos += 8;
+  
+  // Recolectar todas las palabras por tema
+  Object.keys(vocabularyData).forEach(tema => {
+    if (yPos > pageHeight - 40) {
+      doc.addPage();
+      yPos = 15;
+    }
+    
+    // Encabezado de tema
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'bold');
+    doc.text(tema, margin, yPos);
+    yPos += 7;
+    
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(11);
+    
+    const words = vocabularyData[tema];
+    words.forEach((word, idx) => {
+      if (yPos > pageHeight - 15) {
+        doc.addPage();
+        yPos = 15;
+        // Repetir encabezado en nueva página
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text(tema + ' (continuación)', margin, yPos);
+        yPos += 7;
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(11);
+      }
+      
+      // Inglés y español lado a lado
+      doc.text((idx + 1) + '. ' + word.en, margin, yPos);
+      doc.setTextColor(100, 100, 100);
+      doc.text(word.es, 120, yPos);
+      doc.setTextColor(0, 0, 0);
+      yPos += 6;
+    });
+    
+    yPos += 6; // Espacio entre temas
+  });
+  
+  doc.save('Vocabulario_Completo.pdf');
+  document.getElementById('ejerciciosInfo').innerHTML = '✓ PDF descargado: Vocabulario_Completo.pdf';
+}
 
 function generarEjercicioVocabulario() {
   const { jsPDF } = window.jspdf;
