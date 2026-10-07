@@ -1329,7 +1329,47 @@ function selectPairingSpanish(idx, word) {
   document.querySelector(`[data-idx="${idx}"]`).style.background = 'var(--bg-accent)';
 }
 
-function selectPairingEnglish(word) {
+1332 {
+ function selectPairingEnglish(word) {
+  if (!window.selectedSpanish) return;
+  
+  const words = vocabularyData[paresPalabrasTheme];
+  const matchedWord = words[window.selectedSpanish.idx];
+  const correct = matchedWord.en === word;
+  const resultDiv = document.getElementById('paresPalabrasResult');
+  
+  if (correct) {
+    paresPalabrasMatches[window.selectedSpanish.idx] = true;
+    resultDiv.innerHTML = `
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center;">
+        <div style="font-weight: 500; margin-bottom: 8px;">✓ ¡Correcto! (${Object.keys(paresPalabrasMatches).length}/${words.length})</div>
+        <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">${matchedWord.en}</div>
+        <div style="font-size: 11px; font-style: italic;">/${matchedWord.en_pro}/</div>
+      </div>
+    `;
+    
+    setTimeout(() => {
+      if (Object.keys(paresPalabrasMatches).length === words.length) {
+        resultDiv.innerHTML = `
+          <div style="background: var(--bg-accent); padding: 7px; border-radius: 8px; text-align: center; color: var(--text-accent); font-weight: 500;">
+            ✓ ¡Ejercicio completado!
+          </div>
+        `;
+      } else {
+        renderParesPalabrasExercise();
+      }
+    }, 500);
+  } else {
+    resultDiv.innerHTML = `
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center;">
+        ✗ Incorrecto. Intenta de nuevo.
+      </div>
+    `;
+  }
+  
+  window.selectedSpanish = null;
+}
+}
   if (!window.selectedSpanish) return;
   
   const words = vocabularyData[paresPalabrasTheme];
