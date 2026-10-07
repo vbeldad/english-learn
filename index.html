@@ -1496,7 +1496,7 @@ function renderMultipleWordsExercise() {
     
     <div class="navigation">
       <button class="nav-btn" onclick="previousMultipleWords()" ${multipleWordsIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="nav-btn" onclick="nextMultipleWords()" ${multipleWordsIndex === words.length - 1 ? 'disabled' : ''}>Siguiente →</button>
+      <button class="nav-btn" onclick="nextMultipleWords()" ${multipleWordsIndex === allWords.length - 1 ? 'disabled' : ''}>Siguiente →</button>
     </div>
   `;
   
@@ -2625,16 +2625,9 @@ function generarEjercicioFrases() {
   document.getElementById('ejerciciosInfo').innerHTML = '✓ PDF descargado: Ejercicios_Frases.pdf';
 }
 
-// Verificar si ya está activado
+// App loads directly without activation
 window.addEventListener('DOMContentLoaded', () => {
-  if (localStorage.getItem(ACTIVATION_STORAGE) === 'true') {
-    document.getElementById('activationScreen').style.display = 'none';
-    document.getElementById('appContent').style.display = 'block';
-  } else {
-    document.getElementById('activationScreen').style.display = 'flex';
-    document.getElementById('appContent').style.display = 'none';
-    document.getElementById('activationInput').focus();
-  }
+  renderThemes();
 });
 </script>
 
