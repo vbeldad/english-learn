@@ -940,8 +940,6 @@ let frasesCurrentIndex = 0;
 let frasesUserAnswer = '';
 let paresPalabrasTheme = null;
 let paresPalabrasMatches = {};
-let paresPalabrasCurrentBlock = 0;
-const PARES_PALABRAS_BLOCK_SIZE = 8;
 let multipleWordsTheme = null;
 let multipleWordsIndex = 0;
 let paresFrasesTheme = null;
@@ -1233,7 +1231,6 @@ function renderParesPalabrasGrid() {
 function selectParesPalabrasTheme(theme) {
   paresPalabrasTheme = theme;
   paresPalabrasMatches = {};
-  paresPalabrasCurrentBlock = 0;
   document.getElementById('paresPalabrasGrid').style.display = 'none';
   renderParesPalabrasExercise();
   setTimeout(() => {
@@ -1252,106 +1249,71 @@ function returnToParesPalabrasThemes() {
 
 function renderParesPalabrasExercise() {
   if (!paresPalabrasTheme) return;
-
+  
   const words = vocabularyData[paresPalabrasTheme];
-
+  const Spanish = words.map(w => w.es);
+  const English = words.map(w => w.en);
+  
   // Filtrar solo las palabras que no han sido emparejadas
-  const pendingIndices = words.map((_, idx) => paresPalabrasMatches[idx] ? null : idx).filter(i => i !== null);
-  const numBlocks = Math.ceil(pendingIndices.length / PARES_PALABRAS_BLOCK_SIZE);
-
-  // Validar que el bloque actual existe
-  if (paresPalabrasCurrentBlock >= numBlocks) {
-    paresPalabrasCurrentBlock = numBlocks - 1;
-  }
-
-  // Obtener palabras del bloque actual
-  const blockStart = paresPalabrasCurrentBlock * PARES_PALABRAS_BLOCK_SIZE;
-  const blockEnd = Math.min(blockStart + PARES_PALABRAS_BLOCK_SIZE, pendingIndices.length);
-  const blockIndices = pendingIndices.slice(blockStart, blockEnd);
-
-  const blockSpanish = blockIndices.map(idx => words[idx].es);
-  const blockEnglish = blockIndices.map(idx => words[idx].en);
-  const shuffledEnglish = [...blockEnglish].sort(() => Math.random() - 0.5);
-
+  const pendingIndices = Spanish.map((_, idx) => paresPalabrasMatches[idx] ? null : idx).filter(i => i !== null);
+  const pendingSpanish = pendingIndices.map(idx => Spanish[idx]);
+  const pendingEnglish = pendingIndices.map(idx => English[idx]);
+  const shuffledEnglish = [...pendingEnglish].sort(() => Math.random() - 0.5);
+  
   const content = document.getElementById('paresPalabrasContent');
-
+  
   let html = `
     <button onclick="returnToParesPalabrasThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
-
+    
     <div style="background: var(--surface-1); padding: 7px; border-radius: 8px; margin-bottom: 0.4rem; text-align: center;">
-      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Bloque ${paresPalabrasCurrentBlock + 1} de ${numBlocks} | Emparejadas ${Object.keys(paresPalabrasMatches).length}/${words.length}</p>
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar palabras</p>
     </div>
-
+    
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.4rem;">
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
         <div id="spanishList" style="display: flex; flex-direction: column; gap: 6px;">
   `;
-
-  blockSpanish.forEach((word, i) => {
-    const actualIdx = blockIndices[i];
+  
+  pendingSpanish.forEach((word, i) => {
+    const actualIdx = pendingIndices[i];
     html += `
-      <button onclick="selectPairingSpanish(${actualIdx}, '${word.replace(/'/g, "\\'")}')" data-idx="${actualIdx}"
+      <button onclick="selectPairingSpanish(${actualIdx}, '${word}')" data-idx="${actualIdx}" 
         style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 12px; transition: all 0.2s;"
         onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
         ${word}
       </button>
     `;
   });
-
+  
   html += `
         </div>
       </div>
-
+      
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Inglés</div>
         <div id="englishList" style="display: flex; flex-direction: column; gap: 6px;">
   `;
-
+  
   shuffledEnglish.forEach((word, idx) => {
     html += `
-      <button onclick="selectPairingEnglish('${word.replace(/'/g, "\\'")}')"
+      <button onclick="selectPairingEnglish('${word}')" 
         style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 12px; transition: all 0.2s;"
         onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
         ${word}
       </button>
     `;
   });
-
+  
   html += `
         </div>
       </div>
     </div>
-
-    <div style="display: flex; gap: 6px; justify-content: center; margin-bottom: 0.4rem;">
-      <button class="nav-btn" onclick="previousParesPalabrasBlock()" ${paresPalabrasCurrentBlock === 0 ? 'disabled' : ''}>← Bloque Anterior</button>
-      <button class="nav-btn" onclick="nextParesPalabrasBlock()" ${paresPalabrasCurrentBlock === numBlocks - 1 ? 'disabled' : ''}>Siguiente Bloque →</button>
-    </div>
-
+    
     <div id="paresPalabrasResult"></div>
   `;
-
+  
   content.innerHTML = html;
-}
-
-function previousParesPalabrasBlock() {
-  if (paresPalabrasCurrentBlock > 0) {
-    paresPalabrasCurrentBlock--;
-    window.selectedSpanish = null;
-    renderParesPalabrasExercise();
-  }
-}
-
-function nextParesPalabrasBlock() {
-  const words = vocabularyData[paresPalabrasTheme];
-  const pendingIndices = words.map((_, idx) => paresPalabrasMatches[idx] ? null : idx).filter(i => i !== null);
-  const numBlocks = Math.ceil(pendingIndices.length / PARES_PALABRAS_BLOCK_SIZE);
-
-  if (paresPalabrasCurrentBlock < numBlocks - 1) {
-    paresPalabrasCurrentBlock++;
-    window.selectedSpanish = null;
-    renderParesPalabrasExercise();
-  }
 }
 
 function selectPairingSpanish(idx, word) {
