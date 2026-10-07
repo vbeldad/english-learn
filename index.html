@@ -940,12 +940,20 @@ let frasesCurrentIndex = 0;
 let frasesUserAnswer = '';
 let paresPalabrasTheme = null;
 let paresPalabrasMatches = {};
+let paresPalabrasCurrentBlock = 0;
+const PARES_WORDS_BLOCK_SIZE = 6;
 let multipleWordsTheme = null;
 let multipleWordsIndex = 0;
+let multipleWordsCurrentBlock = 0;
+const MULTIPLE_WORDS_BLOCK_SIZE = 6;
 let paresFrasesTheme = null;
 let paresFrasesMatches = {};
 let paresFrasesCurrentBlock = 0;
-const PARES_BLOCK_SIZE = 8;
+const PARES_BLOCK_SIZE = 6;
+let multipleFrasesTheme = null;
+let multipleFrasesIndex = 0;
+let multipleFrasesCurrentBlock = 0;
+const MULTIPLE_FRASES_BLOCK_SIZE = 6;
 let multipleFrasesTheme = null;
 let multipleFrasesIndex = 0;
 
@@ -1231,6 +1239,7 @@ function renderParesPalabrasGrid() {
 function selectParesPalabrasTheme(theme) {
   paresPalabrasTheme = theme;
   paresPalabrasMatches = {};
+  paresPalabrasCurrentBlock = 0;
   document.getElementById('paresPalabrasGrid').style.display = 'none';
   renderParesPalabrasExercise();
   setTimeout(() => {
@@ -1243,28 +1252,66 @@ function selectParesPalabrasTheme(theme) {
 function returnToParesPalabrasThemes() {
   paresPalabrasTheme = null;
   paresPalabrasMatches = {};
+  paresPalabrasCurrentBlock = 0;
   document.getElementById('paresPalabrasGrid').style.display = 'grid';
   document.getElementById('paresPalabrasContent').innerHTML = '';
 }
 
+function changeParesPalabrasBlock(direction) {
+  const words = vocabularyData[paresPalabrasTheme];
+  const totalBlocks = Math.ceil(words.length / PARES_WORDS_BLOCK_SIZE);
+  const newBlock = paresPalabrasCurrentBlock + direction;
+
+  if (newBlock >= 0 && newBlock < totalBlocks) {
+    paresPalabrasCurrentBlock = newBlock;
+    paresPalabrasMatches = {}; // Reset matches for new block
+    renderParesPalabrasExercise();
+  }
+}
+
 function renderParesPalabrasExercise() {
   if (!paresPalabrasTheme) return;
-  
+
   const words = vocabularyData[paresPalabrasTheme];
-  const Spanish = words.map(w => w.es);
-  const English = words.map(w => w.en);
-  
+  const allWords = words;
+  const totalBlocks = Math.ceil(allWords.length / PARES_WORDS_BLOCK_SIZE);
+
+  if (paresPalabrasCurrentBlock >= totalBlocks) {
+    paresPalabrasCurrentBlock = totalBlocks - 1;
+  }
+
+  const startIdx = paresPalabrasCurrentBlock * PARES_WORDS_BLOCK_SIZE;
+  const endIdx = Math.min(startIdx + PARES_WORDS_BLOCK_SIZE, allWords.length);
+  const blockWords = allWords.slice(startIdx, endIdx);
+
+  const Spanish = blockWords.map(w => w.es);
+  const English = blockWords.map(w => w.en);
+
+  // Mapeo de índices de bloque a índices globales
+  const blockToGlobalIdx = blockWords.map((_, i) => startIdx + i);
+
   // Filtrar solo las palabras que no han sido emparejadas
-  const pendingIndices = Spanish.map((_, idx) => paresPalabrasMatches[idx] ? null : idx).filter(i => i !== null);
-  const pendingSpanish = pendingIndices.map(idx => Spanish[idx]);
-  const pendingEnglish = pendingIndices.map(idx => English[idx]);
+  const pendingIndices = blockToGlobalIdx.filter(idx => !paresPalabrasMatches[idx]);
+  const pendingSpanish = pendingIndices.map(idx => Spanish[idx - startIdx]);
+  const pendingEnglish = pendingIndices.map(idx => English[idx - startIdx]);
   const shuffledEnglish = [...pendingEnglish].sort(() => Math.random() - 0.5);
   
   const content = document.getElementById('paresPalabrasContent');
-  
+
+  // Selector de bloques
+  const blockSelector = totalBlocks > 1 ? `
+    <div style="background: var(--surface-1); padding: 8px; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap;">
+      <button onclick="changeParesPalabrasBlock(-1)" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 12px;">← Ant</button>
+      <span style="font-size: 12px; color: var(--text-secondary);">Bloque ${paresPalabrasCurrentBlock + 1} de ${totalBlocks}</span>
+      <button onclick="changeParesPalabrasBlock(1)" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 12px;">Sig →</button>
+    </div>
+  ` : '';
+
   let html = `
     <button onclick="returnToParesPalabrasThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
-    
+
+    ${blockSelector}
+
     <div style="background: var(--surface-1); padding: 7px; border-radius: 8px; margin-bottom: 0.4rem; text-align: center;">
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar palabras</p>
     </div>
@@ -1385,6 +1432,7 @@ function renderMultipleWordsGrid() {
 function selectMultipleWordsTheme(theme) {
   multipleWordsTheme = theme;
   multipleWordsIndex = 0;
+  multipleWordsCurrentBlock = 0;
   renderMultipleWordsExercise();
   setTimeout(() => {
     document.querySelector('#multipleWordsContent .learning-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1393,21 +1441,46 @@ function selectMultipleWordsTheme(theme) {
 
 function renderMultipleWordsExercise() {
   if (!multipleWordsTheme) return;
-  
-  const words = vocabularyData[multipleWordsTheme];
-  const word = words[multipleWordsIndex];
-  const allWords = words.map(w => w.en);
+
+  const allWords = vocabularyData[multipleWordsTheme];
+  const totalBlocks = Math.ceil(allWords.length / MULTIPLE_WORDS_BLOCK_SIZE);
+
+  if (multipleWordsCurrentBlock >= totalBlocks) {
+    multipleWordsCurrentBlock = totalBlocks - 1;
+  }
+
+  const startIdx = multipleWordsCurrentBlock * MULTIPLE_WORDS_BLOCK_SIZE;
+  const endIdx = Math.min(startIdx + MULTIPLE_WORDS_BLOCK_SIZE, allWords.length);
+  const blockWords = allWords.slice(startIdx, endIdx);
+
+  // Ajustar índice si está fuera del bloque
+  if (multipleWordsIndex < startIdx || multipleWordsIndex >= endIdx) {
+    multipleWordsIndex = startIdx;
+  }
+
+  const word = allWords[multipleWordsIndex];
+  const allWordsEn = allWords.map(w => w.en);
   const options = [word.en];
-  
+
   while (options.length < 4) {
-    const random = allWords[Math.floor(Math.random() * allWords.length)];
+    const random = allWordsEn[Math.floor(Math.random() * allWordsEn.length)];
     if (!options.includes(random)) options.push(random);
   }
-  
+
   const shuffled = options.sort(() => Math.random() - 0.5);
-  
+
+  // Selector de bloques
+  const blockSelector = totalBlocks > 1 ? `
+    <div style="background: var(--surface-1); padding: 8px; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap;">
+      <button onclick="changeMultipleWordsBlock(-1)" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 12px;">← Ant</button>
+      <span style="font-size: 12px; color: var(--text-secondary);">Bloque ${multipleWordsCurrentBlock + 1} de ${totalBlocks}</span>
+      <button onclick="changeMultipleWordsBlock(1)" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 12px;">Sig →</button>
+    </div>
+  ` : '';
+
   let html = `
-    <div class="progress">Palabra ${multipleWordsIndex + 1} de ${words.length}</div>
+    ${blockSelector}
+    <div class="progress">Palabra ${multipleWordsIndex + 1} de ${allWords.length}</div>
     
     <div class="learning-card">
       <div class="card-label">¿CUÁL ES LA TRADUCCIÓN?</div>
@@ -1467,16 +1540,42 @@ function checkMultipleWordsAnswer(answer, isCorrect) {
   }
 }
 
+function changeMultipleWordsBlock(direction) {
+  const words = vocabularyData[multipleWordsTheme];
+  const totalBlocks = Math.ceil(words.length / MULTIPLE_WORDS_BLOCK_SIZE);
+  const newBlock = multipleWordsCurrentBlock + direction;
+
+  if (newBlock >= 0 && newBlock < totalBlocks) {
+    multipleWordsCurrentBlock = newBlock;
+    multipleWordsIndex = newBlock * MULTIPLE_WORDS_BLOCK_SIZE;
+    renderMultipleWordsExercise();
+  }
+}
+
 function nextMultipleWords() {
   const words = vocabularyData[multipleWordsTheme];
-  if (multipleWordsIndex < words.length - 1) {
+  const blockEnd = Math.min((multipleWordsCurrentBlock + 1) * MULTIPLE_WORDS_BLOCK_SIZE, words.length);
+
+  if (multipleWordsIndex < blockEnd - 1) {
+    multipleWordsIndex++;
+    renderMultipleWordsExercise();
+  } else if (multipleWordsIndex < words.length - 1) {
+    // Cambiar al siguiente bloque
+    multipleWordsCurrentBlock++;
     multipleWordsIndex++;
     renderMultipleWordsExercise();
   }
 }
 
 function previousMultipleWords() {
-  if (multipleWordsIndex > 0) {
+  const blockStart = multipleWordsCurrentBlock * MULTIPLE_WORDS_BLOCK_SIZE;
+
+  if (multipleWordsIndex > blockStart) {
+    multipleWordsIndex--;
+    renderMultipleWordsExercise();
+  } else if (multipleWordsIndex > 0) {
+    // Cambiar al bloque anterior
+    multipleWordsCurrentBlock--;
     multipleWordsIndex--;
     renderMultipleWordsExercise();
   }
@@ -1727,6 +1826,7 @@ function renderMultipleFrasesGrid() {
 function selectMultipleFrasesTheme(theme) {
   multipleFrasesTheme = theme;
   multipleFrasesIndex = 0;
+  multipleFrasesCurrentBlock = 0;
   renderMultipleFrasesExercise();
   setTimeout(() => {
     document.querySelector('#multipleFrasesContent .learning-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1735,21 +1835,46 @@ function selectMultipleFrasesTheme(theme) {
 
 function renderMultipleFrasesExercise() {
   if (!multipleFrasesTheme) return;
-  
-  const frases = frasesData[multipleFrasesTheme];
-  const frase = frases[multipleFrasesIndex];
-  const allFrases = frases.map(f => f.en);
+
+  const allFrases = frasesData[multipleFrasesTheme];
+  const totalBlocks = Math.ceil(allFrases.length / MULTIPLE_FRASES_BLOCK_SIZE);
+
+  if (multipleFrasesCurrentBlock >= totalBlocks) {
+    multipleFrasesCurrentBlock = totalBlocks - 1;
+  }
+
+  const startIdx = multipleFrasesCurrentBlock * MULTIPLE_FRASES_BLOCK_SIZE;
+  const endIdx = Math.min(startIdx + MULTIPLE_FRASES_BLOCK_SIZE, allFrases.length);
+  const blockFrases = allFrases.slice(startIdx, endIdx);
+
+  // Ajustar índice si está fuera del bloque
+  if (multipleFrasesIndex < startIdx || multipleFrasesIndex >= endIdx) {
+    multipleFrasesIndex = startIdx;
+  }
+
+  const frase = allFrases[multipleFrasesIndex];
+  const allFrasesEn = allFrases.map(f => f.en);
   const options = [frase.en];
-  
+
   while (options.length < 4) {
-    const random = allFrases[Math.floor(Math.random() * allFrases.length)];
+    const random = allFrasesEn[Math.floor(Math.random() * allFrasesEn.length)];
     if (!options.includes(random)) options.push(random);
   }
-  
+
   const shuffled = options.sort(() => Math.random() - 0.5);
-  
+
+  // Selector de bloques
+  const blockSelector = totalBlocks > 1 ? `
+    <div style="background: var(--surface-1); padding: 8px; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap;">
+      <button onclick="changeMultipleFrasesBlock(-1)" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 12px;">← Ant</button>
+      <span style="font-size: 12px; color: var(--text-secondary);">Bloque ${multipleFrasesCurrentBlock + 1} de ${totalBlocks}</span>
+      <button onclick="changeMultipleFrasesBlock(1)" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 12px;">Sig →</button>
+    </div>
+  ` : '';
+
   let html = `
-    <div class="progress">Frase ${multipleFrasesIndex + 1} de ${frases.length}</div>
+    ${blockSelector}
+    <div class="progress">Frase ${multipleFrasesIndex + 1} de ${allFrases.length}</div>
     
     <div class="learning-card">
       <div class="card-label">¿CUÁL ES LA TRADUCCIÓN?</div>
@@ -1808,16 +1933,42 @@ function checkMultipleFrasesAnswer(answer, isCorrect) {
   }
 }
 
+function changeMultipleFrasesBlock(direction) {
+  const frases = frasesData[multipleFrasesTheme];
+  const totalBlocks = Math.ceil(frases.length / MULTIPLE_FRASES_BLOCK_SIZE);
+  const newBlock = multipleFrasesCurrentBlock + direction;
+
+  if (newBlock >= 0 && newBlock < totalBlocks) {
+    multipleFrasesCurrentBlock = newBlock;
+    multipleFrasesIndex = newBlock * MULTIPLE_FRASES_BLOCK_SIZE;
+    renderMultipleFrasesExercise();
+  }
+}
+
 function nextMultipleFrases() {
   const frases = frasesData[multipleFrasesTheme];
-  if (multipleFrasesIndex < frases.length - 1) {
+  const blockEnd = Math.min((multipleFrasesCurrentBlock + 1) * MULTIPLE_FRASES_BLOCK_SIZE, frases.length);
+
+  if (multipleFrasesIndex < blockEnd - 1) {
+    multipleFrasesIndex++;
+    renderMultipleFrasesExercise();
+  } else if (multipleFrasesIndex < frases.length - 1) {
+    // Cambiar al siguiente bloque
+    multipleFrasesCurrentBlock++;
     multipleFrasesIndex++;
     renderMultipleFrasesExercise();
   }
 }
 
 function previousMultipleFrases() {
-  if (multipleFrasesIndex > 0) {
+  const blockStart = multipleFrasesCurrentBlock * MULTIPLE_FRASES_BLOCK_SIZE;
+
+  if (multipleFrasesIndex > blockStart) {
+    multipleFrasesIndex--;
+    renderMultipleFrasesExercise();
+  } else if (multipleFrasesIndex > 0) {
+    // Cambiar al bloque anterior
+    multipleFrasesCurrentBlock--;
     multipleFrasesIndex--;
     renderMultipleFrasesExercise();
   }
