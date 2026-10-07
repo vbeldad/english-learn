@@ -516,7 +516,7 @@ const vocabularyData = {
     { en: "Install", pro: "Instól", es: "Instalar" , en_pro: "ɪn'stɔl" },
     { en: "Uninstall", pro: "Aninstól", es: "Desinstalar" , en_pro: "ʌnɪn'stɔl" },
     { en: "Update", pro: "Apidit", es: "Actualizar" , en_pro: "ʌp'deɪt" },
-    { en: "Search", pro: "Sérch", es: "Buscar" , en_pro: "'search'" },
+    { en: "Search", pro: "Sérch", es: "Buscar" , en_pro: "sɜrtʃ" },
     { en: "File", pro: "Fail", es: "Archivo" , en_pro: "faɪl" },
     { en: "Folder", pro: "Fólder", es: "Carpeta" , en_pro: "'foʊldər" },
     { en: "Document", pro: "Dócument", es: "Documento" , en_pro: "'dɑkjəmənt" },
@@ -560,7 +560,7 @@ const vocabularyData = {
     { en: "Icon", pro: "Áicon", es: "Icono" , en_pro: "'aɪkɑn" },
     { en: "Button", pro: "Báton", es: "Botón" , en_pro: "'bʌtən" },
     { en: "Menu", pro: "Meniú", es: "Menú" , en_pro: "'mɛnju" },
-    { en: "Settings", pro: "Sétings", es: "Configuración" , en_pro: "'settings'" },
+    { en: "Settings", pro: "Sétings", es: "Configuración" , en_pro: "'sɛtɪŋz" },
     { en: "Options", pro: "Ópshons", es: "Opciones" , en_pro: "'options'" },
     { en: "Preferences", pro: "Preferénses", es: "Preferencias" , en_pro: "'preferences'" },
     { en: "Notification", pro: "Notifikéishon", es: "Notificación" , en_pro: "nɑtɪfɪ'keɪʃən" },
@@ -1331,19 +1331,19 @@ function selectPairingSpanish(idx, word) {
 
 function selectPairingEnglish(word) {
   if (!window.selectedSpanish) return;
-  
+
   const words = vocabularyData[paresPalabrasTheme];
   const matchedWord = words[window.selectedSpanish.idx];
   const correct = matchedWord.en === word;
   const resultDiv = document.getElementById('paresPalabrasResult');
-  
+
   if (correct) {
     paresPalabrasMatches[window.selectedSpanish.idx] = true;
     resultDiv.innerHTML = `
       <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center;">
         <div style="font-weight: 500; margin-bottom: 8px;">✓ ¡Correcto! (${Object.keys(paresPalabrasMatches).length}/${words.length})</div>
         <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">${matchedWord.en}</div>
-        <div style="font-size: 11px; font-style: italic;">/${matchedWord.en_pro}/</div>
+        <div style="font-size: 11px; font-style: italic;">/${matchedWord.en_pro || 'pronun'}/</div>
       </div>
     `;
     
