@@ -991,9 +991,9 @@ function renderContent() {
       <div class="card-content">
         <div class="word-row">
           <div class="word-english">${word.en}</div>
-          <div class="word-pronunciation">/${word.pro}/</div>
+          ${isFlipped ? `<div class="word-pronunciation">/${word.pro}/</div>` : ''}
         </div>
-        <div class="translation">${word.es}</div>
+        ${isFlipped ? `<div class="translation">${word.es}</div>` : ''}
       </div>
     </div>
     
