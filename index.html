@@ -1620,9 +1620,14 @@ function selectPairingEnglishFrase(frase) {
   if (correct) {
     paresFrasesMatches[window.selectedSpanishFrase.idx] = true;
     const frases = frasesData[paresFrasesTheme];
+    const matchedFrase = frases[window.selectedSpanishFrase.idx];
+    const pronunciation = matchedFrase.pro;
     resultDiv.innerHTML = `
       <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center;">
-        ✓ ¡Correcto! (${Object.keys(paresFrasesMatches).length}/${frases.length})
+        <div style="margin-bottom: 6px;">✓ ¡Correcto! (${Object.keys(paresFrasesMatches).length}/${frases.length})</div>
+        <div style="font-size: 11px; font-style: italic; margin-top: 6px; padding-top: 6px; border-top: 0.5px solid #c3e6cb;">
+          Pronunciación: <strong>/${pronunciation}/</strong>
+        </div>
       </div>
     `;
     
