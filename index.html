@@ -1595,6 +1595,9 @@ function renderParesFrasesExercise() {
   `;
   
   content.innerHTML = html;
+  
+  // Mostrar parejas ya acertadas con pronunciación
+  renderCompletedPairings();
 }
 
 function selectPairingSpanishFrase(idx, frase) {
@@ -1610,6 +1613,41 @@ function selectPairingSpanishFrase(idx, frase) {
   document.querySelector(`[data-idx="${idx}"]`).style.background = 'var(--bg-accent)';
 }
 
+function renderCompletedPairings() {
+  const frases = frasesData[paresFrasesTheme];
+  const completedDiv = document.createElement('div');
+  completedDiv.style.cssText = 'margin-top: 2rem; padding: 12px; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 8px;';
+  
+  const completedIndices = Object.keys(paresFrasesMatches).map(Number);
+  
+  if (completedIndices.length === 0) return;
+  
+  let html = `<div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase;">✓ Parejas acertadas (${completedIndices.length}/${frases.length})</div>`;
+  html += `<div style="display: flex; flex-direction: column; gap: 8px;">`;
+  
+  completedIndices.forEach(idx => {
+    const frase = frases[idx];
+    html += `
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; border-radius: 6px; padding: 10px; color: #155724; font-size: 12px;">
+        <div style="font-weight: 500; margin-bottom: 4px;">${frase.es} = ${frase.en}</div>
+        <div style="font-style: italic; font-size: 11px;">/${frase.pro}/</div>
+      </div>
+    `;
+  });
+  
+  html += `</div>`;
+  completedDiv.innerHTML = html;
+  
+  const paresFrasesContent = document.getElementById('paresFrasesContent');
+  const existingCompleted = paresFrasesContent.querySelector('[data-completed-section]');
+  if (existingCompleted) {
+    existingCompleted.remove();
+  }
+  
+  completedDiv.setAttribute('data-completed-section', 'true');
+  paresFrasesContent.appendChild(completedDiv);
+}
+
 function selectPairingEnglishFrase(frase) {
   if (!window.selectedSpanishFrase) return;
   
@@ -1619,9 +1657,9 @@ function selectPairingEnglishFrase(frase) {
   
   if (correct) {
     paresFrasesMatches[window.selectedSpanishFrase.idx] = true;
-    const frases = frasesData[paresFrasesTheme];
     const matchedFrase = frases[window.selectedSpanishFrase.idx];
     const pronunciation = matchedFrase.pro;
+    
     resultDiv.innerHTML = `
       <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center;">
         <div style="margin-bottom: 6px;">✓ ¡Correcto! (${Object.keys(paresFrasesMatches).length}/${frases.length})</div>
@@ -1631,6 +1669,13 @@ function selectPairingEnglishFrase(frase) {
       </div>
     `;
     
+    // Marcar parejas como completadas visualmente
+    document.querySelector(`[data-idx="${window.selectedSpanishFrase.idx}"]`).style.background = '#d4edda';
+    document.querySelector(`[data-idx="${window.selectedSpanishFrase.idx}"]`).style.color = '#155724';
+    
+    // Actualizar parejas acertadas visibles
+    renderCompletedPairings();
+    
     setTimeout(() => {
       if (Object.keys(paresFrasesMatches).length === frases.length) {
         resultDiv.innerHTML = `
@@ -1639,7 +1684,13 @@ function selectPairingEnglishFrase(frase) {
           </div>
         `;
       } else {
-        renderParesFrasesExercise();
+        // Limpiar selección pero mantener visible
+        document.querySelectorAll('#spanishFrasesList button').forEach(btn => {
+          if (!btn.style.background.includes('d4edda')) {
+            btn.style.background = 'var(--surface-2)';
+          }
+        });
+        resultDiv.innerHTML = '';
       }
     }, 500);
   } else {
