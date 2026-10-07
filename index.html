@@ -944,6 +944,8 @@ let multipleWordsTheme = null;
 let multipleWordsIndex = 0;
 let paresFrasesTheme = null;
 let paresFrasesMatches = {};
+let paresFrasesCurrentBlock = 0;
+const PARES_BLOCK_SIZE = 8;
 let multipleFrasesTheme = null;
 let multipleFrasesIndex = 0;
 
@@ -1493,6 +1495,7 @@ function renderParesFrasesGrid() {
 function selectParesFrasesTheme(theme) {
   paresFrasesTheme = theme;
   paresFrasesMatches = {};
+  paresFrasesCurrentBlock = 0;
   document.getElementById('paresFrasesGrid').style.display = 'none';
   renderParesFrasesExercise();
   setTimeout(() => {
@@ -1505,6 +1508,7 @@ function selectParesFrasesTheme(theme) {
 function returnToParesFreasesThemes() {
   paresFrasesTheme = null;
   paresFrasesMatches = {};
+  paresFrasesCurrentBlock = 0;
   document.getElementById('paresFrasesGrid').style.display = 'grid';
   document.getElementById('paresFrasesContent').innerHTML = '';
 }
@@ -1520,15 +1524,25 @@ function renderParesFrasesExercise() {
   const pendingIndices = Spanish.map((_, idx) => paresFrasesMatches[idx] ? null : idx).filter(i => i !== null);
   const pendingSpanish = pendingIndices.map(idx => Spanish[idx]);
   const pendingEnglish = pendingIndices.map(idx => English[idx]);
-  const shuffledEnglish = [...pendingEnglish].sort(() => Math.random() - 0.5);
+  
+  // Dividir en bloques de 8
+  const blockStart = paresFrasesCurrentBlock * PARES_BLOCK_SIZE;
+  const blockEnd = blockStart + PARES_BLOCK_SIZE;
+  const blockSpanish = pendingSpanish.slice(blockStart, blockEnd);
+  const blockEnglish = pendingEnglish.slice(blockStart, blockEnd);
+  const shuffledEnglish = [...blockEnglish].sort(() => Math.random() - 0.5);
+  const blockIndices = pendingIndices.slice(blockStart, blockEnd);
+  
+  const totalBlocks = Math.ceil(pendingSpanish.length / PARES_BLOCK_SIZE);
   
   const content = document.getElementById('paresFrasesContent');
   
   let html = `
     <button onclick="returnToParesFreasesThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
     
-    <div style="background: var(--surface-1); padding: 7px; border-radius: 8px; margin-bottom: 0.4rem; text-align: center;">
-      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar frases</p>
+    <div style="background: var(--surface-1); padding: 10px; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0 0 8px 0;">Bloque ${paresFrasesCurrentBlock + 1} de ${totalBlocks} | Emparejadas ${Object.keys(paresFrasesMatches).length}/${frases.length}</p>
+      <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Haz clic para emparejar frases</p>
     </div>
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.4rem;">
@@ -1537,8 +1551,8 @@ function renderParesFrasesExercise() {
         <div id="spanishFrasesList" style="display: flex; flex-direction: column; gap: 6px;">
   `;
   
-  pendingSpanish.forEach((frase, i) => {
-    const actualIdx = pendingIndices[i];
+  blockSpanish.forEach((frase, i) => {
+    const actualIdx = blockIndices[i];
     html += `
       <button onclick="selectPairingSpanishFrase(${actualIdx}, '${frase.replace(/'/g, "\\'")}')" data-idx="${actualIdx}" 
         style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
@@ -1573,6 +1587,11 @@ function renderParesFrasesExercise() {
     </div>
     
     <div id="paresFrasesResult"></div>
+    
+    <div style="display: flex; gap: 6px; margin-top: 1rem; justify-content: center;">
+      ${paresFrasesCurrentBlock > 0 ? `<button onclick="paresFrasesCurrentBlock--; renderParesFrasesExercise();" style="padding: 10px 16px; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Bloque Anterior</button>` : ''}
+      ${paresFrasesCurrentBlock < totalBlocks - 1 ? `<button onclick="paresFrasesCurrentBlock++; renderParesFrasesExercise();" style="padding: 10px 16px; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">Siguiente Bloque →</button>` : ''}
+    </div>
   `;
   
   content.innerHTML = html;
