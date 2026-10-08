@@ -1377,17 +1377,14 @@ function selectPairingEnglish(word) {
       </div>
     `;
     
-    setTimeout(() => {
-      if (Object.keys(paresPalabrasMatches).length === words.length) {
-        resultDiv.innerHTML = `
-          <div style="background: var(--bg-accent); padding: 7px; border-radius: 8px; text-align: center; color: var(--text-accent); font-weight: 500;">
-            ✓ ¡Ejercicio completado!
-          </div>
-        `;
-      } else {
-        renderParesPalabrasExercise();
-      }
-    }, 2000);
+    // Check if all words are matched
+    if (Object.keys(paresPalabrasMatches).length === words.length) {
+      resultDiv.innerHTML = `
+        <div style="background: var(--bg-accent); padding: 7px; border-radius: 8px; text-align: center; color: var(--text-accent); font-weight: 500;">
+          ✓ ¡Ejercicio completado!
+        </div>
+      `;
+    }
   } else {
     resultDiv.innerHTML = `
       <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center;">
