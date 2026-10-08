@@ -327,7 +327,88 @@
 </head>
 <body>
 
-<div id="appContent" style="display: block;">
+<!-- HOME SCREEN - CARÁTULA ELEGANTE -->
+<div id="homeScreen" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 1rem; background: var(--page-bg);">
+  <div style="max-width: 600px; width: 100%; text-align: center;">
+
+    <!-- HERO SECTION -->
+    <div style="margin-bottom: 3rem;">
+      <div style="font-size: 48px; margin-bottom: 1rem;">🌍</div>
+      <h1 style="font-size: 36px; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Learn English</h1>
+      <p style="font-size: 18px; color: var(--text-secondary); margin-bottom: 0.5rem;">Bienvenido al mundo del inglés</p>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 2rem;">Aprende vocabulario, verbos, frases y mucho más de forma divertida</p>
+
+      <button onclick="startApp()" style="padding: 14px 32px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 2rem; transition: all 0.3s; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);">
+        Comenzar ejercicios →
+      </button>
+    </div>
+
+    <!-- CATEGORÍAS -->
+    <div style="margin-bottom: 2rem;">
+      <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Elige qué aprender</p>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1rem;">
+        <div style="padding: 12px; background: var(--surface-1); border-radius: 8px; border: 0.5px solid var(--border); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <div style="font-size: 24px; margin-bottom: 4px;">📚</div>
+          <div style="font-size: 12px; color: var(--text-primary); font-weight: 500;">Vocabulario</div>
+        </div>
+        <div style="padding: 12px; background: var(--surface-1); border-radius: 8px; border: 0.5px solid var(--border); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <div style="font-size: 24px; margin-bottom: 4px;">✏️</div>
+          <div style="font-size: 12px; color: var(--text-primary); font-weight: 500;">Verbos</div>
+        </div>
+        <div style="padding: 12px; background: var(--surface-1); border-radius: 8px; border: 0.5px solid var(--border); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <div style="font-size: 24px; margin-bottom: 4px;">💬</div>
+          <div style="font-size: 12px; color: var(--text-primary); font-weight: 500;">Frases</div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+        <div style="padding: 12px; background: var(--surface-1); border-radius: 8px; border: 0.5px solid var(--border); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <div style="font-size: 24px; margin-bottom: 4px;">🎮</div>
+          <div style="font-size: 12px; color: var(--text-primary); font-weight: 500;">Juegos</div>
+        </div>
+        <div style="padding: 12px; background: var(--surface-1); border-radius: 8px; border: 0.5px solid var(--border); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <div style="font-size: 24px; margin-bottom: 4px;">📝</div>
+          <div style="font-size: 12px; color: var(--text-primary); font-weight: 500;">Escritura</div>
+        </div>
+        <div style="padding: 12px; background: var(--surface-1); border-radius: 8px; border: 0.5px solid var(--border); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <div style="font-size: 24px; margin-bottom: 4px;">🎯</div>
+          <div style="font-size: 12px; color: var(--text-primary); font-weight: 500;">Desafíos</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 2rem;">
+      <div style="padding: 12px; background: var(--bg-accent); border-radius: 8px; border: 0.5px solid var(--fill-accent);">
+        <div style="font-size: 24px; font-weight: 700; color: var(--fill-accent);">120+</div>
+        <div style="font-size: 11px; color: var(--text-secondary);">Palabras</div>
+      </div>
+      <div style="padding: 12px; background: var(--bg-accent); border-radius: 8px; border: 0.5px solid var(--fill-accent);">
+        <div style="font-size: 24px; font-weight: 700; color: var(--fill-accent);">65</div>
+        <div style="font-size: 11px; color: var(--text-secondary);">Verbos</div>
+      </div>
+      <div style="padding: 12px; background: var(--bg-accent); border-radius: 8px; border: 0.5px solid var(--fill-accent);">
+        <div style="font-size: 24px; font-weight: 700; color: var(--fill-accent);">10+</div>
+        <div style="font-size: 11px; color: var(--text-secondary);">Ejercicios</div>
+      </div>
+    </div>
+
+    <!-- FRASE DEL DÍA -->
+    <div style="padding: 16px; background: var(--surface-1); border-radius: 8px; border: 0.5px solid var(--border);">
+      <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase;">💡 Consejo del día</p>
+      <p style="font-size: 14px; color: var(--text-primary); font-style: italic; margin-bottom: 8px;" id="dailyTip">Practice makes perfect. Dedica unos minutos cada día a aprender.</p>
+      <button onclick="changeDailyTip()" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 11px; color: var(--text-secondary); transition: all 0.2s;" onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        🔄 Otra frase
+      </button>
+    </div>
+
+    <!-- PIE DE PÁGINA -->
+    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 0.5px solid var(--border);">
+      <p style="font-size: 11px; color: var(--text-muted);">Hecho con ❤️ para aprender inglés</p>
+    </div>
+  </div>
+</div>
+
+<div id="appContent" style="display: none;">
 
 <div class="container">
   <div class="header">
@@ -2622,9 +2703,36 @@ function generarEjercicioFrases() {
   document.getElementById('ejerciciosInfo').innerHTML = '✓ PDF descargado: Ejercicios_Frases.pdf';
 }
 
+// FUNCIONES DE CARÁTULA
+function startApp() {
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('appContent').style.display = 'block';
+  renderThemes();
+  window.scrollTo(0, 0);
+}
+
+const dailyTips = [
+  "Practice makes perfect. Dedica unos minutos cada día a aprender.",
+  "Learning English opens doors to new opportunities. ¡Sigue adelante!",
+  "Every expert was once a beginner. No tengas miedo de cometer errores.",
+  "Consistency is key. Practica un poco cada día es mejor que mucho una sola vez.",
+  "You're doing great! Sigue aprendiendo y mejorando cada día.",
+  "Language is the key to understanding different cultures. ¡Bienvenido!",
+  "Talk to yourself in English. Ayuda a mejorar tu pronunciación.",
+  "Read, listen, speak, write. Practica todos los aspectos del idioma."
+];
+
+function changeDailyTip() {
+  const randomTip = dailyTips[Math.floor(Math.random() * dailyTips.length)];
+  document.getElementById('dailyTip').textContent = randomTip;
+}
+
 // App loads directly without activation
 window.addEventListener('DOMContentLoaded', () => {
-  renderThemes();
+  // Mostrar homeScreen por defecto
+  document.getElementById('homeScreen').style.display = 'flex';
+  document.getElementById('appContent').style.display = 'none';
+  changeDailyTip();
 });
 </script>
 
