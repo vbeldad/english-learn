@@ -1575,12 +1575,12 @@ function renderParesPalabrasExercise() {
         <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
         <div style="display: flex; flex-direction: column; gap: 0.6rem;">
           ${paresPalabrasHistory.map((h, idx) => `
-            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.6rem; border-radius: 6px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="text-align: left;">
                 <span style="color: var(--text-secondary);">🇪🇸 ${h.spanish}</span>
               </div>
               <div style="text-align: right;">
-                <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">✓ Respuesta: ${h.correct}</span>
               </div>
             </div>
           `).join('')}
@@ -1854,13 +1854,13 @@ function renderMultipleWordsExercise() {
         <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
         <div style="display: flex; flex-direction: column; gap: 0.6rem;">
           ${multipleWordsHistory.map((h) => `
-            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+            <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.6rem; border-radius: 6px; font-size: 11px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">🇪🇸 ${h.question}</div>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div style="text-align: left;">
                 </div>
                 <div style="text-align: right;">
-                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">✓ Respuesta: ${h.correct}</span>
                 </div>
               </div>
             </div>
@@ -2131,13 +2131,13 @@ function renderParesFrasesExercise() {
         <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
         <div style="display: flex; flex-direction: column; gap: 0.6rem;">
           ${paresFrasesHistory.map((h) => `
-            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+            <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.6rem; border-radius: 6px; font-size: 11px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">🇪🇸 ${h.spanish}</div>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div style="text-align: left;">
                 </div>
                 <div style="text-align: right;">
-                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">✓ Respuesta: ${h.correct}</span>
                 </div>
               </div>
             </div>
@@ -2410,13 +2410,13 @@ function renderMultipleFrasesExercise() {
         <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
         <div style="display: flex; flex-direction: column; gap: 0.6rem;">
           ${multipleFrasesHistory.map((h) => `
-            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+            <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.6rem; border-radius: 6px; font-size: 11px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">🇪🇸 ${h.question}</div>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div style="text-align: left;">
                 </div>
                 <div style="text-align: right;">
-                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">✓ Respuesta: ${h.correct}</span>
                 </div>
               </div>
             </div>
@@ -2804,13 +2804,13 @@ function renderMultipleVerbosExercise() {
         <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
         <div style="display: flex; flex-direction: column; gap: 0.6rem;">
           ${multipleVerbosHistory.map((h) => `
-            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+            <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.6rem; border-radius: 6px; font-size: 11px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">🇬🇧 ${h.question}</div>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div style="text-align: left;">
                 </div>
                 <div style="text-align: right;">
-                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">✓ Respuesta: ${h.correct}</span>
                 </div>
               </div>
             </div>
@@ -3073,13 +3073,13 @@ function renderParesVerbosExercise() {
         <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
         <div style="display: flex; flex-direction: column; gap: 0.6rem;">
           ${paresVerbosHistory.map((h) => `
-            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+            <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.6rem; border-radius: 6px; font-size: 11px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">${h.spanish}</div>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div style="text-align: left;">
                 </div>
                 <div style="text-align: right;">
-                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">✓ Respuesta: ${h.correct}</span>
                 </div>
               </div>
             </div>
@@ -3597,12 +3597,12 @@ function renderAlphabetMultiple() {
           <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
           <div style="display: flex; flex-direction: column; gap: 0.6rem;">
             ${alphabetMultipleHistory.map((h) => `
-              <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.6rem; border-radius: 6px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
                 <div style="text-align: left;">
                   <span style="color: var(--text-secondary);">Pronunciación: ${h.pronunciation}</span>
                 </div>
                 <div style="text-align: right;">
-                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">✓ Respuesta: ${h.correct}</span>
                 </div>
               </div>
             `).join('')}
@@ -3729,12 +3729,12 @@ function renderAlphabetPairs() {
         <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
         <div style="display: flex; flex-direction: column; gap: 0.6rem;">
           ${alphabetPairsHistory.map((h) => `
-            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.6rem; border-radius: 6px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="text-align: left;">
                 <span style="color: var(--text-secondary);">Letra: ${h.letter}</span>
               </div>
               <div style="text-align: right;">
-                <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">✓ Respuesta: ${h.correct}</span>
               </div>
             </div>
           `).join('')}
