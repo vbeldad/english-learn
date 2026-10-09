@@ -427,6 +427,7 @@
     <button class="nav-tab" onclick="switchSection('multipleVerbos')">Opción Múltiple Verbos</button>
     <button class="nav-tab" onclick="switchSection('paresVerbos')">Pares Verbos</button>
     <button class="nav-tab" onclick="switchSection('ejerciciosEscritura')">Ejercicios de Escritura</button>
+    <button class="nav-tab" onclick="switchSection('abecedario')">Abecedario</button>
   </div>
 
   <div class="stats" id="stats">
@@ -526,6 +527,31 @@
     </div>
     
     <div id="ejerciciosInfo" style="font-size: 12px; color: var(--text-secondary); text-align: center;"></div>
+  </div>
+
+  <div id="abecedario" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 1rem; color: var(--text-secondary);">ABECEDARIO - ALPHABET</h3>
+    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1.5rem;">Elige un tipo de ejercicio para practicar el abecedario en inglés</p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 2rem;">
+      <button onclick="startAlphabetMultiple()" style="padding: 12px; text-align: center; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+        <div style="font-size: 20px; margin-bottom: 4px;">🔤</div>
+        <div style="font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px;">Opción Múltiple</div>
+        <div style="font-size: 10px; color: var(--text-secondary);">Elige la letra correcta</div>
+      </button>
+      <button onclick="startAlphabetPairs()" style="padding: 12px; text-align: center; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+        <div style="font-size: 20px; margin-bottom: 4px;">🔗</div>
+        <div style="font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px;">Pares</div>
+        <div style="font-size: 10px; color: var(--text-secondary);">Emparejar letra con pronunciación</div>
+      </button>
+      <button onclick="startAlphabetOrder()" style="padding: 12px; text-align: center; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+        <div style="font-size: 20px; margin-bottom: 4px;">📊</div>
+        <div style="font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px;">Ordenar</div>
+        <div style="font-size: 10px; color: var(--text-secondary);">Ordena las letras alfabéticamente</div>
+      </button>
+    </div>
+
+    <div id="alphabetContent"></div>
   </div>
 </div>
 
@@ -818,6 +844,35 @@ const vocabularyData = {
     { en: "Z - Zebra", pro: "Zet - Zébra", es: "Z - Cebra", en_pro: "Z - Zebra" }
   ]
 };
+
+const alphabetData = [
+  { letter: "A", pronunciation: "Ei", word: "Apple", wordPro: "Apol" },
+  { letter: "B", pronunciation: "Bi", word: "Ball", wordPro: "Bol" },
+  { letter: "C", pronunciation: "Si", word: "Cat", wordPro: "Kat" },
+  { letter: "D", pronunciation: "Di", word: "Dog", wordPro: "Dog" },
+  { letter: "E", pronunciation: "I", word: "Egg", wordPro: "Eg" },
+  { letter: "F", pronunciation: "Ef", word: "Fish", wordPro: "Fish" },
+  { letter: "G", pronunciation: "Chi", word: "Girl", wordPro: "Guerl" },
+  { letter: "H", pronunciation: "Eich", word: "House", wordPro: "Jaus" },
+  { letter: "I", pronunciation: "Ai", word: "Ice", wordPro: "Ais" },
+  { letter: "J", pronunciation: "Yei", word: "Jacket", wordPro: "Yaquet" },
+  { letter: "K", pronunciation: "Kei", word: "Key", wordPro: "Ki" },
+  { letter: "L", pronunciation: "El", word: "Lion", wordPro: "Láion" },
+  { letter: "M", pronunciation: "Em", word: "Moon", wordPro: "Mun" },
+  { letter: "N", pronunciation: "En", word: "Nest", wordPro: "Nest" },
+  { letter: "O", pronunciation: "O", word: "Orange", wordPro: "Órench" },
+  { letter: "P", pronunciation: "Pi", word: "Penguin", wordPro: "Penguin" },
+  { letter: "Q", pronunciation: "Kiu", word: "Queen", wordPro: "Cuín" },
+  { letter: "R", pronunciation: "Ar", word: "Rainbow", wordPro: "Rénbou" },
+  { letter: "S", pronunciation: "Es", word: "Sun", wordPro: "San" },
+  { letter: "T", pronunciation: "Ti", word: "Tiger", wordPro: "Táiguer" },
+  { letter: "U", pronunciation: "Yu", word: "Umbrella", wordPro: "Ambrela" },
+  { letter: "V", pronunciation: "Vi", word: "Violin", wordPro: "Vailín" },
+  { letter: "W", pronunciation: "Doble Yu", word: "Watch", wordPro: "Uach" },
+  { letter: "X", pronunciation: "Eks", word: "Xylophone", wordPro: "Zílofon" },
+  { letter: "Y", pronunciation: "Uai", word: "Yo-Yo", wordPro: "Yo-Yo" },
+  { letter: "Z", pronunciation: "Zet", word: "Zebra", wordPro: "Zébra" }
+];
 
 const verbsData = [
   { 
@@ -2767,6 +2822,187 @@ function openAppAndNavigate(section) {
   renderThemes();
   switchSection(section);
   window.scrollTo(0, 0);
+}
+
+// ALPHABET EXERCISES
+let alphabetMultipleIndex = 0;
+let alphabetMultipleBlock = [];
+let alphabetCorrectCount = 0;
+
+function startAlphabetMultiple() {
+  alphabetMultipleIndex = 0;
+  alphabetCorrectCount = 0;
+  alphabetMultipleBlock = [...alphabetData].sort(() => Math.random() - 0.5).slice(0, 6);
+  renderAlphabetMultiple();
+}
+
+function renderAlphabetMultiple() {
+  if (alphabetMultipleIndex >= alphabetMultipleBlock.length) {
+    document.getElementById('alphabetContent').innerHTML = `
+      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px;">
+        <div style="font-size: 48px; margin-bottom: 1rem;">✨</div>
+        <div style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">¡Excelente!</div>
+        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 2rem;">Respondiste correctamente: ${alphabetCorrectCount}/${alphabetMultipleBlock.length}</div>
+        <button onclick="startAlphabetMultiple()" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+      </div>
+    `;
+    return;
+  }
+
+  const current = alphabetMultipleBlock[alphabetMultipleIndex];
+  const options = [current.letter];
+  while (options.length < 4) {
+    const random = alphabetData[Math.floor(Math.random() * alphabetData.length)].letter;
+    if (!options.includes(random)) options.push(random);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  document.getElementById('alphabetContent').innerHTML = `
+    <div style="max-width: 600px; margin: 0 auto;">
+      <div style="background: var(--surface-1); padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
+        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem;">Pronunciación:</div>
+        <div style="font-size: 32px; font-weight: 700; color: var(--fill-accent); margin-bottom: 2rem; text-align: center;">${current.pronunciation}</div>
+        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Ejemplo: ${current.word}</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem;">
+        ${options.map(option => `
+          <button onclick="checkAlphabetMultiple('${option}', '${current.letter}')" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 24px; font-weight: 700; color: var(--text-primary); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            ${option}
+          </button>
+        `).join('')}
+      </div>
+      <div style="text-align: center; font-size: 12px; color: var(--text-secondary);">${alphabetMultipleIndex + 1}/${alphabetMultipleBlock.length}</div>
+    </div>
+  `;
+}
+
+function checkAlphabetMultiple(selected, correct) {
+  if (selected === correct) {
+    alphabetCorrectCount++;
+  }
+  alphabetMultipleIndex++;
+  renderAlphabetMultiple();
+}
+
+let alphabetPairsLeft = [];
+let alphabetPairsRight = [];
+let alphabetPairsMatches = {};
+
+function startAlphabetPairs() {
+  alphabetPairsLeft = [...alphabetData].sort(() => Math.random() - 0.5).slice(0, 8);
+  alphabetPairsRight = [...alphabetPairsLeft].map(item => ({...item})).sort(() => Math.random() - 0.5);
+  alphabetPairsMatches = {};
+  renderAlphabetPairs();
+}
+
+function renderAlphabetPairs() {
+  const allMatched = alphabetPairsLeft.every(item => alphabetPairsMatches[item.letter]);
+
+  if (allMatched && Object.keys(alphabetPairsMatches).length === alphabetPairsLeft.length) {
+    document.getElementById('alphabetContent').innerHTML = `
+      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px;">
+        <div style="font-size: 48px; margin-bottom: 1rem;">🎉</div>
+        <div style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">¡Todas las parejas correctas!</div>
+        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 2rem;">¡Excelente trabajo!</div>
+        <button onclick="startAlphabetPairs()" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+      </div>
+    `;
+    return;
+  }
+
+  document.getElementById('alphabetContent').innerHTML = `
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+      <div>
+        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem; font-weight: 500;">LETRAS</div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${alphabetPairsLeft.map(item => `
+            <button onclick="selectAlphabetLeft('${item.letter}')" style="padding: 12px; background: var(--surface-2); border: 2px solid ${alphabetPairsMatches[item.letter] ? 'var(--fill-accent)' : 'var(--border)'}; border-radius: 8px; cursor: pointer; text-align: left; color: var(--text-primary); font-weight: 500; transition: all 0.2s;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='translateX(0)'">
+              <span style="font-size: 18px; font-weight: 700;">${item.letter}</span>
+              ${alphabetPairsMatches[item.letter] ? ' ✓' : ''}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem; font-weight: 500;">PRONUNCIACIÓN</div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${alphabetPairsRight.map((item, idx) => `
+            <button onclick="matchAlphabetPair('${item.letter}')" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; text-align: left; color: var(--text-primary); transition: all 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+              <span style="font-size: 14px;">${item.pronunciation}</span>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+let selectedAlphabetLeft = null;
+function selectAlphabetLeft(letter) {
+  selectedAlphabetLeft = letter;
+}
+
+function matchAlphabetPair(letter) {
+  if (!selectedAlphabetLeft) return;
+  if (selectedAlphabetLeft === letter) {
+    alphabetPairsMatches[letter] = true;
+    renderAlphabetPairs();
+  }
+}
+
+let alphabetOrderData = [];
+
+function startAlphabetOrder() {
+  alphabetOrderData = [...alphabetData].sort(() => Math.random() - 0.5).slice(0, 10);
+  renderAlphabetOrder();
+}
+
+function renderAlphabetOrder() {
+  const orderedLetters = [...alphabetOrderData].sort((a, b) => a.letter.localeCompare(b.letter));
+  const isCorrect = JSON.stringify(alphabetOrderData.map(x => x.letter)) === JSON.stringify(orderedLetters.map(x => x.letter));
+
+  document.getElementById('alphabetContent').innerHTML = `
+    <div style="max-width: 600px; margin: 0 auto;">
+      <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem;">Arrastra las letras para ordenarlas alfabéticamente</div>
+      <div style="background: var(--surface-1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="alphabetOrderContainer">
+          ${alphabetOrderData.map((item, idx) => `
+            <button draggable="true" ondragstart="dragAlphabetStart(event, ${idx})" ondrop="dropAlphabetOrder(event, ${idx})" ondragover="allowDrop(event)" style="padding: 10px 16px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: move; font-weight: 700; font-size: 16px; transition: all 0.2s;">
+              ${item.letter}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+      ${isCorrect ? `
+        <div style="text-align: center; padding: 1.5rem; background: var(--bg-accent); border-radius: 8px;">
+          <div style="font-size: 40px; margin-bottom: 0.5rem;">✅</div>
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">¡Orden correcto!</div>
+          <button onclick="startAlphabetOrder()" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+        </div>
+      ` : `
+        <div style="text-align: center;">
+          <button onclick="startAlphabetOrder()" style="padding: 10px 20px; background: var(--surface-2); color: var(--text-primary); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 500;">Reiniciar</button>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+let draggedAlphabetIndex = null;
+function dragAlphabetStart(event, index) {
+  draggedAlphabetIndex = index;
+}
+
+function allowDrop(event) {
+  event.preventDefault();
+}
+
+function dropAlphabetOrder(event, index) {
+  event.preventDefault();
+  if (draggedAlphabetIndex !== null && draggedAlphabetIndex !== index) {
+    [alphabetOrderData[draggedAlphabetIndex], alphabetOrderData[index]] = [alphabetOrderData[index], alphabetOrderData[draggedAlphabetIndex]];
+    renderAlphabetOrder();
+  }
 }
 
 const dailyTips = [
