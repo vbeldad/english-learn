@@ -3479,41 +3479,88 @@ function matchAlphabetPair(letter) {
 }
 
 let alphabetOrderData = [];
+let alphabetOrderAttempts = 0;
+let alphabetOrderCorrectPositions = 0;
 
 function startAlphabetOrder() {
   alphabetOrderData = [...alphabetData].sort(() => Math.random() - 0.5).slice(0, 10);
+  alphabetOrderAttempts = 0;
+  alphabetOrderCorrectPositions = 0;
   renderAlphabetOrder();
+}
+
+function calculateCorrectPositions() {
+  const orderedLetters = [...alphabetOrderData].sort((a, b) => a.letter.localeCompare(b.letter));
+  let correctCount = 0;
+  alphabetOrderData.forEach((item, idx) => {
+    if (item.letter === orderedLetters[idx].letter) {
+      correctCount++;
+    }
+  });
+  return correctCount;
 }
 
 function renderAlphabetOrder() {
   const orderedLetters = [...alphabetOrderData].sort((a, b) => a.letter.localeCompare(b.letter));
   const isCorrect = JSON.stringify(alphabetOrderData.map(x => x.letter)) === JSON.stringify(orderedLetters.map(x => x.letter));
+  alphabetOrderCorrectPositions = calculateCorrectPositions();
 
   document.getElementById('alphabetContent').innerHTML = `
-    <div style="max-width: 600px; margin: 0 auto;">
-      <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem;">Arrastra las letras para ordenarlas alfabéticamente</div>
-      <div style="background: var(--surface-1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-        <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="alphabetOrderContainer">
-          ${alphabetOrderData.map((item, idx) => `
-            <button draggable="true" ondragstart="dragAlphabetStart(event, ${idx})" ondrop="dropAlphabetOrder(event, ${idx})" ondragover="allowDrop(event)" style="padding: 10px 16px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: move; font-weight: 700; font-size: 16px; transition: all 0.2s;">
-              ${item.letter}
-            </button>
-          `).join('')}
+    <div style="max-width: 700px; margin: 0 auto;">
+      <!-- INSTRUCCIONES Y CONTADOR -->
+      <div style="background: var(--surface-1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 0.5px solid var(--border);">
+        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase;">Instrucciones</div>
+        <div style="font-size: 14px; color: var(--text-primary); margin-bottom: 1rem;">Arrastra las letras para ordenarlas alfabéticamente de A a Z</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div style="text-align: center;">
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Letras correctas</div>
+            <div style="font-size: 20px; font-weight: 700; color: var(--fill-accent);">${alphabetOrderCorrectPositions}/${alphabetOrderData.length}</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Intentos</div>
+            <div style="font-size: 20px; font-weight: 700; color: #ef4444;">${alphabetOrderAttempts}</div>
+          </div>
         </div>
       </div>
+
+      <!-- ÁREA DE ARRASTRE -->
+      <div style="background: var(--surface-1); padding: 2rem; border-radius: 8px; margin-bottom: 1.5rem; border: 2px dashed var(--border);">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;" id="alphabetOrderContainer">
+          ${alphabetOrderData.map((item, idx) => {
+            const orderedPos = orderedLetters.findIndex(x => x.letter === item.letter);
+            const isInCorrectPosition = idx === orderedPos;
+            const bgColor = isInCorrectPosition ? '#22c55e' : 'var(--fill-accent)';
+            const opacity = isInCorrectPosition ? '0.6' : '1';
+            return `
+              <button draggable="true" ondragstart="dragAlphabetStart(event, ${idx})" ondrop="dropAlphabetOrder(event, ${idx})" ondragover="allowDrop(event)" style="padding: 12px 16px; background: ${bgColor}; color: white; border: none; border-radius: 6px; cursor: move; font-weight: 700; font-size: 18px; transition: all 0.2s; opacity: ${opacity}; ${isInCorrectPosition ? 'box-shadow: 0 0 0 2px #22c55e;' : ''}" title="${isInCorrectPosition ? 'Correcto' : ''}">
+                ${item.letter}
+              </button>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- FEEDBACK Y BOTONES -->
       ${isCorrect ? `
-        <div style="text-align: center; padding: 1.5rem; background: var(--bg-accent); border-radius: 8px;">
-          <div style="font-size: 40px; margin-bottom: 0.5rem;">✅</div>
-          <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">¡Orden correcto!</div>
-          <button onclick="startAlphabetOrder()" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+        <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, var(--bg-accent) 0%, #e8f5e9 100%); border-radius: 8px; border: 2px solid var(--fill-accent);">
+          <div style="font-size: 48px; margin-bottom: 1rem;">✅</div>
+          <div style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">¡Orden correcto!</div>
+          <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 1.5rem;">Completaste el ejercicio en ${alphabetOrderAttempts} intento${alphabetOrderAttempts !== 1 ? 's' : ''}</div>
+          <button onclick="startAlphabetOrder()" style="padding: 12px 24px; background: var(--fill-accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Reintentar ejercicio</button>
         </div>
       ` : `
         <div style="text-align: center;">
-          <button onclick="startAlphabetOrder()" style="padding: 10px 20px; background: var(--surface-2); color: var(--text-primary); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 500;">Reiniciar</button>
+          <button onclick="addAlphabetOrderAttempt()" style="padding: 12px 24px; background: var(--fill-accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; margin-right: 8px; transition: all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Verificar orden</button>
+          <button onclick="startAlphabetOrder()" style="padding: 12px 24px; background: var(--surface-2); color: var(--text-primary); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Reiniciar</button>
         </div>
       `}
     </div>
   `;
+}
+
+function addAlphabetOrderAttempt() {
+  alphabetOrderAttempts++;
+  renderAlphabetOrder();
 }
 
 let draggedAlphabetIndex = null;
