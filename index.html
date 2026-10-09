@@ -1413,6 +1413,8 @@ function switchSection(section) {
 }
 
 // PARES DE PALABRAS
+let paresPalabrasHistory = []; // Historial de respuestas
+
 function renderParesPalabrasGrid() {
   const grid = document.getElementById('paresPalabrasGrid');
   grid.innerHTML = '';
@@ -1430,6 +1432,7 @@ function selectParesPalabrasTheme(theme) {
   paresPalabrasMatches = {};
   paresPalabrasFailures = {};
   paresPalabrasCurrentBlock = 0;
+  paresPalabrasHistory = []; // Resetear historial
   document.getElementById('paresPalabrasGrid').style.display = 'none';
   renderParesPalabrasExercise();
   setTimeout(() => {
@@ -1567,6 +1570,25 @@ function renderParesPalabrasExercise() {
       <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Haz clic para emparejar palabras</p>
     </div>
 
+    ${paresPalabrasHistory.length > 0 ? `
+      <div style="background: var(--surface-1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--fill-accent);">
+        <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          ${paresPalabrasHistory.map((h, idx) => `
+            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div style="text-align: left;">
+                <span style="color: var(--text-secondary);">🇪🇸 ${h.spanish}</span> →
+                <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">${h.selected}</span>
+              </div>
+              <div style="text-align: right;">
+                <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
+
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.4rem;">
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
@@ -1690,6 +1712,15 @@ function selectPairingEnglish(word) {
   paresPalabrasFeedbackCorrect = matchedWord.en;
   paresPalabrasShowFeedback = true;
 
+  // Agregar al historial
+  paresPalabrasHistory.push({
+    spanish: window.selectedSpanish.word,
+    selected: word,
+    correct: matchedWord.en,
+    pronunciation: matchedWord.en_pro,
+    isCorrect: correct
+  });
+
   if (correct) {
     paresPalabrasMatches[window.selectedSpanish.idx] = true;
   } else {
@@ -1704,10 +1735,12 @@ function selectPairingEnglish(word) {
     paresPalabrasFeedbackCorrect = null;
     window.selectedSpanish = null;
     renderParesPalabrasExercise();
-  }, 1500);
+  }, 1000);
 }
 
 // OPCIÓN MÚLTIPLE PALABRAS
+let multipleWordsHistory = []; // Historial de respuestas
+
 function renderMultipleWordsGrid() {
   const grid = document.getElementById('multipleWordsGrid');
   grid.innerHTML = '';
@@ -1727,6 +1760,7 @@ function selectMultipleWordsTheme(theme) {
   multipleWordsAnswered = {};
   multipleWordsFailures = [];
   multipleWordsCorrectCount = 0;
+  multipleWordsHistory = []; // Resetear historial
   renderMultipleWordsExercise();
   setTimeout(() => {
     document.querySelector('#multipleWordsContent .learning-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1816,6 +1850,27 @@ function renderMultipleWordsExercise() {
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Respondidas ${answeredCount}/${allWords.length}</p>
     </div>
 
+    ${multipleWordsHistory.length > 0 ? `
+      <div style="background: var(--surface-1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--fill-accent);">
+        <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          ${multipleWordsHistory.map((h) => `
+            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+              <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">🇪🇸 ${h.question}</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div style="text-align: left;">
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">Respondiste: ${h.selected}</span>
+                </div>
+                <div style="text-align: right;">
+                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
+
     <div class="progress">Palabra ${multipleWordsIndex + 1} de ${allWords.length}</div>
 
     <div class="learning-card">
@@ -1896,6 +1951,15 @@ function checkMultipleWordsAnswer(answer, isCorrect, wordIndex) {
   multipleWordsFeedbackCorrect = word.en;
   multipleWordsShowFeedback = true;
 
+  // Agregar al historial
+  multipleWordsHistory.push({
+    question: word.es,
+    pronunciation: word.pro,
+    selected: answer,
+    correct: word.en,
+    isCorrect: isCorrect
+  });
+
   // Marcar como respondida
   multipleWordsAnswered[wordIndex] = true;
 
@@ -1918,7 +1982,7 @@ function checkMultipleWordsAnswer(answer, isCorrect, wordIndex) {
     multipleWordsFeedbackSelected = null;
     multipleWordsFeedbackCorrect = null;
     renderMultipleWordsExercise();
-  }, 1500);
+  }, 1000);
 }
 
 function changeMultipleWordsBlock(direction) {
@@ -1934,6 +1998,8 @@ function previousMultipleWords() {
 }
 
 // PARES DE FRASES
+let paresFrasesHistory = []; // Historial de respuestas
+
 function renderParesFrasesGrid() {
   const grid = document.getElementById('paresFrasesGrid');
   grid.innerHTML = '';
@@ -1951,6 +2017,7 @@ function selectParesFrasesTheme(theme) {
   paresFrasesMatches = {};
   paresFrasesFailures = {};
   paresFrasesCurrentBlock = 0;
+  paresFrasesHistory = []; // Resetear historial
   document.getElementById('paresFrasesGrid').style.display = 'none';
   renderParesFrasesExercise();
   setTimeout(() => {
@@ -2060,6 +2127,27 @@ function renderParesFrasesExercise() {
       <p style="font-size: 13px; color: var(--text-accent); margin: 0 0 8px 0;">Emparejadas ${completedCount}/${frases.length}</p>
       <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Haz clic para emparejar frases</p>
     </div>
+
+    ${paresFrasesHistory.length > 0 ? `
+      <div style="background: var(--surface-1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--fill-accent);">
+        <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          ${paresFrasesHistory.map((h) => `
+            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+              <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">🇪🇸 ${h.spanish}</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div style="text-align: left;">
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">Respondiste: ${h.selected}</span>
+                </div>
+                <div style="text-align: right;">
+                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.4rem;">
       <div>
@@ -2183,6 +2271,15 @@ function selectPairingEnglishFrase(frase) {
   paresFrasesFeedbackCorrect = matchedFrase.en;
   paresFrasesShowFeedback = true;
 
+  // Agregar al historial
+  paresFrasesHistory.push({
+    spanish: window.selectedSpanishFrase.frase,
+    selected: frase,
+    correct: matchedFrase.en,
+    pronunciation: matchedFrase.pro,
+    isCorrect: correct
+  });
+
   if (correct) {
     paresFrasesMatches[window.selectedSpanishFrase.idx] = true;
   } else {
@@ -2197,10 +2294,12 @@ function selectPairingEnglishFrase(frase) {
     paresFrasesFeedbackCorrect = null;
     window.selectedSpanishFrase = null;
     renderParesFrasesExercise();
-  }, 1500);
+  }, 1000);
 }
 
 // OPCIÓN MÚLTIPLE FRASES
+let multipleFrasesHistory = []; // Historial de respuestas
+
 function renderMultipleFrasesGrid() {
   const grid = document.getElementById('multipleFrasesGrid');
   grid.innerHTML = '';
@@ -2220,6 +2319,7 @@ function selectMultipleFrasesTheme(theme) {
   multipleFrasesAnswered = {};
   multipleFrasesFailures = [];
   multipleFrasesCorrectCount = 0;
+  multipleFrasesHistory = []; // Resetear historial
   renderMultipleFrasesExercise();
   setTimeout(() => {
     document.querySelector('#multipleFrasesContent .learning-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2308,6 +2408,27 @@ function renderMultipleFrasesExercise() {
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Respondidas ${answeredCount}/${allFrases.length}</p>
     </div>
 
+    ${multipleFrasesHistory.length > 0 ? `
+      <div style="background: var(--surface-1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--fill-accent);">
+        <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          ${multipleFrasesHistory.map((h) => `
+            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+              <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">🇪🇸 ${h.question}</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div style="text-align: left;">
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">Respondiste: ${h.selected}</span>
+                </div>
+                <div style="text-align: right;">
+                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
+
     <div class="progress">Frase ${multipleFrasesIndex + 1} de ${allFrases.length}</div>
 
     <div class="learning-card">
@@ -2387,6 +2508,14 @@ function checkMultipleFrasesAnswer(answer, isCorrect, fraseIndex) {
   multiplefrasesFeedbackCorrect = frase.en;
   multipleFrasesShowFeedback = true;
 
+  // Agregar al historial
+  multipleFrasesHistory.push({
+    question: frase.es,
+    selected: answer,
+    correct: frase.en,
+    isCorrect: isCorrect
+  });
+
   // Marcar como respondida
   multipleFrasesAnswered[fraseIndex] = true;
 
@@ -2408,7 +2537,7 @@ function checkMultipleFrasesAnswer(answer, isCorrect, fraseIndex) {
     multiplefrasesFeedbackSelected = null;
     multiplefrasesFeedbackCorrect = null;
     renderMultipleFrasesExercise();
-  }, 1500);
+  }, 1000);
 }
 
 function changeMultipleFrasesBlock(direction) {
@@ -2573,6 +2702,7 @@ let multipleVerbosCorrectCount = 0;
 let multipleVerbosShowFeedback = false;
 let multipleVerbasFeedbackSelected = null;
 let multipleVerbasFeedbackCorrect = null;
+let multipleVerbosHistory = []; // Historial de respuestas
 
 function renderMultipleVerbosGrid() {
   const content = document.getElementById('multipleVerbosContent');
@@ -2587,6 +2717,7 @@ function renderMultipleVerbosGrid() {
   multipleVerbosAnswered = {};
   multipleVerbosFailures = [];
   multipleVerbosCorrectCount = 0;
+  multipleVerbosHistory = []; // Resetear historial
 
   renderMultipleVerbosExercise();
 }
@@ -2672,6 +2803,27 @@ function renderMultipleVerbosExercise() {
       <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Respondidos ${answeredCount}/${verbsData.length}</p>
     </div>
 
+    ${multipleVerbosHistory.length > 0 ? `
+      <div style="background: var(--surface-1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--fill-accent);">
+        <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          ${multipleVerbosHistory.map((h) => `
+            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+              <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">🇬🇧 ${h.question}</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div style="text-align: left;">
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">Respondiste: ${h.selected}</span>
+                </div>
+                <div style="text-align: right;">
+                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
+
     <div class="progress">Verbo ${window.multipleVerbosIndex + 1} de ${verbsData.length}</div>
 
     <div class="learning-card">
@@ -2748,6 +2900,15 @@ function checkMultipleVerbosAnswer(answer, isCorrect, verbIndex) {
   multipleVerbasFeedbackCorrect = verb.es;
   multipleVerbosShowFeedback = true;
 
+  // Agregar al historial
+  multipleVerbosHistory.push({
+    question: verb.en,
+    pronunciation: verb.pro,
+    selected: answer,
+    correct: verb.es,
+    isCorrect: isCorrect
+  });
+
   // Marcar como respondido
   multipleVerbosAnswered[verbIndex] = true;
 
@@ -2770,7 +2931,7 @@ function checkMultipleVerbosAnswer(answer, isCorrect, verbIndex) {
     multipleVerbasFeedbackSelected = null;
     multipleVerbasFeedbackCorrect = null;
     renderMultipleVerbosExercise();
-  }, 1500);
+  }, 1000);
 }
 
 function nextMultipleVerbos() {
@@ -2785,14 +2946,15 @@ function previousMultipleVerbos() {
 let paresVerbosShowFeedback = false;
 let paresVerbasFeedbackSelected = null;
 let paresVerbasFeedbackCorrect = null;
+let paresVerbosHistory = []; // Historial de respuestas
 
 function renderParesVerbosGrid() {
   const grid = document.getElementById('paresVerbosGrid');
   const content = document.getElementById('paresVerbosContent');
-  
+
   grid.innerHTML = '';
   content.innerHTML = '';
-  
+
   verbsData.forEach((verb, idx) => {
     const card = document.createElement('button');
     card.className = 'theme-card';
@@ -2806,6 +2968,7 @@ function selectParesVerbosVerb(verbName) {
   window.paresVerbosMatch = {};
   window.paresVerbosFailures = {};
   window.selectedParesVerb = verbName;
+  paresVerbosHistory = []; // Resetear historial
   document.getElementById('paresVerbosGrid').style.display = 'none';
   renderParesVerbosExercise();
   setTimeout(() => {
@@ -2909,6 +3072,27 @@ function renderParesVerbosExercise() {
       <p style="font-size: 13px; color: var(--text-accent); margin: 0 0 8px 0;">Emparejadas ${completedCount}/${verb.conjugations.length}</p>
       <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Verbo: <strong>${verb.en}</strong></p>
     </div>
+
+    ${paresVerbosHistory.length > 0 ? `
+      <div style="background: var(--surface-1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--fill-accent);">
+        <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          ${paresVerbosHistory.map((h) => `
+            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+              <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">${h.spanish}</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div style="text-align: left;">
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">Respondiste: ${h.selected}</span>
+                </div>
+                <div style="text-align: right;">
+                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.4rem;">
       <div>
@@ -3031,6 +3215,15 @@ function selectParesVerbosEnglish(english) {
   paresVerbasFeedbackCorrect = verb.conjugations[idx].form;
   paresVerbosShowFeedback = true;
 
+  // Agregar al historial
+  paresVerbosHistory.push({
+    spanish: verb.conjugations[idx].es,
+    selected: english,
+    correct: verb.conjugations[idx].form,
+    pronunciation: verb.conjugations[idx].pro,
+    isCorrect: correct
+  });
+
   if (correct) {
     window.paresVerbosMatch = window.paresVerbosMatch || {};
     window.paresVerbosMatch[idx] = true;
@@ -3047,7 +3240,7 @@ function selectParesVerbosEnglish(english) {
     paresVerbasFeedbackCorrect = null;
     window.selectedParesVerbosSpanish = null;
     renderParesVerbosExercise();
-  }, 1500);
+  }, 1000);
 }
 
 // EJERCICIOS DE ESCRITURA - PDF
@@ -3343,12 +3536,14 @@ let alphabetMultipleAnswers = [];
 let alphabetMultipleShowFeedback = false;
 let alphabetMultipleFeedbackSelected = null;
 let alphabetMultipleFeedbackCorrect = null;
+let alphabetMultipleHistory = []; // Historial de respuestas
 
 function startAlphabetMultiple() {
   alphabetMultipleIndex = 0;
   alphabetCorrectCount = 0;
   alphabetMultipleAnswers = [];
   alphabetMultipleShowFeedback = false;
+  alphabetMultipleHistory = []; // Resetear historial
   alphabetMultipleBlock = [...alphabetData].sort(() => Math.random() - 0.5).slice(0, 6);
   renderAlphabetMultiple();
 }
@@ -3403,6 +3598,25 @@ function renderAlphabetMultiple() {
 
   document.getElementById('alphabetContent').innerHTML = `
     <div style="max-width: 600px; margin: 0 auto;">
+      ${alphabetMultipleHistory.length > 0 ? `
+        <div style="background: var(--surface-1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--fill-accent);">
+          <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            ${alphabetMultipleHistory.map((h) => `
+              <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div style="text-align: left;">
+                  <span style="color: var(--text-secondary);">Pronunciación: ${h.pronunciation}</span><br>
+                  <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">Respondiste: ${h.selected}</span>
+                </div>
+                <div style="text-align: right;">
+                  <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+
       <div style="background: var(--surface-1); padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
         <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem;">Pronunciación:</div>
         <div style="font-size: 32px; font-weight: 700; color: var(--fill-accent); margin-bottom: 2rem; text-align: center;">${current.pronunciation}</div>
@@ -3432,12 +3646,17 @@ function checkAlphabetMultiple(selected, correct) {
     alphabetCorrectCount++;
   }
 
-  alphabetMultipleAnswers.push({
+  const answer = {
     pronunciation: alphabetMultipleBlock[alphabetMultipleIndex].pronunciation,
     selected: selected,
     correct: correct,
     isCorrect: isCorrect
-  });
+  };
+
+  alphabetMultipleAnswers.push(answer);
+
+  // Agregar al historial
+  alphabetMultipleHistory.push(answer);
 
   renderAlphabetMultiple();
 
@@ -3447,7 +3666,7 @@ function checkAlphabetMultiple(selected, correct) {
     alphabetMultipleFeedbackSelected = null;
     alphabetMultipleFeedbackCorrect = null;
     renderAlphabetMultiple();
-  }, 1500);
+  }, 1000);
 }
 
 let alphabetPairsLeft = [];
@@ -3455,6 +3674,7 @@ let alphabetPairsRight = [];
 let alphabetPairsMatches = {};
 let alphabetPairsFailed = {};
 let alphabetPairsAnswers = [];
+let alphabetPairsHistory = []; // Historial de respuestas
 
 function startAlphabetPairs() {
   alphabetPairsLeft = [...alphabetData].sort(() => Math.random() - 0.5).slice(0, 8);
@@ -3462,6 +3682,7 @@ function startAlphabetPairs() {
   alphabetPairsMatches = {};
   alphabetPairsFailed = {};
   alphabetPairsAnswers = [];
+  alphabetPairsHistory = []; // Resetear historial
   renderAlphabetPairs();
 }
 
@@ -3510,6 +3731,25 @@ function renderAlphabetPairs() {
   }
 
   document.getElementById('alphabetContent').innerHTML = `
+    ${alphabetPairsHistory.length > 0 ? `
+      <div style="background: var(--surface-1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--fill-accent);">
+        <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">RESPUESTAS ANTERIORES</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          ${alphabetPairsHistory.map((h) => `
+            <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div style="text-align: left;">
+                <span style="color: var(--text-secondary);">Letra: ${h.letter}</span><br>
+                <span style="color: ${h.isCorrect ? '#22c55e' : '#ef4444'}; font-weight: 600;">Respondiste: ${h.selected}</span>
+              </div>
+              <div style="text-align: right;">
+                <span style="color: #22c55e; font-weight: 600;">✓ ${h.correct}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
+
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
       <div>
         <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem; font-weight: 500;">LETRAS</div>
@@ -3552,14 +3792,26 @@ function matchAlphabetPair(letter) {
 
   const isCorrect = selectedAlphabetLeft === letter;
   const correctPronunciation = alphabetData.find(item => item.letter === selectedAlphabetLeft)?.pronunciation || '';
+  const selectedPronunciation = alphabetPairsRight.find(item => item.letter === letter)?.pronunciation || '';
 
   if (isCorrect) {
     alphabetPairsMatches[selectedAlphabetLeft] = true;
   } else {
     alphabetPairsFailed[selectedAlphabetLeft] = correctPronunciation;
+  }
+
+  // Agregar al historial
+  alphabetPairsHistory.push({
+    letter: selectedAlphabetLeft,
+    selected: selectedPronunciation,
+    correct: correctPronunciation,
+    isCorrect: isCorrect
+  });
+
+  if (!isCorrect) {
     alphabetPairsAnswers.push({
       letter: selectedAlphabetLeft,
-      selected: alphabetPairsRight.find(item => item.letter === letter)?.pronunciation || '',
+      selected: selectedPronunciation,
       correct: correctPronunciation
     });
   }
@@ -3571,11 +3823,13 @@ function matchAlphabetPair(letter) {
 let alphabetOrderData = [];
 let alphabetOrderAttempts = 0;
 let alphabetOrderCorrectPositions = 0;
+let alphabetOrderHistory = []; // Historial de intentos
 
 function startAlphabetOrder() {
   alphabetOrderData = [...alphabetData].sort(() => Math.random() - 0.5).slice(0, 10);
   alphabetOrderAttempts = 0;
   alphabetOrderCorrectPositions = 0;
+  alphabetOrderHistory = []; // Resetear historial
   renderAlphabetOrder();
 }
 
@@ -3612,6 +3866,19 @@ function renderAlphabetOrder() {
           </div>
         </div>
       </div>
+
+      ${alphabetOrderHistory.length > 0 ? `
+        <div style="background: var(--surface-1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid var(--fill-accent);">
+          <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.8rem;">HISTORIAL DE INTENTOS</div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            ${alphabetOrderHistory.map((h) => `
+              <div style="background: var(--surface-2); padding: 0.6rem; border-radius: 6px; font-size: 11px;">
+                <div style="color: var(--text-secondary); margin-bottom: 0.3rem;">Intento ${h.attempt}: ${h.correctPositions}/${alphabetOrderData.length} correctas</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
 
       <!-- ÁREA DE ARRASTRE -->
       <div style="background: var(--surface-1); padding: 2rem; border-radius: 8px; margin-bottom: 1.5rem; border: 2px dashed var(--border);">
@@ -3650,6 +3917,15 @@ function renderAlphabetOrder() {
 
 function addAlphabetOrderAttempt() {
   alphabetOrderAttempts++;
+
+  // Agregar al historial el estado actual
+  const orderedLetters = [...alphabetOrderData].sort((a, b) => a.letter.localeCompare(b.letter));
+  alphabetOrderHistory.push({
+    attempt: alphabetOrderAttempts,
+    currentOrder: alphabetOrderData.map(x => x.letter).join(', '),
+    correctPositions: calculateCorrectPositions()
+  });
+
   renderAlphabetOrder();
 }
 
