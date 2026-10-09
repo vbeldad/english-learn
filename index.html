@@ -1118,6 +1118,9 @@ let multipleWordsTheme = null;
 let multipleWordsIndex = 0;
 let multipleWordsCurrentBlock = 0;
 const MULTIPLE_WORDS_BLOCK_SIZE = 6;
+let multipleWordsAnswered = {};
+let multipleWordsFailures = [];
+let multipleWordsCorrectCount = 0;
 let paresFrasesTheme = null;
 let paresFrasesMatches = {};
 let paresFrasesFailures = {};
@@ -1127,6 +1130,9 @@ let multipleFrasesTheme = null;
 let multipleFrasesIndex = 0;
 let multipleFrasesCurrentBlock = 0;
 const MULTIPLE_FRASES_BLOCK_SIZE = 6;
+let multipleFrasesAnswered = {};
+let multipleFrasesFailures = [];
+let multipleFrasesCorrectCount = 0;
 
 const themeGrid = document.getElementById('themeGrid');
 const vocabContent = document.getElementById('vocabContent');
@@ -1692,6 +1698,9 @@ function selectMultipleWordsTheme(theme) {
   multipleWordsTheme = theme;
   multipleWordsIndex = 0;
   multipleWordsCurrentBlock = 0;
+  multipleWordsAnswered = {};
+  multipleWordsFailures = [];
+  multipleWordsCorrectCount = 0;
   renderMultipleWordsExercise();
   setTimeout(() => {
     document.querySelector('#multipleWordsContent .learning-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1702,21 +1711,68 @@ function renderMultipleWordsExercise() {
   if (!multipleWordsTheme) return;
 
   const allWords = vocabularyData[multipleWordsTheme];
-  const totalBlocks = Math.ceil(allWords.length / MULTIPLE_WORDS_BLOCK_SIZE);
 
-  if (multipleWordsCurrentBlock >= totalBlocks) {
-    multipleWordsCurrentBlock = totalBlocks - 1;
+  // Encontrar la siguiente palabra sin responder
+  let pendingIndex = -1;
+  for (let i = 0; i < allWords.length; i++) {
+    if (!multipleWordsAnswered[i]) {
+      pendingIndex = i;
+      break;
+    }
   }
 
-  const startIdx = multipleWordsCurrentBlock * MULTIPLE_WORDS_BLOCK_SIZE;
-  const endIdx = Math.min(startIdx + MULTIPLE_WORDS_BLOCK_SIZE, allWords.length);
-  const blockWords = allWords.slice(startIdx, endIdx);
+  // Si todas las palabras fueron respondidas, mostrar resumen
+  if (pendingIndex === -1) {
+    const failureCount = multipleWordsFailures.length;
+    const totalCount = allWords.length;
 
-  // Ajustar índice si está fuera del bloque
-  if (multipleWordsIndex < startIdx || multipleWordsIndex >= endIdx) {
-    multipleWordsIndex = startIdx;
+    let html = `
+      <button onclick="returnToMultipleWordsThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver a temas</button>
+
+      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+        <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
+        <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
+        <div style="font-size: 18px; color: var(--fill-accent); font-weight: 700;">${multipleWordsCorrectCount}/${totalCount} aciertos</div>
+      </div>
+    `;
+
+    if (failureCount > 0) {
+      html += `
+        <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #ef4444; margin-bottom: 2rem;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">❌ Preguntas falladas:</div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${multipleWordsFailures.map(failure => `
+              <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #ef4444;">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Pregunta:</div>
+                <div style="font-size: 16px; font-weight: 700; color: #ef4444; margin-bottom: 0.5rem;">🇪🇸 ${failure.question}</div>
+                <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 0.5rem; font-style: italic;">/${failure.pronunciation}/</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Respondiste: <strong>${failure.userAnswer}</strong></div>
+                <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>🇬🇧 ${failure.correctAnswer}</strong></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    } else {
+      html += `
+        <div style="text-align: center; padding: 1.5rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+          <div style="font-size: 32px; margin-bottom: 0.5rem;">🎉</div>
+          <div style="font-size: 14px; color: var(--text-primary);">¡Todas las respuestas correctas!</div>
+        </div>
+      `;
+    }
+
+    html += `
+      <div style="text-align: center;">
+        <button onclick="selectMultipleWordsTheme('${multipleWordsTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+      </div>
+    `;
+
+    document.getElementById('multipleWordsContent').innerHTML = html;
+    return;
   }
 
+  multipleWordsIndex = pendingIndex;
   const word = allWords[multipleWordsIndex];
   const allWordsEn = allWords.map(w => w.en);
   const options = [word.en];
@@ -1727,20 +1783,15 @@ function renderMultipleWordsExercise() {
   }
 
   const shuffled = options.sort(() => Math.random() - 0.5);
-
-  // Selector de bloques
-  const blockSelector = totalBlocks > 1 ? `
-    <div style="background: var(--surface-1); padding: 8px; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap;">
-      <button onclick="changeMultipleWordsBlock(-1)" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 12px;">← Ant</button>
-      <span style="font-size: 12px; color: var(--text-secondary);">Bloque ${multipleWordsCurrentBlock + 1} de ${totalBlocks}</span>
-      <button onclick="changeMultipleWordsBlock(1)" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 12px;">Sig →</button>
-    </div>
-  ` : '';
+  const answeredCount = Object.keys(multipleWordsAnswered).length;
 
   let html = `
-    ${blockSelector}
+    <div style="background: var(--surface-1); padding: 10px; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Respondidas ${answeredCount}/${allWords.length}</p>
+    </div>
+
     <div class="progress">Palabra ${multipleWordsIndex + 1} de ${allWords.length}</div>
-    
+
     <div class="learning-card">
       <div class="card-label">¿CUÁL ES LA TRADUCCIÓN?</div>
       <div class="card-content">
@@ -1750,94 +1801,100 @@ function renderMultipleWordsExercise() {
         </div>
       </div>
     </div>
-    
+
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.4rem;">
   `;
-  
+
   shuffled.forEach((option, idx) => {
     const isCorrect = option === word.en;
     html += `
-      <button onclick="checkMultipleWordsAnswer('${option}', ${isCorrect})" 
+      <button onclick="checkMultipleWordsAnswer('${option}', ${isCorrect}, ${multipleWordsIndex})"
         style="padding: 7px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-size: 12px; font-weight: 500; transition: all 0.2s;"
         onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
         ${option}
       </button>
     `;
   });
-  
+
   html += `
     </div>
-    
+
     <div id="multipleWordsResult"></div>
-    
-    <div class="navigation">
-      <button class="nav-btn" onclick="previousMultipleWords()" ${multipleWordsIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="nav-btn" onclick="nextMultipleWords()" ${multipleWordsIndex === allWords.length - 1 ? 'disabled' : ''}>Siguiente →</button>
-    </div>
   `;
-  
+
   document.getElementById('multipleWordsContent').innerHTML = html;
 }
 
-function checkMultipleWordsAnswer(answer, isCorrect) {
+function returnToMultipleWordsThemes() {
+  multipleWordsTheme = null;
+  multipleWordsIndex = 0;
+  multipleWordsCurrentBlock = 0;
+  multipleWordsAnswered = {};
+  multipleWordsFailures = [];
+  multipleWordsCorrectCount = 0;
+  renderMultipleWordsGrid();
+  document.getElementById('multipleWordsContent').innerHTML = '';
+}
+
+function checkMultipleWordsAnswer(answer, isCorrect, wordIndex) {
   const resultDiv = document.getElementById('multipleWordsResult');
   const words = vocabularyData[multipleWordsTheme];
-  const word = words[multipleWordsIndex];
-  
+  const word = words[wordIndex];
+
+  // Marcar como respondida
+  multipleWordsAnswered[wordIndex] = true;
+
   if (isCorrect) {
+    multipleWordsCorrectCount++;
     resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center;">
-        ✓ ¡Correcto!
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 13px; text-align: center; font-weight: 500;">
+        <div style="font-size: 18px; margin-bottom: 6px;">✓</div>
+        ¡Correcto!
       </div>
     `;
   } else {
+    // Registrar fallo
+    multipleWordsFailures.push({
+      question: word.es,
+      pronunciation: word.pro,
+      userAnswer: answer,
+      correctAnswer: word.en
+    });
+
     resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center;">
-        ✗ Incorrecto. La respuesta correcta es: <strong>${word.en}</strong>
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 13px;">
+        <div style="font-size: 18px; margin-bottom: 6px; text-align: center;">✗</div>
+        <div style="text-align: center; margin-bottom: 8px; font-weight: 500;">Incorrecto</div>
+        <div style="font-size: 12px; margin-bottom: 6px;">Respondiste: <strong>${answer}</strong></div>
+        <div style="font-size: 12px; color: #155724;">Correcto: <strong>${word.en}</strong></div>
       </div>
     `;
   }
+
+  // Deshabilitar todos los botones después de responder
+  const buttons = document.querySelectorAll('#multipleWordsContent button[onclick*="checkMultipleWordsAnswer"]');
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.style.cursor = 'not-allowed';
+  });
+
+  // Avanzar después de un delay
+  setTimeout(() => {
+    renderMultipleWordsExercise();
+  }, 1500);
 }
 
 function changeMultipleWordsBlock(direction) {
-  const words = vocabularyData[multipleWordsTheme];
-  const totalBlocks = Math.ceil(words.length / MULTIPLE_WORDS_BLOCK_SIZE);
-  const newBlock = multipleWordsCurrentBlock + direction;
-
-  if (newBlock >= 0 && newBlock < totalBlocks) {
-    multipleWordsCurrentBlock = newBlock;
-    multipleWordsIndex = newBlock * MULTIPLE_WORDS_BLOCK_SIZE;
-    renderMultipleWordsExercise();
-  }
+  // Función no usada en nuevo sistema
 }
 
 function nextMultipleWords() {
-  const words = vocabularyData[multipleWordsTheme];
-  const blockEnd = Math.min((multipleWordsCurrentBlock + 1) * MULTIPLE_WORDS_BLOCK_SIZE, words.length);
-
-  if (multipleWordsIndex < blockEnd - 1) {
-    multipleWordsIndex++;
-    renderMultipleWordsExercise();
-  } else if (multipleWordsIndex < words.length - 1) {
-    // Cambiar al siguiente bloque
-    multipleWordsCurrentBlock++;
-    multipleWordsIndex++;
-    renderMultipleWordsExercise();
-  }
+  // Función no usada en nuevo sistema
 }
 
 function previousMultipleWords() {
-  const blockStart = multipleWordsCurrentBlock * MULTIPLE_WORDS_BLOCK_SIZE;
-
-  if (multipleWordsIndex > blockStart) {
-    multipleWordsIndex--;
-    renderMultipleWordsExercise();
-  } else if (multipleWordsIndex > 0) {
-    // Cambiar al bloque anterior
-    multipleWordsCurrentBlock--;
-    multipleWordsIndex--;
-    renderMultipleWordsExercise();
-  }
+  // Función no usada en nuevo sistema
 }
 
 // PARES DE FRASES
@@ -2111,6 +2168,9 @@ function selectMultipleFrasesTheme(theme) {
   multipleFrasesTheme = theme;
   multipleFrasesIndex = 0;
   multipleFrasesCurrentBlock = 0;
+  multipleFrasesAnswered = {};
+  multipleFrasesFailures = [];
+  multipleFrasesCorrectCount = 0;
   renderMultipleFrasesExercise();
   setTimeout(() => {
     document.querySelector('#multipleFrasesContent .learning-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2121,21 +2181,67 @@ function renderMultipleFrasesExercise() {
   if (!multipleFrasesTheme) return;
 
   const allFrases = frasesData[multipleFrasesTheme];
-  const totalBlocks = Math.ceil(allFrases.length / MULTIPLE_FRASES_BLOCK_SIZE);
 
-  if (multipleFrasesCurrentBlock >= totalBlocks) {
-    multipleFrasesCurrentBlock = totalBlocks - 1;
+  // Encontrar la siguiente frase sin responder
+  let pendingIndex = -1;
+  for (let i = 0; i < allFrases.length; i++) {
+    if (!multipleFrasesAnswered[i]) {
+      pendingIndex = i;
+      break;
+    }
   }
 
-  const startIdx = multipleFrasesCurrentBlock * MULTIPLE_FRASES_BLOCK_SIZE;
-  const endIdx = Math.min(startIdx + MULTIPLE_FRASES_BLOCK_SIZE, allFrases.length);
-  const blockFrases = allFrases.slice(startIdx, endIdx);
+  // Si todas las frases fueron respondidas, mostrar resumen
+  if (pendingIndex === -1) {
+    const failureCount = multipleFrasesFailures.length;
+    const totalCount = allFrases.length;
 
-  // Ajustar índice si está fuera del bloque
-  if (multipleFrasesIndex < startIdx || multipleFrasesIndex >= endIdx) {
-    multipleFrasesIndex = startIdx;
+    let html = `
+      <button onclick="returnToMultipleFrasesThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver a temas</button>
+
+      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+        <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
+        <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
+        <div style="font-size: 18px; color: var(--fill-accent); font-weight: 700;">${multipleFrasesCorrectCount}/${totalCount} aciertos</div>
+      </div>
+    `;
+
+    if (failureCount > 0) {
+      html += `
+        <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #ef4444; margin-bottom: 2rem;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">❌ Preguntas falladas:</div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${multipleFrasesFailures.map(failure => `
+              <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #ef4444;">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Pregunta:</div>
+                <div style="font-size: 14px; font-weight: 700; color: #ef4444; margin-bottom: 0.5rem;">🇪🇸 ${failure.question}</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Respondiste: <strong>${failure.userAnswer}</strong></div>
+                <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>🇬🇧 ${failure.correctAnswer}</strong></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    } else {
+      html += `
+        <div style="text-align: center; padding: 1.5rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+          <div style="font-size: 32px; margin-bottom: 0.5rem;">🎉</div>
+          <div style="font-size: 14px; color: var(--text-primary);">¡Todas las respuestas correctas!</div>
+        </div>
+      `;
+    }
+
+    html += `
+      <div style="text-align: center;">
+        <button onclick="selectMultipleFrasesTheme('${multipleFrasesTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+      </div>
+    `;
+
+    document.getElementById('multipleFrasesContent').innerHTML = html;
+    return;
   }
 
+  multipleFrasesIndex = pendingIndex;
   const frase = allFrases[multipleFrasesIndex];
   const allFrasesEn = allFrases.map(f => f.en);
   const options = [frase.en];
@@ -2146,20 +2252,15 @@ function renderMultipleFrasesExercise() {
   }
 
   const shuffled = options.sort(() => Math.random() - 0.5);
-
-  // Selector de bloques
-  const blockSelector = totalBlocks > 1 ? `
-    <div style="background: var(--surface-1); padding: 8px; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap;">
-      <button onclick="changeMultipleFrasesBlock(-1)" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 12px;">← Ant</button>
-      <span style="font-size: 12px; color: var(--text-secondary);">Bloque ${multipleFrasesCurrentBlock + 1} de ${totalBlocks}</span>
-      <button onclick="changeMultipleFrasesBlock(1)" style="padding: 6px 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 12px;">Sig →</button>
-    </div>
-  ` : '';
+  const answeredCount = Object.keys(multipleFrasesAnswered).length;
 
   let html = `
-    ${blockSelector}
+    <div style="background: var(--surface-1); padding: 10px; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Respondidas ${answeredCount}/${allFrases.length}</p>
+    </div>
+
     <div class="progress">Frase ${multipleFrasesIndex + 1} de ${allFrases.length}</div>
-    
+
     <div class="learning-card">
       <div class="card-label">¿CUÁL ES LA TRADUCCIÓN?</div>
       <div class="card-content">
@@ -2168,94 +2269,99 @@ function renderMultipleFrasesExercise() {
         </div>
       </div>
     </div>
-    
+
     <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 0.4rem;">
   `;
-  
+
   shuffled.forEach((option) => {
     const isCorrect = option === frase.en;
     html += `
-      <button onclick="checkMultipleFrasesAnswer('${option.replace(/'/g, "\\'")}', ${isCorrect})" 
+      <button onclick="checkMultipleFrasesAnswer('${option.replace(/'/g, "\\'")}', ${isCorrect}, ${multipleFrasesIndex})"
         style="padding: 7px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500; transition: all 0.2s; text-align: left;"
         onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
         ${option}
       </button>
     `;
   });
-  
+
   html += `
     </div>
-    
+
     <div id="multipleFrasesResult"></div>
-    
-    <div class="navigation">
-      <button class="nav-btn" onclick="previousMultipleFrases()" ${multipleFrasesIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="nav-btn" onclick="nextMultipleFrases()" ${multipleFrasesIndex === frases.length - 1 ? 'disabled' : ''}>Siguiente →</button>
-    </div>
   `;
-  
+
   document.getElementById('multipleFrasesContent').innerHTML = html;
 }
 
-function checkMultipleFrasesAnswer(answer, isCorrect) {
+function returnToMultipleFrasesThemes() {
+  multipleFrasesTheme = null;
+  multipleFrasesIndex = 0;
+  multipleFrasesCurrentBlock = 0;
+  multipleFrasesAnswered = {};
+  multipleFrasesFailures = [];
+  multipleFrasesCorrectCount = 0;
+  renderMultipleFrasesGrid();
+  document.getElementById('multipleFrasesContent').innerHTML = '';
+}
+
+function checkMultipleFrasesAnswer(answer, isCorrect, fraseIndex) {
   const resultDiv = document.getElementById('multipleFrasesResult');
   const frases = frasesData[multipleFrasesTheme];
-  const frase = frases[multipleFrasesIndex];
-  
+  const frase = frases[fraseIndex];
+
+  // Marcar como respondida
+  multipleFrasesAnswered[fraseIndex] = true;
+
   if (isCorrect) {
+    multipleFrasesCorrectCount++;
     resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center;">
-        ✓ ¡Correcto!
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 13px; text-align: center; font-weight: 500;">
+        <div style="font-size: 18px; margin-bottom: 6px;">✓</div>
+        ¡Correcto!
       </div>
     `;
   } else {
+    // Registrar fallo
+    multipleFrasesFailures.push({
+      question: frase.es,
+      userAnswer: answer,
+      correctAnswer: frase.en
+    });
+
     resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center;">
-        ✗ Incorrecto. La respuesta correcta es: <strong>${frase.en}</strong>
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 13px;">
+        <div style="font-size: 18px; margin-bottom: 6px; text-align: center;">✗</div>
+        <div style="text-align: center; margin-bottom: 8px; font-weight: 500;">Incorrecto</div>
+        <div style="font-size: 12px; margin-bottom: 6px;">Respondiste: <strong>${answer}</strong></div>
+        <div style="font-size: 12px; color: #155724;">Correcto: <strong>${frase.en}</strong></div>
       </div>
     `;
   }
+
+  // Deshabilitar todos los botones después de responder
+  const buttons = document.querySelectorAll('#multipleFrasesContent button[onclick*="checkMultipleFrasesAnswer"]');
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.style.cursor = 'not-allowed';
+  });
+
+  // Avanzar después de un delay
+  setTimeout(() => {
+    renderMultipleFrasesExercise();
+  }, 1500);
 }
 
 function changeMultipleFrasesBlock(direction) {
-  const frases = frasesData[multipleFrasesTheme];
-  const totalBlocks = Math.ceil(frases.length / MULTIPLE_FRASES_BLOCK_SIZE);
-  const newBlock = multipleFrasesCurrentBlock + direction;
-
-  if (newBlock >= 0 && newBlock < totalBlocks) {
-    multipleFrasesCurrentBlock = newBlock;
-    multipleFrasesIndex = newBlock * MULTIPLE_FRASES_BLOCK_SIZE;
-    renderMultipleFrasesExercise();
-  }
+  // Función no usada en nuevo sistema
 }
 
 function nextMultipleFrases() {
-  const frases = frasesData[multipleFrasesTheme];
-  const blockEnd = Math.min((multipleFrasesCurrentBlock + 1) * MULTIPLE_FRASES_BLOCK_SIZE, frases.length);
-
-  if (multipleFrasesIndex < blockEnd - 1) {
-    multipleFrasesIndex++;
-    renderMultipleFrasesExercise();
-  } else if (multipleFrasesIndex < frases.length - 1) {
-    // Cambiar al siguiente bloque
-    multipleFrasesCurrentBlock++;
-    multipleFrasesIndex++;
-    renderMultipleFrasesExercise();
-  }
+  // Función no usada en nuevo sistema
 }
 
 function previousMultipleFrases() {
-  const blockStart = multipleFrasesCurrentBlock * MULTIPLE_FRASES_BLOCK_SIZE;
-
-  if (multipleFrasesIndex > blockStart) {
-    multipleFrasesIndex--;
-    renderMultipleFrasesExercise();
-  } else if (multipleFrasesIndex > 0) {
-    // Cambiar al bloque anterior
-    multipleFrasesCurrentBlock--;
-    multipleFrasesIndex--;
-    renderMultipleFrasesExercise();
-  }
+  // Función no usada en nuevo sistema
 }
 
 function startFrasesMode(mode) {
@@ -2402,48 +2508,110 @@ function checkActivation() {
 }
 
 // OPCIÓN MÚLTIPLE VERBOS
+let multipleVerbosAnswered = {};
+let multipleVerbosFailures = [];
+let multipleVerbosCorrectCount = 0;
+
 function renderMultipleVerbosGrid() {
   const content = document.getElementById('multipleVerbosContent');
-  
+
   if (verbsData.length === 0) {
     content.innerHTML = '<p>No hay verbos disponibles</p>';
     return;
   }
-  
-  let multipleVerbosIndex = 0;
-  const verb = verbsData[multipleVerbosIndex];
-  const allVerbs = verbsData.map(v => v.es);
-  const options = [verb.es];
-  
-  while (options.length < 4) {
-    const random = allVerbs[Math.floor(Math.random() * allVerbs.length)];
-    if (!options.includes(random)) options.push(random);
-  }
-  
-  const shuffled = options.sort(() => Math.random() - 0.5);
-  
+
+  // Resetear variables
   window.multipleVerbosIndex = 0;
-  
+  multipleVerbosAnswered = {};
+  multipleVerbosFailures = [];
+  multipleVerbosCorrectCount = 0;
+
   renderMultipleVerbosExercise();
 }
 
 function renderMultipleVerbosExercise() {
   if (window.multipleVerbosIndex === undefined) window.multipleVerbosIndex = 0;
-  
+
+  // Encontrar el siguiente verbo sin responder
+  let pendingIndex = -1;
+  for (let i = 0; i < verbsData.length; i++) {
+    if (!multipleVerbosAnswered[i]) {
+      pendingIndex = i;
+      break;
+    }
+  }
+
+  // Si todos los verbos fueron respondidos, mostrar resumen
+  if (pendingIndex === -1) {
+    const failureCount = multipleVerbosFailures.length;
+    const totalCount = verbsData.length;
+
+    let html = `
+      <button onclick="returnToMultipleVerbosGrid()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver a verbos</button>
+
+      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+        <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
+        <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
+        <div style="font-size: 18px; color: var(--fill-accent); font-weight: 700;">${multipleVerbosCorrectCount}/${totalCount} aciertos</div>
+      </div>
+    `;
+
+    if (failureCount > 0) {
+      html += `
+        <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #ef4444; margin-bottom: 2rem;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">❌ Preguntas falladas:</div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${multipleVerbosFailures.map(failure => `
+              <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #ef4444;">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Pregunta:</div>
+                <div style="font-size: 16px; font-weight: 700; color: #ef4444; margin-bottom: 0.5rem;">🇬🇧 ${failure.question}</div>
+                <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 0.5rem; font-style: italic;">/${failure.pronunciation}/</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Respondiste: <strong>${failure.userAnswer}</strong></div>
+                <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>${failure.correctAnswer}</strong></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    } else {
+      html += `
+        <div style="text-align: center; padding: 1.5rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+          <div style="font-size: 32px; margin-bottom: 0.5rem;">🎉</div>
+          <div style="font-size: 14px; color: var(--text-primary);">¡Todas las respuestas correctas!</div>
+        </div>
+      `;
+    }
+
+    html += `
+      <div style="text-align: center;">
+        <button onclick="renderMultipleVerbosGrid()" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+      </div>
+    `;
+
+    document.getElementById('multipleVerbosContent').innerHTML = html;
+    return;
+  }
+
+  window.multipleVerbosIndex = pendingIndex;
   const verb = verbsData[window.multipleVerbosIndex];
   const allVerbs = verbsData.map(v => v.es);
   const options = [verb.es];
-  
+
   while (options.length < 4) {
     const random = allVerbs[Math.floor(Math.random() * allVerbs.length)];
     if (!options.includes(random)) options.push(random);
   }
-  
+
   const shuffled = options.sort(() => Math.random() - 0.5);
-  
+  const answeredCount = Object.keys(multipleVerbosAnswered).length;
+
   let html = `
+    <div style="background: var(--surface-1); padding: 10px; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Respondidos ${answeredCount}/${verbsData.length}</p>
+    </div>
+
     <div class="progress">Verbo ${window.multipleVerbosIndex + 1} de ${verbsData.length}</div>
-    
+
     <div class="learning-card">
       <div class="card-label">¿CUÁL ES LA TRADUCCIÓN?</div>
       <div class="card-content">
@@ -2453,65 +2621,92 @@ function renderMultipleVerbosExercise() {
         </div>
       </div>
     </div>
-    
+
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.4rem;">
   `;
-  
+
   shuffled.forEach((option) => {
     const isCorrect = option === verb.es;
     html += `
-      <button onclick="checkMultipleVerbosAnswer('${option.replace(/'/g, "\\'")}', ${isCorrect})" 
+      <button onclick="checkMultipleVerbosAnswer('${option.replace(/'/g, "\\'")}', ${isCorrect}, ${window.multipleVerbosIndex})"
         style="padding: 7px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-size: 12px; font-weight: 500; transition: all 0.2s;"
         onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
         ${option}
       </button>
     `;
   });
-  
+
   html += `
     </div>
-    
+
     <div id="multipleVerbosResult"></div>
-    
-    <div class="navigation">
-      <button class="nav-btn" onclick="previousMultipleVerbos()" ${window.multipleVerbosIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="nav-btn" onclick="nextMultipleVerbos()" ${window.multipleVerbosIndex === verbsData.length - 1 ? 'disabled' : ''}>Siguiente →</button>
-    </div>
   `;
-  
+
   document.getElementById('multipleVerbosContent').innerHTML = html;
 }
 
-function checkMultipleVerbosAnswer(answer, isCorrect) {
+function returnToMultipleVerbosGrid() {
+  multipleVerbosAnswered = {};
+  multipleVerbosFailures = [];
+  multipleVerbosCorrectCount = 0;
+  window.multipleVerbosIndex = 0;
+  renderMultipleVerbosGrid();
+}
+
+function checkMultipleVerbosAnswer(answer, isCorrect, verbIndex) {
   const resultDiv = document.getElementById('multipleVerbosResult');
-  
+  const verb = verbsData[verbIndex];
+
+  // Marcar como respondido
+  multipleVerbosAnswered[verbIndex] = true;
+
   if (isCorrect) {
+    multipleVerbosCorrectCount++;
     resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center;">
-        ✓ ¡Correcto!
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 13px; text-align: center; font-weight: 500;">
+        <div style="font-size: 18px; margin-bottom: 6px;">✓</div>
+        ¡Correcto!
       </div>
     `;
   } else {
+    // Registrar fallo
+    multipleVerbosFailures.push({
+      question: verb.en,
+      pronunciation: verb.pro,
+      userAnswer: answer,
+      correctAnswer: verb.es
+    });
+
     resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center;">
-        ✗ Incorrecto. Intenta de nuevo.
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 13px;">
+        <div style="font-size: 18px; margin-bottom: 6px; text-align: center;">✗</div>
+        <div style="text-align: center; margin-bottom: 8px; font-weight: 500;">Incorrecto</div>
+        <div style="font-size: 12px; margin-bottom: 6px;">Respondiste: <strong>${answer}</strong></div>
+        <div style="font-size: 12px; color: #155724;">Correcto: <strong>${verb.es}</strong></div>
       </div>
     `;
   }
+
+  // Deshabilitar todos los botones después de responder
+  const buttons = document.querySelectorAll('#multipleVerbosContent button[onclick*="checkMultipleVerbosAnswer"]');
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.style.cursor = 'not-allowed';
+  });
+
+  // Avanzar después de un delay
+  setTimeout(() => {
+    renderMultipleVerbosExercise();
+  }, 1500);
 }
 
 function nextMultipleVerbos() {
-  if (window.multipleVerbosIndex < verbsData.length - 1) {
-    window.multipleVerbosIndex++;
-    renderMultipleVerbosExercise();
-  }
+  // Función no usada en nuevo sistema
 }
 
 function previousMultipleVerbos() {
-  if (window.multipleVerbosIndex > 0) {
-    window.multipleVerbosIndex--;
-    renderMultipleVerbosExercise();
-  }
+  // Función no usada en nuevo sistema
 }
 
 // PARES DE VERBOS
