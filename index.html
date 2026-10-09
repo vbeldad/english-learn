@@ -1113,10 +1113,16 @@ let paresPalabrasTheme = null;
 let paresPalabrasMatches = {};
 let paresPalabrasFailures = {};
 let paresPalabrasCurrentBlock = 0;
+let paresPalabrasShowFeedback = false;
+let paresPalabrasFeedbackSelected = null;
+let paresPalabrasFeedbackCorrect = null;
 const PARES_WORDS_BLOCK_SIZE = 6;
 let multipleWordsTheme = null;
 let multipleWordsIndex = 0;
 let multipleWordsCurrentBlock = 0;
+let multipleWordsShowFeedback = false;
+let multipleWordsFeedbackSelected = null;
+let multipleWordsFeedbackCorrect = null;
 const MULTIPLE_WORDS_BLOCK_SIZE = 6;
 let multipleWordsAnswered = {};
 let multipleWordsFailures = [];
@@ -1125,10 +1131,16 @@ let paresFrasesTheme = null;
 let paresFrasesMatches = {};
 let paresFrasesFailures = {};
 let paresFrasesCurrentBlock = 0;
+let paresFrasesShowFeedback = false;
+let paresFrasesFeedbackSelected = null;
+let paresFrasesFeedbackCorrect = null;
 const PARES_BLOCK_SIZE = 6;
 let multipleFrasesTheme = null;
 let multipleFrasesIndex = 0;
 let multipleFrasesCurrentBlock = 0;
+let multipleFrasesShowFeedback = false;
+let multiplefrasesFeedbackSelected = null;
+let multiplefrasesFeedbackCorrect = null;
 const MULTIPLE_FRASES_BLOCK_SIZE = 6;
 let multipleFrasesAnswered = {};
 let multipleFrasesFailures = [];
@@ -1604,10 +1616,34 @@ function renderParesPalabrasExercise() {
   `;
 
   shuffledEnglish.forEach((word) => {
+    let bgColor = 'var(--surface-2)';
+    let textColor = 'var(--text-primary)';
+    let borderColor = 'var(--border)';
+    let cursor = 'pointer';
+
+    if (paresPalabrasShowFeedback) {
+      if (word === paresPalabrasFeedbackSelected && word === paresPalabrasFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (word === paresPalabrasFeedbackSelected && word !== paresPalabrasFeedbackCorrect) {
+        bgColor = '#ef4444';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (word === paresPalabrasFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      }
+    }
+
     html += `
       <button onclick="selectPairingEnglish('${word}')"
-        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 12px; transition: all 0.2s;"
-        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        style="padding: 12px; background: ${bgColor}; border: 0.5px solid ${borderColor}; border-radius: 6px; text-align: left; cursor: ${cursor}; color: ${textColor}; font-size: 12px; transition: all 0.2s;"
+        ${!paresPalabrasShowFeedback ? "onmouseover=\"this.style.borderColor='var(--fill-accent)'\" onmouseout=\"this.style.borderColor='var(--border)'\"" : ''}>
         ${word}
       </button>
     `;
@@ -1644,41 +1680,31 @@ function selectPairingSpanish(idx, word) {
 
 function selectPairingEnglish(word) {
   if (!window.selectedSpanish) return;
+  if (paresPalabrasShowFeedback) return;
 
   const words = vocabularyData[paresPalabrasTheme];
   const matchedWord = words[window.selectedSpanish.idx];
   const correct = matchedWord.en === word;
-  const resultDiv = document.getElementById('paresPalabrasResult');
+
+  paresPalabrasFeedbackSelected = word;
+  paresPalabrasFeedbackCorrect = matchedWord.en;
+  paresPalabrasShowFeedback = true;
 
   if (correct) {
     paresPalabrasMatches[window.selectedSpanish.idx] = true;
-    resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center; font-weight: 500;">
-        <div style="margin-bottom: 8px;">✓ ¡Correcto!</div>
-        <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">${matchedWord.en}</div>
-        <div style="font-size: 11px; font-style: italic;">/${matchedWord.en_pro}/</div>
-      </div>
-    `;
-
-    setTimeout(() => {
-      renderParesPalabrasExercise();
-    }, 800);
   } else {
     paresPalabrasFailures[window.selectedSpanish.idx] = { selected: word };
-    resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center; font-weight: 500;">
-        <div style="margin-bottom: 8px;">✗ Incorrecto</div>
-        <div style="font-size: 13px; margin-top: 8px;">Respondiste: <strong>${word}</strong></div>
-        <div style="font-size: 11px; color: #155724; margin-top: 4px;">Correcto: <strong>${matchedWord.en}</strong></div>
-      </div>
-    `;
-
-    setTimeout(() => {
-      renderParesPalabrasExercise();
-    }, 1200);
   }
 
-  window.selectedSpanish = null;
+  renderParesPalabrasExercise();
+
+  setTimeout(() => {
+    paresPalabrasShowFeedback = false;
+    paresPalabrasFeedbackSelected = null;
+    paresPalabrasFeedbackCorrect = null;
+    window.selectedSpanish = null;
+    renderParesPalabrasExercise();
+  }, 1500);
 }
 
 // OPCIÓN MÚLTIPLE PALABRAS
@@ -1807,10 +1833,34 @@ function renderMultipleWordsExercise() {
 
   shuffled.forEach((option, idx) => {
     const isCorrect = option === word.en;
+    let bgColor = 'var(--surface-2)';
+    let textColor = 'var(--text-primary)';
+    let borderColor = 'var(--border)';
+    let cursor = 'pointer';
+
+    if (multipleWordsShowFeedback) {
+      if (option === multipleWordsFeedbackSelected && option === multipleWordsFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (option === multipleWordsFeedbackSelected && option !== multipleWordsFeedbackCorrect) {
+        bgColor = '#ef4444';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (option === multipleWordsFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      }
+    }
+
     html += `
       <button onclick="checkMultipleWordsAnswer('${option}', ${isCorrect}, ${multipleWordsIndex})"
-        style="padding: 7px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-size: 12px; font-weight: 500; transition: all 0.2s;"
-        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        style="padding: 7px; background: ${bgColor}; border: 0.5px solid ${borderColor}; border-radius: 8px; cursor: ${cursor}; color: ${textColor}; font-size: 12px; font-weight: 500; transition: all 0.2s;"
+        ${!multipleWordsShowFeedback ? "onmouseover=\"this.style.borderColor='var(--fill-accent)'\" onmouseout=\"this.style.borderColor='var(--border)'\"" : ''}>
         ${option}
       </button>
     `;
@@ -1837,21 +1887,20 @@ function returnToMultipleWordsThemes() {
 }
 
 function checkMultipleWordsAnswer(answer, isCorrect, wordIndex) {
-  const resultDiv = document.getElementById('multipleWordsResult');
+  if (multipleWordsShowFeedback) return;
+
   const words = vocabularyData[multipleWordsTheme];
   const word = words[wordIndex];
+
+  multipleWordsFeedbackSelected = answer;
+  multipleWordsFeedbackCorrect = word.en;
+  multipleWordsShowFeedback = true;
 
   // Marcar como respondida
   multipleWordsAnswered[wordIndex] = true;
 
   if (isCorrect) {
     multipleWordsCorrectCount++;
-    resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 13px; text-align: center; font-weight: 500;">
-        <div style="font-size: 18px; margin-bottom: 6px;">✓</div>
-        ¡Correcto!
-      </div>
-    `;
   } else {
     // Registrar fallo
     multipleWordsFailures.push({
@@ -1860,27 +1909,14 @@ function checkMultipleWordsAnswer(answer, isCorrect, wordIndex) {
       userAnswer: answer,
       correctAnswer: word.en
     });
-
-    resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 13px;">
-        <div style="font-size: 18px; margin-bottom: 6px; text-align: center;">✗</div>
-        <div style="text-align: center; margin-bottom: 8px; font-weight: 500;">Incorrecto</div>
-        <div style="font-size: 12px; margin-bottom: 6px;">Respondiste: <strong>${answer}</strong></div>
-        <div style="font-size: 12px; color: #155724;">Correcto: <strong>${word.en}</strong></div>
-      </div>
-    `;
   }
 
-  // Deshabilitar todos los botones después de responder
-  const buttons = document.querySelectorAll('#multipleWordsContent button[onclick*="checkMultipleWordsAnswer"]');
-  buttons.forEach(btn => {
-    btn.disabled = true;
-    btn.style.opacity = '0.5';
-    btn.style.cursor = 'not-allowed';
-  });
+  renderMultipleWordsExercise();
 
-  // Avanzar después de un delay
   setTimeout(() => {
+    multipleWordsShowFeedback = false;
+    multipleWordsFeedbackSelected = null;
+    multipleWordsFeedbackCorrect = null;
     renderMultipleWordsExercise();
   }, 1500);
 }
@@ -2073,10 +2109,34 @@ function renderParesFrasesExercise() {
   `;
 
   shuffledEnglish.forEach((frase, idx) => {
+    let bgColor = 'var(--surface-2)';
+    let textColor = 'var(--text-primary)';
+    let borderColor = 'var(--border)';
+    let cursor = 'pointer';
+
+    if (paresFrasesShowFeedback) {
+      if (frase === paresFrasesFeedbackSelected && frase === paresFrasesFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (frase === paresFrasesFeedbackSelected && frase !== paresFrasesFeedbackCorrect) {
+        bgColor = '#ef4444';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (frase === paresFrasesFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      }
+    }
+
     html += `
       <button onclick="selectPairingEnglishFrase('${frase.replace(/'/g, "\\'")}')"
-        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
-        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        style="padding: 12px; background: ${bgColor}; border: 0.5px solid ${borderColor}; border-radius: 6px; text-align: left; cursor: ${cursor}; color: ${textColor}; font-size: 13px; transition: all 0.2s;"
+        ${!paresFrasesShowFeedback ? "onmouseover=\"this.style.borderColor='var(--fill-accent)'\" onmouseout=\"this.style.borderColor='var(--border)'\"" : ''}>
         ${frase}
       </button>
     `;
@@ -2113,42 +2173,31 @@ function selectPairingSpanishFrase(idx, frase) {
 
 function selectPairingEnglishFrase(frase) {
   if (!window.selectedSpanishFrase) return;
+  if (paresFrasesShowFeedback) return;
 
   const frases = frasesData[paresFrasesTheme];
-  const correct = frases[window.selectedSpanishFrase.idx].en === frase;
-  const resultDiv = document.getElementById('paresFrasesResult');
+  const matchedFrase = frases[window.selectedSpanishFrase.idx];
+  const correct = matchedFrase.en === frase;
+
+  paresFrasesFeedbackSelected = frase;
+  paresFrasesFeedbackCorrect = matchedFrase.en;
+  paresFrasesShowFeedback = true;
 
   if (correct) {
     paresFrasesMatches[window.selectedSpanishFrase.idx] = true;
-    const matchedFrase = frases[window.selectedSpanishFrase.idx];
-
-    resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center; font-weight: 500;">
-        <div style="margin-bottom: 8px;">✓ ¡Correcto!</div>
-        <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">${matchedFrase.en}</div>
-        <div style="font-size: 11px; font-style: italic;">/${matchedFrase.pro}/</div>
-      </div>
-    `;
-
-    setTimeout(() => {
-      renderParesFrasesExercise();
-    }, 800);
   } else {
     paresFrasesFailures[window.selectedSpanishFrase.idx] = { selected: frase };
-    resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center; font-weight: 500;">
-        <div style="margin-bottom: 8px;">✗ Incorrecto</div>
-        <div style="font-size: 13px; margin-top: 8px;">Respondiste: <strong>${frase}</strong></div>
-        <div style="font-size: 11px; color: #155724; margin-top: 4px;">Correcto: <strong>${frases[window.selectedSpanishFrase.idx].en}</strong></div>
-      </div>
-    `;
-
-    setTimeout(() => {
-      renderParesFrasesExercise();
-    }, 1200);
   }
 
-  window.selectedSpanishFrase = null;
+  renderParesFrasesExercise();
+
+  setTimeout(() => {
+    paresFrasesShowFeedback = false;
+    paresFrasesFeedbackSelected = null;
+    paresFrasesFeedbackCorrect = null;
+    window.selectedSpanishFrase = null;
+    renderParesFrasesExercise();
+  }, 1500);
 }
 
 // OPCIÓN MÚLTIPLE FRASES
@@ -2275,10 +2324,34 @@ function renderMultipleFrasesExercise() {
 
   shuffled.forEach((option) => {
     const isCorrect = option === frase.en;
+    let bgColor = 'var(--surface-2)';
+    let textColor = 'var(--text-primary)';
+    let borderColor = 'var(--border)';
+    let cursor = 'pointer';
+
+    if (multipleFrasesShowFeedback) {
+      if (option === multiplefrasesFeedbackSelected && option === multiplefrasesFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (option === multiplefrasesFeedbackSelected && option !== multiplefrasesFeedbackCorrect) {
+        bgColor = '#ef4444';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (option === multiplefrasesFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      }
+    }
+
     html += `
       <button onclick="checkMultipleFrasesAnswer('${option.replace(/'/g, "\\'")}', ${isCorrect}, ${multipleFrasesIndex})"
-        style="padding: 7px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500; transition: all 0.2s; text-align: left;"
-        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        style="padding: 7px; background: ${bgColor}; border: 0.5px solid ${borderColor}; border-radius: 8px; cursor: ${cursor}; color: ${textColor}; font-size: 13px; font-weight: 500; transition: all 0.2s; text-align: left;"
+        ${!multipleFrasesShowFeedback ? "onmouseover=\"this.style.borderColor='var(--fill-accent)'\" onmouseout=\"this.style.borderColor='var(--border)'\"" : ''}>
         ${option}
       </button>
     `;
@@ -2305,21 +2378,20 @@ function returnToMultipleFrasesThemes() {
 }
 
 function checkMultipleFrasesAnswer(answer, isCorrect, fraseIndex) {
-  const resultDiv = document.getElementById('multipleFrasesResult');
+  if (multipleFrasesShowFeedback) return;
+
   const frases = frasesData[multipleFrasesTheme];
   const frase = frases[fraseIndex];
+
+  multiplefrasesFeedbackSelected = answer;
+  multiplefrasesFeedbackCorrect = frase.en;
+  multipleFrasesShowFeedback = true;
 
   // Marcar como respondida
   multipleFrasesAnswered[fraseIndex] = true;
 
   if (isCorrect) {
     multipleFrasesCorrectCount++;
-    resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 13px; text-align: center; font-weight: 500;">
-        <div style="font-size: 18px; margin-bottom: 6px;">✓</div>
-        ¡Correcto!
-      </div>
-    `;
   } else {
     // Registrar fallo
     multipleFrasesFailures.push({
@@ -2327,27 +2399,14 @@ function checkMultipleFrasesAnswer(answer, isCorrect, fraseIndex) {
       userAnswer: answer,
       correctAnswer: frase.en
     });
-
-    resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 13px;">
-        <div style="font-size: 18px; margin-bottom: 6px; text-align: center;">✗</div>
-        <div style="text-align: center; margin-bottom: 8px; font-weight: 500;">Incorrecto</div>
-        <div style="font-size: 12px; margin-bottom: 6px;">Respondiste: <strong>${answer}</strong></div>
-        <div style="font-size: 12px; color: #155724;">Correcto: <strong>${frase.en}</strong></div>
-      </div>
-    `;
   }
 
-  // Deshabilitar todos los botones después de responder
-  const buttons = document.querySelectorAll('#multipleFrasesContent button[onclick*="checkMultipleFrasesAnswer"]');
-  buttons.forEach(btn => {
-    btn.disabled = true;
-    btn.style.opacity = '0.5';
-    btn.style.cursor = 'not-allowed';
-  });
+  renderMultipleFrasesExercise();
 
-  // Avanzar después de un delay
   setTimeout(() => {
+    multipleFrasesShowFeedback = false;
+    multiplefrasesFeedbackSelected = null;
+    multiplefrasesFeedbackCorrect = null;
     renderMultipleFrasesExercise();
   }, 1500);
 }
@@ -2511,6 +2570,9 @@ function checkActivation() {
 let multipleVerbosAnswered = {};
 let multipleVerbosFailures = [];
 let multipleVerbosCorrectCount = 0;
+let multipleVerbosShowFeedback = false;
+let multipleVerbasFeedbackSelected = null;
+let multipleVerbasFeedbackCorrect = null;
 
 function renderMultipleVerbosGrid() {
   const content = document.getElementById('multipleVerbosContent');
@@ -2627,10 +2689,34 @@ function renderMultipleVerbosExercise() {
 
   shuffled.forEach((option) => {
     const isCorrect = option === verb.es;
+    let bgColor = 'var(--surface-2)';
+    let textColor = 'var(--text-primary)';
+    let borderColor = 'var(--border)';
+    let cursor = 'pointer';
+
+    if (multipleVerbosShowFeedback) {
+      if (option === multipleVerbasFeedbackSelected && option === multipleVerbasFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (option === multipleVerbasFeedbackSelected && option !== multipleVerbasFeedbackCorrect) {
+        bgColor = '#ef4444';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (option === multipleVerbasFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      }
+    }
+
     html += `
       <button onclick="checkMultipleVerbosAnswer('${option.replace(/'/g, "\\'")}', ${isCorrect}, ${window.multipleVerbosIndex})"
-        style="padding: 7px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-primary); font-size: 12px; font-weight: 500; transition: all 0.2s;"
-        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        style="padding: 7px; background: ${bgColor}; border: 0.5px solid ${borderColor}; border-radius: 8px; cursor: ${cursor}; color: ${textColor}; font-size: 12px; font-weight: 500; transition: all 0.2s;"
+        ${!multipleVerbosShowFeedback ? "onmouseover=\"this.style.borderColor='var(--fill-accent)'\" onmouseout=\"this.style.borderColor='var(--border)'\"" : ''}>
         ${option}
       </button>
     `;
@@ -2654,20 +2740,19 @@ function returnToMultipleVerbosGrid() {
 }
 
 function checkMultipleVerbosAnswer(answer, isCorrect, verbIndex) {
-  const resultDiv = document.getElementById('multipleVerbosResult');
+  if (multipleVerbosShowFeedback) return;
+
   const verb = verbsData[verbIndex];
+
+  multipleVerbasFeedbackSelected = answer;
+  multipleVerbasFeedbackCorrect = verb.es;
+  multipleVerbosShowFeedback = true;
 
   // Marcar como respondido
   multipleVerbosAnswered[verbIndex] = true;
 
   if (isCorrect) {
     multipleVerbosCorrectCount++;
-    resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 13px; text-align: center; font-weight: 500;">
-        <div style="font-size: 18px; margin-bottom: 6px;">✓</div>
-        ¡Correcto!
-      </div>
-    `;
   } else {
     // Registrar fallo
     multipleVerbosFailures.push({
@@ -2676,27 +2761,14 @@ function checkMultipleVerbosAnswer(answer, isCorrect, verbIndex) {
       userAnswer: answer,
       correctAnswer: verb.es
     });
-
-    resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 13px;">
-        <div style="font-size: 18px; margin-bottom: 6px; text-align: center;">✗</div>
-        <div style="text-align: center; margin-bottom: 8px; font-weight: 500;">Incorrecto</div>
-        <div style="font-size: 12px; margin-bottom: 6px;">Respondiste: <strong>${answer}</strong></div>
-        <div style="font-size: 12px; color: #155724;">Correcto: <strong>${verb.es}</strong></div>
-      </div>
-    `;
   }
 
-  // Deshabilitar todos los botones después de responder
-  const buttons = document.querySelectorAll('#multipleVerbosContent button[onclick*="checkMultipleVerbosAnswer"]');
-  buttons.forEach(btn => {
-    btn.disabled = true;
-    btn.style.opacity = '0.5';
-    btn.style.cursor = 'not-allowed';
-  });
+  renderMultipleVerbosExercise();
 
-  // Avanzar después de un delay
   setTimeout(() => {
+    multipleVerbosShowFeedback = false;
+    multipleVerbasFeedbackSelected = null;
+    multipleVerbasFeedbackCorrect = null;
     renderMultipleVerbosExercise();
   }, 1500);
 }
@@ -2710,6 +2782,10 @@ function previousMultipleVerbos() {
 }
 
 // PARES DE VERBOS
+let paresVerbosShowFeedback = false;
+let paresVerbasFeedbackSelected = null;
+let paresVerbasFeedbackCorrect = null;
+
 function renderParesVerbosGrid() {
   const grid = document.getElementById('paresVerbosGrid');
   const content = document.getElementById('paresVerbosContent');
@@ -2881,10 +2957,34 @@ function renderParesVerbosExercise() {
   `;
 
   shuffledEnglish.forEach((english) => {
+    let bgColor = 'var(--surface-2)';
+    let textColor = 'var(--text-primary)';
+    let borderColor = 'var(--border)';
+    let cursor = 'pointer';
+
+    if (paresVerbosShowFeedback) {
+      if (english === paresVerbasFeedbackSelected && english === paresVerbasFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (english === paresVerbasFeedbackSelected && english !== paresVerbasFeedbackCorrect) {
+        bgColor = '#ef4444';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      } else if (english === paresVerbasFeedbackCorrect) {
+        bgColor = '#22c55e';
+        textColor = 'white';
+        borderColor = 'transparent';
+        cursor = 'default';
+      }
+    }
+
     html += `
       <button onclick="selectParesVerbosEnglish('${english.replace(/'/g, "\\'")}')"
-        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
-        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        style="padding: 12px; background: ${bgColor}; border: 0.5px solid ${borderColor}; border-radius: 6px; text-align: left; cursor: ${cursor}; color: ${textColor}; font-size: 13px; transition: all 0.2s;"
+        ${!paresVerbosShowFeedback ? "onmouseover=\"this.style.borderColor='var(--fill-accent)'\" onmouseout=\"this.style.borderColor='var(--border)'\"" : ''}>
         ${english}
       </button>
     `;
@@ -2921,43 +3021,33 @@ function selectParesVerbosSpanish(idx, spanish) {
 
 function selectParesVerbosEnglish(english) {
   if (!window.selectedParesVerbosSpanish) return;
+  if (paresVerbosShowFeedback) return;
 
   const verb = verbsData.find(v => v.en === window.selectedParesVerb);
   const idx = window.selectedParesVerbosSpanish.idx;
   const correct = verb.conjugations[idx].form === english;
-  const resultDiv = document.getElementById('paresVerbosResult');
+
+  paresVerbasFeedbackSelected = english;
+  paresVerbasFeedbackCorrect = verb.conjugations[idx].form;
+  paresVerbosShowFeedback = true;
 
   if (correct) {
     window.paresVerbosMatch = window.paresVerbosMatch || {};
     window.paresVerbosMatch[idx] = true;
-    resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center; font-weight: 500;">
-        <div style="margin-bottom: 8px;">✓ ¡Correcto!</div>
-        <div style="font-size: 13px; font-weight: 600;">${english}</div>
-        <div style="font-size: 11px; font-style: italic;">/${verb.conjugations[idx].pro}/</div>
-      </div>
-    `;
-
-    setTimeout(() => {
-      renderParesVerbosExercise();
-    }, 800);
   } else {
     window.paresVerbosFailures = window.paresVerbosFailures || {};
     window.paresVerbosFailures[idx] = { selected: english };
-    resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center; font-weight: 500;">
-        <div style="margin-bottom: 8px;">✗ Incorrecto</div>
-        <div style="font-size: 13px; margin-top: 8px;">Respondiste: <strong>${english}</strong></div>
-        <div style="font-size: 11px; color: #155724; margin-top: 4px;">Correcto: <strong>${verb.conjugations[idx].form}</strong></div>
-      </div>
-    `;
-
-    setTimeout(() => {
-      renderParesVerbosExercise();
-    }, 1200);
   }
 
-  window.selectedParesVerbosSpanish = null;
+  renderParesVerbosExercise();
+
+  setTimeout(() => {
+    paresVerbosShowFeedback = false;
+    paresVerbasFeedbackSelected = null;
+    paresVerbasFeedbackCorrect = null;
+    window.selectedParesVerbosSpanish = null;
+    renderParesVerbosExercise();
+  }, 1500);
 }
 
 // EJERCICIOS DE ESCRITURA - PDF
