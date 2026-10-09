@@ -1121,6 +1121,7 @@ let multipleWordsFeedbackCorrect = null;
 const MULTIPLE_WORDS_BLOCK_SIZE = 6;
 let multipleWordsAnswered = {};
 let multipleWordsFailures = [];
+let multipleWordsCorrect = [];
 let multipleWordsCorrectCount = 0;
 let paresFrasesTheme = null;
 let paresFrasesMatches = {};
@@ -1139,6 +1140,7 @@ let multiplefrasesFeedbackCorrect = null;
 const MULTIPLE_FRASES_BLOCK_SIZE = 6;
 let multipleFrasesAnswered = {};
 let multipleFrasesFailures = [];
+let multipleFrasesCorrect = [];
 let multipleFrasesCorrectCount = 0;
 
 const themeGrid = document.getElementById('themeGrid');
@@ -1757,6 +1759,7 @@ function selectMultipleWordsTheme(theme) {
   multipleWordsCurrentBlock = 0;
   multipleWordsAnswered = {};
   multipleWordsFailures = [];
+  multipleWordsCorrect = [];
   multipleWordsCorrectCount = 0;
   multipleWordsHistory = []; // Resetear historial
   renderMultipleWordsExercise();
@@ -1793,6 +1796,25 @@ function renderMultipleWordsExercise() {
         <div style="font-size: 18px; color: var(--fill-accent); font-weight: 700;">${multipleWordsCorrectCount}/${totalCount} aciertos</div>
       </div>
     `;
+
+    // Mostrar preguntas acertadas
+    if (multipleWordsCorrect.length > 0) {
+      html += `
+        <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #22c55e; margin-bottom: 2rem;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">✓ Preguntas acertadas:</div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${multipleWordsCorrect.map(correct => `
+              <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #22c55e;">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Pregunta:</div>
+                <div style="font-size: 16px; font-weight: 700; color: #22c55e; margin-bottom: 0.5rem;">🇪🇸 ${correct.question}</div>
+                <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 0.5rem; font-style: italic;">/${correct.pronunciation}/</div>
+                <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>🇬🇧 ${correct.correctAnswer}</strong></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
 
     if (failureCount > 0) {
       html += `
@@ -1934,6 +1956,7 @@ function returnToMultipleWordsThemes() {
   multipleWordsCurrentBlock = 0;
   multipleWordsAnswered = {};
   multipleWordsFailures = [];
+  multipleWordsCorrect = [];
   multipleWordsCorrectCount = 0;
   renderMultipleWordsGrid();
   document.getElementById('multipleWordsContent').innerHTML = '';
@@ -1964,6 +1987,12 @@ function checkMultipleWordsAnswer(answer, isCorrect, wordIndex) {
 
   if (isCorrect) {
     multipleWordsCorrectCount++;
+    // Registrar acierto
+    multipleWordsCorrect.push({
+      question: word.es,
+      pronunciation: word.pro,
+      correctAnswer: word.en
+    });
   } else {
     // Registrar fallo
     multipleWordsFailures.push({
@@ -2318,6 +2347,7 @@ function selectMultipleFrasesTheme(theme) {
   multipleFrasesCurrentBlock = 0;
   multipleFrasesAnswered = {};
   multipleFrasesFailures = [];
+  multipleFrasesCorrect = [];
   multipleFrasesCorrectCount = 0;
   multipleFrasesHistory = []; // Resetear historial
   renderMultipleFrasesExercise();
@@ -2354,6 +2384,24 @@ function renderMultipleFrasesExercise() {
         <div style="font-size: 18px; color: var(--fill-accent); font-weight: 700;">${multipleFrasesCorrectCount}/${totalCount} aciertos</div>
       </div>
     `;
+
+    // Mostrar preguntas acertadas
+    if (multipleFrasesCorrect.length > 0) {
+      html += `
+        <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #22c55e; margin-bottom: 2rem;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">✓ Preguntas acertadas:</div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${multipleFrasesCorrect.map(correct => `
+              <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #22c55e;">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Pregunta:</div>
+                <div style="font-size: 14px; font-weight: 700; color: #22c55e; margin-bottom: 0.5rem;">🇪🇸 ${correct.question}</div>
+                <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>🇬🇧 ${correct.correctAnswer}</strong></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
 
     if (failureCount > 0) {
       html += `
@@ -2493,6 +2541,7 @@ function returnToMultipleFrasesThemes() {
   multipleFrasesCurrentBlock = 0;
   multipleFrasesAnswered = {};
   multipleFrasesFailures = [];
+  multipleFrasesCorrect = [];
   multipleFrasesCorrectCount = 0;
   renderMultipleFrasesGrid();
   document.getElementById('multipleFrasesContent').innerHTML = '';
@@ -2523,6 +2572,11 @@ function checkMultipleFrasesAnswer(answer, isCorrect, fraseIndex) {
 
   if (isCorrect) {
     multipleFrasesCorrectCount++;
+    // Registrar acierto
+    multipleFrasesCorrect.push({
+      question: frase.es,
+      correctAnswer: frase.en
+    });
   } else {
     // Registrar fallo
     multipleFrasesFailures.push({
@@ -2700,6 +2754,7 @@ function checkActivation() {
 // OPCIÓN MÚLTIPLE VERBOS
 let multipleVerbosAnswered = {};
 let multipleVerbosFailures = [];
+let multipleVerbosCorrect = [];
 let multipleVerbosCorrectCount = 0;
 let multipleVerbosShowFeedback = false;
 let multipleVerbasFeedbackSelected = null;
@@ -2718,6 +2773,7 @@ function renderMultipleVerbosGrid() {
   window.multipleVerbosIndex = 0;
   multipleVerbosAnswered = {};
   multipleVerbosFailures = [];
+  multipleVerbosCorrect = [];
   multipleVerbosCorrectCount = 0;
   multipleVerbosHistory = []; // Resetear historial
 
@@ -2750,6 +2806,25 @@ function renderMultipleVerbosExercise() {
         <div style="font-size: 18px; color: var(--fill-accent); font-weight: 700;">${multipleVerbosCorrectCount}/${totalCount} aciertos</div>
       </div>
     `;
+
+    // Mostrar preguntas acertadas
+    if (multipleVerbosCorrect.length > 0) {
+      html += `
+        <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #22c55e; margin-bottom: 2rem;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">✓ Preguntas acertadas:</div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${multipleVerbosCorrect.map(correct => `
+              <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #22c55e;">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Pregunta:</div>
+                <div style="font-size: 16px; font-weight: 700; color: #22c55e; margin-bottom: 0.5rem;">🇬🇧 ${correct.question}</div>
+                <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 0.5rem; font-style: italic;">/${correct.pronunciation}/</div>
+                <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>${correct.correctAnswer}</strong></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
 
     if (failureCount > 0) {
       html += `
@@ -2888,6 +2963,7 @@ function renderMultipleVerbosExercise() {
 function returnToMultipleVerbosGrid() {
   multipleVerbosAnswered = {};
   multipleVerbosFailures = [];
+  multipleVerbosCorrect = [];
   multipleVerbosCorrectCount = 0;
   window.multipleVerbosIndex = 0;
   renderMultipleVerbosGrid();
@@ -2917,6 +2993,12 @@ function checkMultipleVerbosAnswer(answer, isCorrect, verbIndex) {
 
   if (isCorrect) {
     multipleVerbosCorrectCount++;
+    // Registrar acierto
+    multipleVerbosCorrect.push({
+      question: verb.en,
+      pronunciation: verb.pro,
+      correctAnswer: verb.es
+    });
   } else {
     // Registrar fallo
     multipleVerbosFailures.push({
@@ -3554,6 +3636,7 @@ function startAlphabetMultiple() {
 
 function renderAlphabetMultiple() {
   if (alphabetMultipleIndex >= alphabetMultipleBlock.length) {
+    const successItems = alphabetMultipleAnswers.filter(a => a.correct);
     const failedItems = alphabetMultipleAnswers.filter(a => !a.correct);
     document.getElementById('alphabetContent').innerHTML = `
       <div style="max-width: 700px; margin: 0 auto;">
@@ -3562,6 +3645,21 @@ function renderAlphabetMultiple() {
           <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Excelente!</div>
           <div style="font-size: 16px; color: var(--fill-accent); font-weight: 700; margin-bottom: 1rem;">${alphabetCorrectCount}/${alphabetMultipleBlock.length} aciertos</div>
         </div>
+
+        ${successItems.length > 0 ? `
+          <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #22c55e; margin-bottom: 2rem;">
+            <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">✓ Preguntas acertadas:</div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              ${successItems.map(item => `
+                <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #22c55e;">
+                  <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Pronunciación:</div>
+                  <div style="font-size: 24px; font-weight: 700; color: #22c55e; margin-bottom: 0.5rem;">${item.pronunciation}</div>
+                  <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>${item.correct}</strong></div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
 
         ${failedItems.length > 0 ? `
           <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #ef4444;">
