@@ -2828,22 +2828,55 @@ function openAppAndNavigate(section) {
 let alphabetMultipleIndex = 0;
 let alphabetMultipleBlock = [];
 let alphabetCorrectCount = 0;
+let alphabetMultipleAnswers = [];
+let alphabetMultipleShowFeedback = false;
+let alphabetMultipleFeedbackSelected = null;
+let alphabetMultipleFeedbackCorrect = null;
 
 function startAlphabetMultiple() {
   alphabetMultipleIndex = 0;
   alphabetCorrectCount = 0;
+  alphabetMultipleAnswers = [];
+  alphabetMultipleShowFeedback = false;
   alphabetMultipleBlock = [...alphabetData].sort(() => Math.random() - 0.5).slice(0, 6);
   renderAlphabetMultiple();
 }
 
 function renderAlphabetMultiple() {
   if (alphabetMultipleIndex >= alphabetMultipleBlock.length) {
+    const failedItems = alphabetMultipleAnswers.filter(a => !a.correct);
     document.getElementById('alphabetContent').innerHTML = `
-      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px;">
-        <div style="font-size: 48px; margin-bottom: 1rem;">✨</div>
-        <div style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">¡Excelente!</div>
-        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 2rem;">Respondiste correctamente: ${alphabetCorrectCount}/${alphabetMultipleBlock.length}</div>
-        <button onclick="startAlphabetMultiple()" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+      <div style="max-width: 700px; margin: 0 auto;">
+        <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+          <div style="font-size: 48px; margin-bottom: 1rem;">✨</div>
+          <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Excelente!</div>
+          <div style="font-size: 16px; color: var(--fill-accent); font-weight: 700; margin-bottom: 1rem;">${alphabetCorrectCount}/${alphabetMultipleBlock.length} aciertos</div>
+        </div>
+
+        ${failedItems.length > 0 ? `
+          <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #ef4444;">
+            <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">❌ Preguntas falladas:</div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              ${failedItems.map(item => `
+                <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #ef4444;">
+                  <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Pronunciación:</div>
+                  <div style="font-size: 24px; font-weight: 700; color: #ef4444; margin-bottom: 0.5rem;">${item.pronunciation}</div>
+                  <div style="font-size: 12px; color: var(--text-secondary);">Respondiste: <strong>${item.selected}</strong></div>
+                  <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>${item.correct}</strong></div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : `
+          <div style="text-align: center; padding: 1.5rem; background: var(--bg-accent); border-radius: 8px;">
+            <div style="font-size: 32px; margin-bottom: 0.5rem;">🎉</div>
+            <div style="font-size: 14px; color: var(--text-primary);">¡Todas las respuestas correctas!</div>
+          </div>
+        `}
+
+        <div style="text-align: center; margin-top: 2rem;">
+          <button onclick="startAlphabetMultiple()" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+        </div>
       </div>
     `;
     return;
@@ -2866,7 +2899,7 @@ function renderAlphabetMultiple() {
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem;">
         ${options.map(option => `
-          <button onclick="checkAlphabetMultiple('${option}', '${current.letter}')" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 24px; font-weight: 700; color: var(--text-primary); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <button onclick="checkAlphabetMultiple('${option}', '${current.letter}')" style="padding: 12px; background: ${alphabetMultipleShowFeedback && option === alphabetMultipleFeedbackSelected ? (option === alphabetMultipleFeedbackCorrect ? '#22c55e' : '#ef4444') : (alphabetMultipleShowFeedback && option === alphabetMultipleFeedbackCorrect ? '#22c55e' : 'var(--surface-2)')}; border: 0.5px solid ${alphabetMultipleShowFeedback && (option === alphabetMultipleFeedbackSelected || option === alphabetMultipleFeedbackCorrect) ? 'transparent' : 'var(--border)'}; border-radius: 8px; cursor: ${alphabetMultipleShowFeedback ? 'default' : 'pointer'}; font-size: 24px; font-weight: 700; color: ${alphabetMultipleShowFeedback && (option === alphabetMultipleFeedbackSelected || option === alphabetMultipleFeedbackCorrect) ? 'white' : 'var(--text-primary)'}; transition: all 0.2s;" ${!alphabetMultipleShowFeedback ? "onmouseover=\"this.style.transform='scale(1.05)'\" onmouseout=\"this.style.transform='scale(1)'\"" : ''}>
             ${option}
           </button>
         `).join('')}
@@ -2877,11 +2910,33 @@ function renderAlphabetMultiple() {
 }
 
 function checkAlphabetMultiple(selected, correct) {
-  if (selected === correct) {
+  if (alphabetMultipleShowFeedback) return;
+
+  alphabetMultipleFeedbackSelected = selected;
+  alphabetMultipleFeedbackCorrect = correct;
+  alphabetMultipleShowFeedback = true;
+
+  const isCorrect = selected === correct;
+  if (isCorrect) {
     alphabetCorrectCount++;
   }
-  alphabetMultipleIndex++;
+
+  alphabetMultipleAnswers.push({
+    pronunciation: alphabetMultipleBlock[alphabetMultipleIndex].pronunciation,
+    selected: selected,
+    correct: correct,
+    isCorrect: isCorrect
+  });
+
   renderAlphabetMultiple();
+
+  setTimeout(() => {
+    alphabetMultipleIndex++;
+    alphabetMultipleShowFeedback = false;
+    alphabetMultipleFeedbackSelected = null;
+    alphabetMultipleFeedbackCorrect = null;
+    renderAlphabetMultiple();
+  }, 1500);
 }
 
 let alphabetPairsLeft = [];
