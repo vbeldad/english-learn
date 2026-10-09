@@ -2942,11 +2942,14 @@ function checkAlphabetMultiple(selected, correct) {
 let alphabetPairsLeft = [];
 let alphabetPairsRight = [];
 let alphabetPairsMatches = {};
+let alphabetPairsFeedback = null;
+let alphabetPairsFeedbackTimeout = null;
 
 function startAlphabetPairs() {
   alphabetPairsLeft = [...alphabetData].sort(() => Math.random() - 0.5).slice(0, 8);
   alphabetPairsRight = [...alphabetPairsLeft].map(item => ({...item})).sort(() => Math.random() - 0.5);
   alphabetPairsMatches = {};
+  alphabetPairsFeedback = null;
   renderAlphabetPairs();
 }
 
@@ -2971,9 +2974,9 @@ function renderAlphabetPairs() {
         <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem; font-weight: 500;">LETRAS</div>
         <div style="display: flex; flex-direction: column; gap: 8px;">
           ${alphabetPairsLeft.map(item => `
-            <button onclick="selectAlphabetLeft('${item.letter}')" style="padding: 12px; background: var(--surface-2); border: 2px solid ${alphabetPairsMatches[item.letter] ? 'var(--fill-accent)' : 'var(--border)'}; border-radius: 8px; cursor: pointer; text-align: left; color: var(--text-primary); font-weight: 500; transition: all 0.2s;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='translateX(0)'">
+            <button onclick="selectAlphabetLeft('${item.letter}')" style="padding: 12px; background: ${alphabetPairsMatches[item.letter] ? '#22c55e' : 'var(--surface-2)'}; border: 2px solid ${alphabetPairsMatches[item.letter] ? 'transparent' : 'var(--border)'}; border-radius: 8px; cursor: pointer; text-align: left; color: ${alphabetPairsMatches[item.letter] ? 'white' : 'var(--text-primary)'}; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='translateX(0)'">
               <span style="font-size: 18px; font-weight: 700;">${item.letter}</span>
-              ${alphabetPairsMatches[item.letter] ? ' ✓' : ''}
+              ${alphabetPairsMatches[item.letter] ? ` <span style="margin-left: 8px;">${item.pronunciation}</span>` : ''}
             </button>
           `).join('')}
         </div>
@@ -2981,11 +2984,18 @@ function renderAlphabetPairs() {
       <div>
         <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem; font-weight: 500;">PRONUNCIACIÓN</div>
         <div style="display: flex; flex-direction: column; gap: 8px;">
-          ${alphabetPairsRight.map((item, idx) => `
-            <button onclick="matchAlphabetPair('${item.letter}')" style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; text-align: left; color: var(--text-primary); transition: all 0.2s;" onmouseover="this.style.transform='translateX(-4px)'" onmouseout="this.style.transform='translateX(0)'">
+          ${alphabetPairsRight.map((item, idx) => {
+            const matchStatus = alphabetPairsFeedback && (alphabetPairsFeedback.letter === item.letter || alphabetPairsFeedback.pronunciation === item.pronunciation);
+            const isCorrect = matchStatus && alphabetPairsFeedback.isCorrect;
+            const isWrong = matchStatus && !alphabetPairsFeedback.isCorrect;
+
+            return `
+            <button onclick="matchAlphabetPair('${item.letter}')" style="padding: 12px; background: ${isCorrect ? '#22c55e' : (isWrong ? '#ef4444' : 'var(--surface-2)')}; border: 0.5px solid ${isCorrect || isWrong ? 'transparent' : 'var(--border)'}; border-radius: 8px; cursor: pointer; text-align: left; color: ${isCorrect || isWrong ? 'white' : 'var(--text-primary)'}; transition: all 0.2s;" onmouseover="${!isCorrect && !isWrong ? "this.style.transform='translateX(-4px)'" : ''}" onmouseout="${!isCorrect && !isWrong ? "this.style.transform='translateX(0)'" : ''}>
               <span style="font-size: 14px;">${item.pronunciation}</span>
+              ${isCorrect ? ` <span style="margin-left: 8px;">✓ ${item.letter}</span>` : (isWrong ? ` <span style="margin-left: 8px;">✗ ${item.letter}</span>` : '')}
             </button>
-          `).join('')}
+          `;
+          }).join('')}
         </div>
       </div>
     </div>
@@ -2998,11 +3008,28 @@ function selectAlphabetLeft(letter) {
 }
 
 function matchAlphabetPair(letter) {
-  if (!selectedAlphabetLeft) return;
-  if (selectedAlphabetLeft === letter) {
+  if (!selectedAlphabetLeft || alphabetPairsFeedback) return;
+
+  const isCorrect = selectedAlphabetLeft === letter;
+
+  alphabetPairsFeedback = {
+    letter: selectedAlphabetLeft,
+    pronunciation: alphabetPairsRight.find(item => item.letter === letter)?.pronunciation || '',
+    isCorrect: isCorrect
+  };
+
+  if (isCorrect) {
     alphabetPairsMatches[letter] = true;
-    renderAlphabetPairs();
   }
+
+  renderAlphabetPairs();
+
+  if (alphabetPairsFeedbackTimeout) clearTimeout(alphabetPairsFeedbackTimeout);
+  alphabetPairsFeedbackTimeout = setTimeout(() => {
+    alphabetPairsFeedback = null;
+    selectedAlphabetLeft = null;
+    renderAlphabetPairs();
+  }, 1200);
 }
 
 let alphabetOrderData = [];
