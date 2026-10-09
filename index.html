@@ -1111,6 +1111,7 @@ let frasesCurrentIndex = 0;
 let frasesUserAnswer = '';
 let paresPalabrasTheme = null;
 let paresPalabrasMatches = {};
+let paresPalabrasFailures = {};
 let paresPalabrasCurrentBlock = 0;
 const PARES_WORDS_BLOCK_SIZE = 6;
 let multipleWordsTheme = null;
@@ -1119,6 +1120,7 @@ let multipleWordsCurrentBlock = 0;
 const MULTIPLE_WORDS_BLOCK_SIZE = 6;
 let paresFrasesTheme = null;
 let paresFrasesMatches = {};
+let paresFrasesFailures = {};
 let paresFrasesCurrentBlock = 0;
 const PARES_BLOCK_SIZE = 6;
 let multipleFrasesTheme = null;
@@ -1408,6 +1410,7 @@ function renderParesPalabrasGrid() {
 function selectParesPalabrasTheme(theme) {
   paresPalabrasTheme = theme;
   paresPalabrasMatches = {};
+  paresPalabrasFailures = {};
   paresPalabrasCurrentBlock = 0;
   document.getElementById('paresPalabrasGrid').style.display = 'none';
   renderParesPalabrasExercise();
@@ -1421,6 +1424,7 @@ function selectParesPalabrasTheme(theme) {
 function returnToParesPalabrasThemes() {
   paresPalabrasTheme = null;
   paresPalabrasMatches = {};
+  paresPalabrasFailures = {};
   paresPalabrasCurrentBlock = 0;
   document.getElementById('paresPalabrasGrid').style.display = 'grid';
   document.getElementById('paresPalabrasContent').innerHTML = '';
@@ -1453,18 +1457,74 @@ function renderParesPalabrasExercise() {
   const endIdx = Math.min(startIdx + PARES_WORDS_BLOCK_SIZE, allWords.length);
   const blockWords = allWords.slice(startIdx, endIdx);
 
-  const Spanish = blockWords.map(w => w.es);
-  const English = blockWords.map(w => w.en);
-
   // Mapeo de índices de bloque a índices globales
   const blockToGlobalIdx = blockWords.map((_, i) => startIdx + i);
 
-  // Filtrar solo las palabras que no han sido emparejadas
-  const pendingIndices = blockToGlobalIdx.filter(idx => !paresPalabrasMatches[idx]);
+  // Checar si todas las palabras del ejercicio completo fueron emparejadas
+  const allMatched = blockToGlobalIdx.every(idx => paresPalabrasMatches[idx] || paresPalabrasFailures[idx]);
+
+  if (allMatched && paresPalabrasCurrentBlock === 0) {
+    // Mostrar resumen solo si es el primer bloque
+    const failedItems = [];
+    blockToGlobalIdx.forEach(idx => {
+      if (paresPalabrasFailures[idx]) {
+        failedItems.push({
+          spanish: words[idx].es,
+          selected: paresPalabrasFailures[idx].selected,
+          correct: words[idx].en,
+          pronunciation: words[idx].en_pro
+        });
+      }
+    });
+
+    const correctCount = blockToGlobalIdx.filter(idx => paresPalabrasMatches[idx]).length;
+
+    document.getElementById('paresPalabrasContent').innerHTML = `
+      <button onclick="returnToParesPalabrasThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
+
+      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+        <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
+        <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
+        <div style="font-size: 16px; color: var(--fill-accent); font-weight: 700;">${correctCount}/${blockToGlobalIdx.length} aciertos</div>
+      </div>
+
+      ${failedItems.length > 0 ? `
+        <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #ef4444; margin-bottom: 2rem;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">❌ Parejas falladas:</div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${failedItems.map(item => `
+              <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #ef4444;">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Palabra:</div>
+                <div style="font-size: 14px; font-weight: 700; color: #ef4444; margin-bottom: 0.5rem;">🇪🇸 ${item.spanish}</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Respondiste: <strong>${item.selected}</strong></div>
+                <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>🇬🇧 ${item.correct}</strong></div>
+                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 0.5rem; font-style: italic;">Pronunciación: /${item.pronunciation}/</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : `
+        <div style="text-align: center; padding: 1.5rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+          <div style="font-size: 32px; margin-bottom: 0.5rem;">🎉</div>
+          <div style="font-size: 14px; color: var(--text-primary);">¡Todas las parejas correctas!</div>
+        </div>
+      `}
+
+      <div style="text-align: center;">
+        <button onclick="selectParesPalabrasTheme('${paresPalabrasTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+      </div>
+    `;
+    return;
+  }
+
+  // Mostrar ejercicio normal
+  const pendingIndices = blockToGlobalIdx.filter(idx => !paresPalabrasMatches[idx] && !paresPalabrasFailures[idx]);
+  const Spanish = blockWords.map(w => w.es);
+  const English = blockWords.map(w => w.en);
   const pendingSpanish = pendingIndices.map(idx => Spanish[idx - startIdx]);
   const pendingEnglish = pendingIndices.map(idx => English[idx - startIdx]);
   const shuffledEnglish = [...pendingEnglish].sort(() => Math.random() - 0.5);
-  
+
   const content = document.getElementById('paresPalabrasContent');
 
   // Selector de bloques
@@ -1476,73 +1536,104 @@ function renderParesPalabrasExercise() {
     </div>
   ` : '';
 
+  // Mostrar parejas completadas
+  const completedCount = blockToGlobalIdx.filter(idx => paresPalabrasMatches[idx] || paresPalabrasFailures[idx]).length;
+
   let html = `
     <button onclick="returnToParesPalabrasThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
 
     ${blockSelector}
 
-    <div style="background: var(--surface-1); padding: 7px; border-radius: 8px; margin-bottom: 0.4rem; text-align: center;">
-      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Arrastra o haz clic para emparejar palabras</p>
+    <div style="background: var(--surface-1); padding: 10px; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0 0 8px 0;">Emparejadas ${completedCount}/${blockToGlobalIdx.length}</p>
+      <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Haz clic para emparejar palabras</p>
     </div>
-    
+
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.4rem;">
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
         <div id="spanishList" style="display: flex; flex-direction: column; gap: 6px;">
   `;
-  
-  pendingSpanish.forEach((word, i) => {
-    const actualIdx = pendingIndices[i];
+
+  blockToGlobalIdx.forEach(actualIdx => {
+    const word = words[actualIdx];
+    const isMatched = paresPalabrasMatches[actualIdx];
+    const isFailed = paresPalabrasFailures[actualIdx];
+    const isDisabled = isMatched || isFailed;
+
+    let bgColor = 'var(--surface-2)';
+    let textColor = 'var(--text-primary)';
+    let opacity = '1';
+    let cursor = 'pointer';
+    let icon = '';
+
+    if (isMatched) {
+      bgColor = '#22c55e';
+      textColor = 'white';
+      icon = ' ✓';
+      cursor = 'default';
+    } else if (isFailed) {
+      bgColor = '#ef4444';
+      textColor = 'white';
+      icon = ' ✗';
+      cursor = 'default';
+    }
+
     html += `
-      <button onclick="selectPairingSpanish(${actualIdx}, '${word}')" data-idx="${actualIdx}" 
-        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 12px; transition: all 0.2s;"
-        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
-        ${word}
+      <button onclick="selectPairingSpanish(${actualIdx}, '${word.es}')" data-idx="${actualIdx}"
+        style="padding: 12px; background: ${bgColor}; border: 0.5px solid ${isDisabled ? 'transparent' : 'var(--border)'}; border-radius: 6px; text-align: left; cursor: ${cursor}; color: ${textColor}; font-size: 12px; transition: all 0.2s; opacity: ${opacity};"
+        ${!isDisabled ? "onmouseover=\"this.style.transform='translateX(2px)'\" onmouseout=\"this.style.transform='translateX(0)'\"" : ''}>
+        ${word.es}${icon}
       </button>
     `;
   });
-  
+
   html += `
         </div>
       </div>
-      
+
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Inglés</div>
         <div id="englishList" style="display: flex; flex-direction: column; gap: 6px;">
   `;
-  
-  shuffledEnglish.forEach((word, idx) => {
+
+  shuffledEnglish.forEach((word) => {
     html += `
-      <button onclick="selectPairingEnglish('${word}')" 
+      <button onclick="selectPairingEnglish('${word}')"
         style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 12px; transition: all 0.2s;"
         onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
         ${word}
       </button>
     `;
   });
-  
+
   html += `
         </div>
       </div>
     </div>
-    
+
     <div id="paresPalabrasResult"></div>
   `;
-  
+
   content.innerHTML = html;
 }
 
 function selectPairingSpanish(idx, word) {
+  // No seleccionar si ya está emparejada
+  if (paresPalabrasMatches[idx] || paresPalabrasFailures[idx]) return;
+
   const resultDiv = document.getElementById('paresPalabrasResult');
-  resultDiv.innerHTML = `<p style="color: var(--text-secondary); font-size: 13px;">Seleccionaste: <strong>${word}</strong> - Ahora selecciona su traducción</p>`;
-  
+  resultDiv.innerHTML = `<div style="background: var(--bg-accent); padding: 12px; border-radius: 8px; color: var(--text-accent); font-size: 12px; text-align: center; font-weight: 500;">Seleccionaste: <strong>${word}</strong><br><span style="font-size: 11px; margin-top: 4px; display: block;">Ahora selecciona su traducción →</span></div>`;
+
   window.selectedSpanish = { idx, word };
-  
+
   document.querySelectorAll('#spanishList button').forEach(btn => {
     btn.style.background = 'var(--surface-2)';
+    btn.style.borderColor = 'var(--border)';
   });
-  
+
   document.querySelector(`[data-idx="${idx}"]`).style.background = 'var(--bg-accent)';
+  document.querySelector(`[data-idx="${idx}"]`).style.borderColor = 'var(--fill-accent)';
 }
 
 function selectPairingEnglish(word) {
@@ -1556,29 +1647,31 @@ function selectPairingEnglish(word) {
   if (correct) {
     paresPalabrasMatches[window.selectedSpanish.idx] = true;
     resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center;">
-        <div style="font-weight: 500; margin-bottom: 8px;">✓ ¡Correcto! (${Object.keys(paresPalabrasMatches).length}/${words.length})</div>
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center; font-weight: 500;">
+        <div style="margin-bottom: 8px;">✓ ¡Correcto!</div>
         <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">${matchedWord.en}</div>
         <div style="font-size: 11px; font-style: italic;">/${matchedWord.en_pro}/</div>
       </div>
     `;
-    
-    // Check if all words are matched
-    if (Object.keys(paresPalabrasMatches).length === words.length) {
-      resultDiv.innerHTML = `
-        <div style="background: var(--bg-accent); padding: 7px; border-radius: 8px; text-align: center; color: var(--text-accent); font-weight: 500;">
-          ✓ ¡Ejercicio completado!
-        </div>
-      `;
-    }
+
+    setTimeout(() => {
+      renderParesPalabrasExercise();
+    }, 800);
   } else {
+    paresPalabrasFailures[window.selectedSpanish.idx] = { selected: word };
     resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center;">
-        ✗ Incorrecto. Intenta de nuevo.
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center; font-weight: 500;">
+        <div style="margin-bottom: 8px;">✗ Incorrecto</div>
+        <div style="font-size: 13px; margin-top: 8px;">Respondiste: <strong>${word}</strong></div>
+        <div style="font-size: 11px; color: #155724; margin-top: 4px;">Correcto: <strong>${matchedWord.en}</strong></div>
       </div>
     `;
+
+    setTimeout(() => {
+      renderParesPalabrasExercise();
+    }, 1200);
   }
-  
+
   window.selectedSpanish = null;
 }
 
@@ -1763,6 +1856,7 @@ function renderParesFrasesGrid() {
 function selectParesFrasesTheme(theme) {
   paresFrasesTheme = theme;
   paresFrasesMatches = {};
+  paresFrasesFailures = {};
   paresFrasesCurrentBlock = 0;
   document.getElementById('paresFrasesGrid').style.display = 'none';
   renderParesFrasesExercise();
@@ -1776,6 +1870,7 @@ function selectParesFrasesTheme(theme) {
 function returnToParesFreasesThemes() {
   paresFrasesTheme = null;
   paresFrasesMatches = {};
+  paresFrasesFailures = {};
   paresFrasesCurrentBlock = 0;
   document.getElementById('paresFrasesGrid').style.display = 'grid';
   document.getElementById('paresFrasesContent').innerHTML = '';
@@ -1783,196 +1878,219 @@ function returnToParesFreasesThemes() {
 
 function renderParesFrasesExercise() {
   if (!paresFrasesTheme) return;
-  
+
   const frases = frasesData[paresFrasesTheme];
+
+  // Checar si todas las frases fueron emparejadas
+  const allMatched = frases.every((_, idx) => paresFrasesMatches[idx] || paresFrasesFailures[idx]);
+
+  if (allMatched) {
+    // Mostrar resumen
+    const failedItems = [];
+    frases.forEach((frase, idx) => {
+      if (paresFrasesFailures[idx]) {
+        failedItems.push({
+          spanish: frase.es,
+          selected: paresFrasesFailures[idx].selected,
+          correct: frase.en,
+          pronunciation: frase.pro
+        });
+      }
+    });
+
+    const correctCount = frases.filter((_, idx) => paresFrasesMatches[idx]).length;
+
+    document.getElementById('paresFrasesContent').innerHTML = `
+      <button onclick="returnToParesFreasesThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
+
+      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+        <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
+        <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
+        <div style="font-size: 16px; color: var(--fill-accent); font-weight: 700;">${correctCount}/${frases.length} aciertos</div>
+      </div>
+
+      ${failedItems.length > 0 ? `
+        <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #ef4444; margin-bottom: 2rem;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">❌ Parejas falladas:</div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${failedItems.map(item => `
+              <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #ef4444;">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Frase:</div>
+                <div style="font-size: 13px; font-weight: 700; color: #ef4444; margin-bottom: 0.5rem;">🇪🇸 ${item.spanish}</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Respondiste: <strong>${item.selected}</strong></div>
+                <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>🇬🇧 ${item.correct}</strong></div>
+                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 0.5rem; font-style: italic;">Pronunciación: /${item.pronunciation}/</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : `
+        <div style="text-align: center; padding: 1.5rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+          <div style="font-size: 32px; margin-bottom: 0.5rem;">🎉</div>
+          <div style="font-size: 14px; color: var(--text-primary);">¡Todas las parejas correctas!</div>
+        </div>
+      `}
+
+      <div style="text-align: center;">
+        <button onclick="selectParesFrasesTheme('${paresFrasesTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+      </div>
+    `;
+    return;
+  }
+
+  // Mostrar ejercicio normal
   const Spanish = frases.map(f => f.es);
   const English = frases.map(f => f.en);
-  
+
   // Filtrar solo las frases que no han sido emparejadas
-  const pendingIndices = Spanish.map((_, idx) => paresFrasesMatches[idx] ? null : idx).filter(i => i !== null);
+  const pendingIndices = Spanish.map((_, idx) => paresFrasesMatches[idx] || paresFrasesFailures[idx] ? null : idx).filter(i => i !== null);
   const pendingSpanish = pendingIndices.map(idx => Spanish[idx]);
   const pendingEnglish = pendingIndices.map(idx => English[idx]);
-  
-  // Dividir en bloques de 8
+
+  // Dividir en bloques de 6
   const blockStart = paresFrasesCurrentBlock * PARES_BLOCK_SIZE;
   const blockEnd = blockStart + PARES_BLOCK_SIZE;
   const blockSpanish = pendingSpanish.slice(blockStart, blockEnd);
   const blockEnglish = pendingEnglish.slice(blockStart, blockEnd);
   const shuffledEnglish = [...blockEnglish].sort(() => Math.random() - 0.5);
   const blockIndices = pendingIndices.slice(blockStart, blockEnd);
-  
+
   const totalBlocks = Math.ceil(pendingSpanish.length / PARES_BLOCK_SIZE);
-  
+  const completedCount = frases.length - pendingIndices.length;
+
   const content = document.getElementById('paresFrasesContent');
-  
+
   let html = `
     <button onclick="returnToParesFreasesThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
-    
+
     <div style="background: var(--surface-1); padding: 10px; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
-      <p style="font-size: 13px; color: var(--text-accent); margin: 0 0 8px 0;">Bloque ${paresFrasesCurrentBlock + 1} de ${totalBlocks} | Emparejadas ${Object.keys(paresFrasesMatches).length}/${frases.length}</p>
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0 0 8px 0;">Emparejadas ${completedCount}/${frases.length}</p>
       <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Haz clic para emparejar frases</p>
     </div>
-    
+
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.4rem;">
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
         <div id="spanishFrasesList" style="display: flex; flex-direction: column; gap: 6px;">
   `;
-  
+
   blockSpanish.forEach((frase, i) => {
     const actualIdx = blockIndices[i];
+    const isMatched = paresFrasesMatches[actualIdx];
+    const isFailed = paresFrasesFailures[actualIdx];
+    const isDisabled = isMatched || isFailed;
+
+    let bgColor = 'var(--surface-2)';
+    let textColor = 'var(--text-primary)';
+    let cursor = 'pointer';
+    let icon = '';
+
+    if (isMatched) {
+      bgColor = '#22c55e';
+      textColor = 'white';
+      icon = ' ✓';
+      cursor = 'default';
+    } else if (isFailed) {
+      bgColor = '#ef4444';
+      textColor = 'white';
+      icon = ' ✗';
+      cursor = 'default';
+    }
+
     html += `
-      <button onclick="selectPairingSpanishFrase(${actualIdx}, '${frase.replace(/'/g, "\\'")}')" data-idx="${actualIdx}" 
-        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
-        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
-        ${frase}
+      <button onclick="selectPairingSpanishFrase(${actualIdx}, '${frase.replace(/'/g, "\\'")}')" data-idx="${actualIdx}"
+        style="padding: 12px; background: ${bgColor}; border: 0.5px solid ${isDisabled ? 'transparent' : 'var(--border)'}; border-radius: 6px; text-align: left; cursor: ${cursor}; color: ${textColor}; font-size: 13px; transition: all 0.2s;"
+        ${!isDisabled ? "onmouseover=\"this.style.transform='translateX(2px)'\" onmouseout=\"this.style.transform='translateX(0)'\"" : ''}>
+        ${frase}${icon}
       </button>
     `;
   });
-  
+
   html += `
         </div>
       </div>
-      
+
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Inglés</div>
         <div id="englishFrasesList" style="display: flex; flex-direction: column; gap: 6px;">
   `;
-  
+
   shuffledEnglish.forEach((frase, idx) => {
     html += `
-      <button onclick="selectPairingEnglishFrase('${frase.replace(/'/g, "\\'")}')" 
+      <button onclick="selectPairingEnglishFrase('${frase.replace(/'/g, "\\'")}')"
         style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
         onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
         ${frase}
       </button>
     `;
   });
-  
+
   html += `
         </div>
       </div>
     </div>
-    
+
     <div id="paresFrasesResult"></div>
-    
-    <div style="display: flex; gap: 6px; margin-top: 1rem; justify-content: center;">
-      ${paresFrasesCurrentBlock > 0 ? `<button onclick="paresFrasesCurrentBlock--; renderParesFrasesExercise();" style="padding: 10px 16px; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Bloque Anterior</button>` : ''}
-      ${paresFrasesCurrentBlock < totalBlocks - 1 ? `<button onclick="paresFrasesCurrentBlock++; renderParesFrasesExercise();" style="padding: 10px 16px; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">Siguiente Bloque →</button>` : ''}
-    </div>
   `;
-  
+
   content.innerHTML = html;
-  
-  // Mostrar parejas ya acertadas con pronunciación
-  renderCompletedPairings();
 }
 
 function selectPairingSpanishFrase(idx, frase) {
+  // No seleccionar si ya está emparejada
+  if (paresFrasesMatches[idx] || paresFrasesFailures[idx]) return;
+
   const resultDiv = document.getElementById('paresFrasesResult');
-  resultDiv.innerHTML = `<p style="color: var(--text-secondary); font-size: 13px;">Seleccionaste: <strong>${frase}</strong> - Ahora selecciona su traducción</p>`;
-  
+  resultDiv.innerHTML = `<div style="background: var(--bg-accent); padding: 12px; border-radius: 8px; color: var(--text-accent); font-size: 12px; text-align: center; font-weight: 500;">Seleccionaste: <strong>${frase}</strong><br><span style="font-size: 11px; margin-top: 4px; display: block;">Ahora selecciona su traducción →</span></div>`;
+
   window.selectedSpanishFrase = { idx, frase };
-  
+
   document.querySelectorAll('#spanishFrasesList button').forEach(btn => {
     btn.style.background = 'var(--surface-2)';
+    btn.style.borderColor = 'var(--border)';
   });
-  
-  document.querySelector(`[data-idx="${idx}"]`).style.background = 'var(--bg-accent)';
-}
 
-function renderCompletedPairings() {
-  const frases = frasesData[paresFrasesTheme];
-  const completedDiv = document.createElement('div');
-  completedDiv.style.cssText = 'margin-top: 2rem; padding: 12px; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 8px;';
-  
-  const completedIndices = Object.keys(paresFrasesMatches).map(Number);
-  
-  if (completedIndices.length === 0) return;
-  
-  let html = `<div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase;">✓ Parejas acertadas (${completedIndices.length}/${frases.length})</div>`;
-  html += `<div style="display: flex; flex-direction: column; gap: 8px;">`;
-  
-  completedIndices.forEach(idx => {
-    const frase = frases[idx];
-    html += `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; border-radius: 6px; padding: 10px; color: #155724; font-size: 12px;">
-        <div style="font-weight: 500; margin-bottom: 4px;">🇪🇸 ${frase.es}</div>
-        <div style="font-weight: 500; margin-bottom: 4px;">🇬🇧 ${frase.en}</div>
-        <div style="font-style: italic; font-size: 11px; padding-top: 4px; border-top: 0.5px solid #c3e6cb; margin-top: 4px;">Pronunciación: /${frase.pro}/</div>
-      </div>
-    `;
-  });
-  
-  html += `</div>`;
-  completedDiv.innerHTML = html;
-  
-  const paresFrasesContent = document.getElementById('paresFrasesContent');
-  const existingCompleted = paresFrasesContent.querySelector('[data-completed-section]');
-  if (existingCompleted) {
-    existingCompleted.remove();
-  }
-  
-  completedDiv.setAttribute('data-completed-section', 'true');
-  paresFrasesContent.appendChild(completedDiv);
+  document.querySelector(`[data-idx="${idx}"]`).style.background = 'var(--bg-accent)';
+  document.querySelector(`[data-idx="${idx}"]`).style.borderColor = 'var(--fill-accent)';
 }
 
 function selectPairingEnglishFrase(frase) {
   if (!window.selectedSpanishFrase) return;
-  
+
   const frases = frasesData[paresFrasesTheme];
   const correct = frases[window.selectedSpanishFrase.idx].en === frase;
   const resultDiv = document.getElementById('paresFrasesResult');
-  
+
   if (correct) {
     paresFrasesMatches[window.selectedSpanishFrase.idx] = true;
     const matchedFrase = frases[window.selectedSpanishFrase.idx];
-    const pronunciation = matchedFrase.pro;
-    
+
     resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center;">
-        <div style="margin-bottom: 6px;">✓ ¡Correcto! (${Object.keys(paresFrasesMatches).length}/${frases.length})</div>
-        <div style="font-size: 13px; font-weight: 500; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid #c3e6cb;">
-          ${matchedFrase.en}
-        </div>
-        <div style="font-size: 12px; font-style: italic; margin-top: 6px;">
-          /${pronunciation}/
-        </div>
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center; font-weight: 500;">
+        <div style="margin-bottom: 8px;">✓ ¡Correcto!</div>
+        <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">${matchedFrase.en}</div>
+        <div style="font-size: 11px; font-style: italic;">/${matchedFrase.pro}/</div>
       </div>
     `;
-    
-    // Marcar parejas como completadas visualmente
-    document.querySelector(`[data-idx="${window.selectedSpanishFrase.idx}"]`).style.background = '#d4edda';
-    document.querySelector(`[data-idx="${window.selectedSpanishFrase.idx}"]`).style.color = '#155724';
-    
-    // Actualizar parejas acertadas visibles
-    renderCompletedPairings();
-    
+
     setTimeout(() => {
-      if (Object.keys(paresFrasesMatches).length === frases.length) {
-        resultDiv.innerHTML = `
-          <div style="background: var(--bg-accent); padding: 7px; border-radius: 8px; text-align: center; color: var(--text-accent); font-weight: 500;">
-            ✓ ¡Ejercicio completado!
-          </div>
-        `;
-      } else {
-        // Limpiar selección pero mantener visible
-        document.querySelectorAll('#spanishFrasesList button').forEach(btn => {
-          if (!btn.style.background.includes('d4edda')) {
-            btn.style.background = 'var(--surface-2)';
-          }
-        });
-        resultDiv.innerHTML = '';
-      }
-    }, 500);
+      renderParesFrasesExercise();
+    }, 800);
   } else {
+    paresFrasesFailures[window.selectedSpanishFrase.idx] = { selected: frase };
     resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center;">
-        ✗ Incorrecto. Intenta de nuevo.
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center; font-weight: 500;">
+        <div style="margin-bottom: 8px;">✗ Incorrecto</div>
+        <div style="font-size: 13px; margin-top: 8px;">Respondiste: <strong>${frase}</strong></div>
+        <div style="font-size: 11px; color: #155724; margin-top: 4px;">Correcto: <strong>${frases[window.selectedSpanishFrase.idx].en}</strong></div>
       </div>
     `;
+
+    setTimeout(() => {
+      renderParesFrasesExercise();
+    }, 1200);
   }
-  
+
   window.selectedSpanishFrase = null;
 }
 
@@ -2415,6 +2533,7 @@ function renderParesVerbosGrid() {
 
 function selectParesVerbosVerb(verbName) {
   window.paresVerbosMatch = {};
+  window.paresVerbosFailures = {};
   window.selectedParesVerb = verbName;
   document.getElementById('paresVerbosGrid').style.display = 'none';
   renderParesVerbosExercise();
@@ -2427,6 +2546,7 @@ function selectParesVerbosVerb(verbName) {
 
 function returnFromParesVerbos() {
   window.paresVerbosMatch = null;
+  window.paresVerbosFailures = null;
   window.selectedParesVerb = null;
   document.getElementById('paresVerbosGrid').style.display = 'grid';
   document.getElementById('paresVerbosContent').innerHTML = '';
@@ -2435,107 +2555,213 @@ function returnFromParesVerbos() {
 
 function renderParesVerbosExercise() {
   if (!window.selectedParesVerb) return;
-  
+
   const verb = verbsData.find(v => v.en === window.selectedParesVerb);
   if (!verb || !verb.conjugations) return;
-  
+
+  const allMatched = verb.conjugations.every((_, idx) => window.paresVerbosMatch[idx] || window.paresVerbosFailures[idx]);
+
+  if (allMatched) {
+    // Mostrar resumen
+    const failedItems = [];
+    const pronouns = ['I', 'You', 'He/She/It', 'We', 'They'];
+
+    verb.conjugations.forEach((conj, idx) => {
+      if (window.paresVerbosFailures[idx]) {
+        failedItems.push({
+          pronoun: conj.pronoun || pronouns[idx],
+          spanish: conj.es,
+          selected: window.paresVerbosFailures[idx].selected,
+          correct: conj.form,
+          pronunciation: conj.pro
+        });
+      }
+    });
+
+    const correctCount = verb.conjugations.filter((_, idx) => window.paresVerbosMatch[idx]).length;
+
+    document.getElementById('paresVerbosContent').innerHTML = `
+      <button onclick="returnFromParesVerbos()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
+
+      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+        <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
+        <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
+        <div style="font-size: 16px; color: var(--fill-accent); font-weight: 700;">${correctCount}/${verb.conjugations.length} aciertos</div>
+        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 0.5rem;">Verbo: ${verb.en}</div>
+      </div>
+
+      ${failedItems.length > 0 ? `
+        <div style="background: var(--surface-1); border-radius: 8px; padding: 1.5rem; border-left: 4px solid #ef4444; margin-bottom: 2rem;">
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">❌ Conjugaciones falladas:</div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${failedItems.map(item => `
+              <div style="background: var(--surface-2); padding: 1rem; border-radius: 6px; border-left: 3px solid #ef4444;">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Pronombre: <strong>${item.pronoun}</strong></div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Español:</div>
+                <div style="font-size: 13px; font-weight: 700; color: #ef4444; margin-bottom: 0.5rem;">${item.spanish}</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem;">Respondiste: <strong>${item.selected}</strong></div>
+                <div style="font-size: 12px; color: #22c55e;">Correcto: <strong>${item.correct}</strong></div>
+                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 0.5rem; font-style: italic;">Pronunciación: /${item.pronunciation}/</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : `
+        <div style="text-align: center; padding: 1.5rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+          <div style="font-size: 32px; margin-bottom: 0.5rem;">🎉</div>
+          <div style="font-size: 14px; color: var(--text-primary);">¡Todas las conjugaciones correctas!</div>
+        </div>
+      `}
+
+      <div style="text-align: center;">
+        <button onclick="selectParesVerbosVerb('${verb.en}')" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+      </div>
+    `;
+    return;
+  }
+
+  // Mostrar ejercicio normal
   const Spanish = verb.conjugations.map(c => c.es);
   const English = verb.conjugations.map(c => c.form);
-  const shuffledEnglish = [...English].sort(() => Math.random() - 0.5);
-  
+
+  const pendingIndices = Spanish.map((_, idx) => window.paresVerbosMatch[idx] || window.paresVerbosFailures[idx] ? null : idx).filter(i => i !== null);
+  const pendingSpanish = pendingIndices.map(idx => Spanish[idx]);
+  const pendingEnglish = pendingIndices.map(idx => English[idx]);
+  const shuffledEnglish = [...pendingEnglish].sort(() => Math.random() - 0.5);
+
+  const completedCount = verb.conjugations.length - pendingIndices.length;
+
   let html = `
     <button onclick="returnFromParesVerbos()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
-    
-    <div style="background: var(--surface-1); padding: 7px; border-radius: 8px; margin-bottom: 0.4rem; text-align: center;">
-      <p style="font-size: 13px; color: var(--text-accent); margin: 0;">Emparejar conjugaciones de: <strong>${verb.en}</strong></p>
+
+    <div style="background: var(--surface-1); padding: 10px; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-accent); margin: 0 0 8px 0;">Emparejadas ${completedCount}/${verb.conjugations.length}</p>
+      <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Verbo: <strong>${verb.en}</strong></p>
     </div>
-    
+
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.4rem;">
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Español</div>
         <div id="spanishConjList" style="display: flex; flex-direction: column; gap: 6px;">
   `;
-  
-  Spanish.forEach((spanish, idx) => {
-    if (window.paresVerbosMatch && window.paresVerbosMatch[idx]) return;
+
+  verb.conjugations.forEach((conj, idx) => {
+    const isMatched = window.paresVerbosMatch[idx];
+    const isFailed = window.paresVerbosFailures[idx];
+    const isDisabled = isMatched || isFailed;
+
+    let bgColor = 'var(--surface-2)';
+    let textColor = 'var(--text-primary)';
+    let cursor = 'pointer';
+    let icon = '';
+
+    if (isMatched) {
+      bgColor = '#22c55e';
+      textColor = 'white';
+      icon = ' ✓';
+      cursor = 'default';
+    } else if (isFailed) {
+      bgColor = '#ef4444';
+      textColor = 'white';
+      icon = ' ✗';
+      cursor = 'default';
+    }
+
     html += `
-      <button onclick="selectParesVerbosSpanish(${idx}, '${spanish.replace(/'/g, "\\'")}')" data-idx="${idx}" 
-        style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
-        onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
-        ${spanish}
+      <button onclick="selectParesVerbosSpanish(${idx}, '${conj.es.replace(/'/g, "\\'")}')" data-idx="${idx}"
+        style="padding: 12px; background: ${bgColor}; border: 0.5px solid ${isDisabled ? 'transparent' : 'var(--border)'}; border-radius: 6px; text-align: left; cursor: ${cursor}; color: ${textColor}; font-size: 13px; transition: all 0.2s;"
+        ${!isDisabled ? "onmouseover=\"this.style.transform='translateX(2px)'\" onmouseout=\"this.style.transform='translateX(0)'\"" : ''}>
+        ${conj.es}${icon}
       </button>
     `;
   });
-  
+
   html += `
         </div>
       </div>
-      
+
       <div>
         <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Inglés</div>
         <div id="englishConjList" style="display: flex; flex-direction: column; gap: 6px;">
   `;
-  
+
   shuffledEnglish.forEach((english) => {
     html += `
-      <button onclick="selectParesVerbosEnglish('${english.replace(/'/g, "\\'")}')" 
+      <button onclick="selectParesVerbosEnglish('${english.replace(/'/g, "\\'")}')"
         style="padding: 12px; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; color: var(--text-primary); font-size: 13px; transition: all 0.2s;"
         onmouseover="this.style.borderColor='var(--fill-accent)'" onmouseout="this.style.borderColor='var(--border)'">
         ${english}
       </button>
     `;
   });
-  
+
   html += `
         </div>
       </div>
     </div>
-    
+
     <div id="paresVerbosResult"></div>
   `;
-  
+
   document.getElementById('paresVerbosContent').innerHTML = html;
 }
 
 function selectParesVerbosSpanish(idx, spanish) {
+  // No seleccionar si ya está emparejada
+  if (window.paresVerbosMatch[idx] || window.paresVerbosFailures[idx]) return;
+
+  const resultDiv = document.getElementById('paresVerbosResult');
+  resultDiv.innerHTML = `<div style="background: var(--bg-accent); padding: 12px; border-radius: 8px; color: var(--text-accent); font-size: 12px; text-align: center; font-weight: 500;">Seleccionaste: <strong>${spanish}</strong><br><span style="font-size: 11px; margin-top: 4px; display: block;">Ahora selecciona su conjugación en inglés →</span></div>`;
+
   window.selectedParesVerbosSpanish = { idx, spanish };
+
+  document.querySelectorAll('#spanishConjList button').forEach(btn => {
+    btn.style.background = 'var(--surface-2)';
+    btn.style.borderColor = 'var(--border)';
+  });
+
+  document.querySelector(`[data-idx="${idx}"]`).style.background = 'var(--bg-accent)';
+  document.querySelector(`[data-idx="${idx}"]`).style.borderColor = 'var(--fill-accent)';
 }
 
 function selectParesVerbosEnglish(english) {
   if (!window.selectedParesVerbosSpanish) return;
-  
+
   const verb = verbsData.find(v => v.en === window.selectedParesVerb);
-  const correct = verb.conjugations[window.selectedParesVerbosSpanish.idx].form === english;
+  const idx = window.selectedParesVerbosSpanish.idx;
+  const correct = verb.conjugations[idx].form === english;
   const resultDiv = document.getElementById('paresVerbosResult');
-  
+
   if (correct) {
     window.paresVerbosMatch = window.paresVerbosMatch || {};
-    window.paresVerbosMatch[window.selectedParesVerbosSpanish.idx] = true;
+    window.paresVerbosMatch[idx] = true;
     resultDiv.innerHTML = `
-      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center;">
-        ✓ ¡Correcto! (${Object.keys(window.paresVerbosMatch).length}/${verb.conjugations.length})
+      <div style="background: #d4edda; border: 0.5px solid #c3e6cb; padding: 12px; border-radius: 8px; color: #155724; font-size: 12px; text-align: center; font-weight: 500;">
+        <div style="margin-bottom: 8px;">✓ ¡Correcto!</div>
+        <div style="font-size: 13px; font-weight: 600;">${english}</div>
+        <div style="font-size: 11px; font-style: italic;">/${verb.conjugations[idx].pro}/</div>
       </div>
     `;
-    
+
     setTimeout(() => {
-      if (Object.keys(window.paresVerbosMatch).length === verb.conjugations.length) {
-        resultDiv.innerHTML = `
-          <div style="background: var(--bg-accent); padding: 7px; border-radius: 8px; text-align: center; color: var(--text-accent); font-weight: 500;">
-            ✓ ¡Ejercicio completado!
-          </div>
-        `;
-      } else {
-        renderParesVerbosExercise();
-      }
-    }, 500);
+      renderParesVerbosExercise();
+    }, 800);
   } else {
+    window.paresVerbosFailures = window.paresVerbosFailures || {};
+    window.paresVerbosFailures[idx] = { selected: english };
     resultDiv.innerHTML = `
-      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center;">
-        ✗ Incorrecto. Intenta de nuevo.
+      <div style="background: #f8d7da; border: 0.5px solid #f5c6cb; padding: 12px; border-radius: 8px; color: #721c24; font-size: 12px; text-align: center; font-weight: 500;">
+        <div style="margin-bottom: 8px;">✗ Incorrecto</div>
+        <div style="font-size: 13px; margin-top: 8px;">Respondiste: <strong>${english}</strong></div>
+        <div style="font-size: 11px; color: #155724; margin-top: 4px;">Correcto: <strong>${verb.conjugations[idx].form}</strong></div>
       </div>
     `;
+
+    setTimeout(() => {
+      renderParesVerbosExercise();
+    }, 1200);
   }
-  
+
   window.selectedParesVerbosSpanish = null;
 }
 
