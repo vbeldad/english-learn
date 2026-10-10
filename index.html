@@ -323,6 +323,21 @@
       margin-bottom: 0.5rem;
     }
 
+    /* Botón flotante de imprimir (dentro de los ejercicios) */
+    #printFab {
+      position: fixed;
+      right: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      z-index: 9999;
+      display: flex; align-items: center; gap: 6px;
+      padding: 12px 18px;
+      background: #2563eb; color: #ffffff;
+      border: none; border-radius: 999px;
+      font-size: 15px; font-weight: 600;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      cursor: pointer;
+    }
+
     /* PRINT STYLES */
     @media print {
       body {
@@ -372,10 +387,15 @@
         display: none !important;
       }
 
-      /* Optimize layout for printing */
-      .section {
+      /* Imprimir solo la sección/ejercicio que se está viendo */
+      .section:not(.active) {
+        display: none !important;
+      }
+      .section.active {
         display: block !important;
-        page-break-inside: avoid;
+      }
+      #printFab {
+        display: none !important;
       }
 
       .learning-card {
@@ -591,6 +611,8 @@
 </div>
 
 <div id="appContent" style="display: none;">
+
+<button id="printFab" onclick="window.print()" aria-label="Imprimir">🖨️ Imprimir</button>
 
 <div class="container">
   <div class="header">
