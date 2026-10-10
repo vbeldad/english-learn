@@ -493,6 +493,11 @@
         page-break-after: avoid;
       }
 
+      /* Hide exercise completion summary */
+      .exercise-completion-summary {
+        display: none !important;
+      }
+
       /* Header styling for print */
       .header {
         page-break-after: avoid;
@@ -1704,7 +1709,7 @@ function renderParesPalabrasExercise() {
     document.getElementById('paresPalabrasContent').innerHTML = `
       <button onclick="returnToParesPalabrasThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
 
-      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+      <div class="exercise-completion-summary" style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
         <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
         <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
         <div style="font-size: 16px; color: var(--fill-accent); font-weight: 700;">${correctCount}/${blockToGlobalIdx.length} aciertos</div>
@@ -2009,7 +2014,7 @@ function renderMultipleWordsExercise() {
     let html = `
       <button onclick="returnToMultipleWordsThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver a temas</button>
 
-      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+      <div class="exercise-completion-summary" style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
         <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
         <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
         <div style="font-size: 18px; color: var(--fill-accent); font-weight: 700;">${multipleWordsCorrectCount}/${totalCount} aciertos</div>
@@ -2310,7 +2315,7 @@ function renderParesFrasesExercise() {
     document.getElementById('paresFrasesContent').innerHTML = `
       <button onclick="returnToParesFreasesThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
 
-      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+      <div class="exercise-completion-summary" style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
         <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
         <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
         <div style="font-size: 16px; color: var(--fill-accent); font-weight: 700;">${correctCount}/${frases.length} aciertos</div>
@@ -2612,7 +2617,7 @@ function renderMultipleFrasesExercise() {
     let html = `
       <button onclick="returnToMultipleFrasesThemes()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver a temas</button>
 
-      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+      <div class="exercise-completion-summary" style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
         <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
         <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
         <div style="font-size: 18px; color: var(--fill-accent); font-weight: 700;">${multipleFrasesCorrectCount}/${totalCount} aciertos</div>
@@ -3044,7 +3049,7 @@ function renderMultipleVerbosExercise() {
     let html = `
       <button onclick="returnToMultipleVerbosGrid()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver a verbos</button>
 
-      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+      <div class="exercise-completion-summary" style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
         <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
         <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
         <div style="font-size: 18px; color: var(--fill-accent); font-weight: 700;">${multipleVerbosCorrectCount}/${totalCount} aciertos</div>
@@ -3346,7 +3351,7 @@ function renderParesVerbosExercise() {
     document.getElementById('paresVerbosContent').innerHTML = `
       <button onclick="returnFromParesVerbos()" style="padding: 10px 16px; margin-bottom: 1rem; background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 13px; font-weight: 500;">← Volver</button>
 
-      <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+      <div class="exercise-completion-summary" style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
         <div style="font-size: 40px; margin-bottom: 1rem;">✨</div>
         <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
         <div style="font-size: 16px; color: var(--fill-accent); font-weight: 700;">${correctCount}/${verb.conjugations.length} aciertos</div>
@@ -4054,7 +4059,7 @@ function renderAlphabetPairs() {
 
     document.getElementById('alphabetContent').innerHTML = `
       <div style="max-width: 700px; margin: 0 auto;">
-        <div style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
+        <div class="exercise-completion-summary" style="text-align: center; padding: 2rem; background: var(--bg-accent); border-radius: 8px; margin-bottom: 2rem;">
           <div style="font-size: 48px; margin-bottom: 1rem;">✨</div>
           <div style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">¡Ejercicio Completado!</div>
           <div style="font-size: 16px; color: var(--fill-accent); font-weight: 700; margin-bottom: 1rem;">${correctCount}/${alphabetPairsLeft.length} aciertos</div>
