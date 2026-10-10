@@ -1590,11 +1590,11 @@ ${(blockToGlobalIdx.filter(idx => paresPalabrasMatches[idx]).map(idx => words[id
             <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.8rem; border-radius: 6px; font-size: 12px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇪🇸 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.spanish}</span>
+                <span style="color: #000000; font-weight: 600;">${h.spanish}</span>
               </div>
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇬🇧 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.english}</span>
+                <span style="color: #000000; font-weight: 600;">${h.english}</span>
                 <span style="color: #000000; font-size: 11px; font-style: italic;"> /${h.pronunciation}/</span>
               </div>
             </div>
@@ -1893,11 +1893,11 @@ function renderMultipleWordsExercise() {
             <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.8rem; border-radius: 6px; font-size: 12px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇪🇸 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.question}</span>
+                <span style="color: #000000; font-weight: 600;">${h.question}</span>
               </div>
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇬🇧 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.english}</span>
+                <span style="color: #000000; font-weight: 600;">${h.english}</span>
                 <span style="color: #000000; font-size: 11px; font-style: italic;"> /${h.pronunciation}/</span>
               </div>
             </div>
@@ -2194,11 +2194,11 @@ ${(frases.filter((_, idx) => paresFrasesMatches[idx])).length > 0 ? `
             <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.8rem; border-radius: 6px; font-size: 12px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇪🇸 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.spanish}</span>
+                <span style="color: #000000; font-weight: 600;">${h.spanish}</span>
               </div>
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇬🇧 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.english}</span>
+                <span style="color: #000000; font-weight: 600;">${h.english}</span>
                 <span style="color: #000000; font-size: 11px; font-style: italic;"> /${h.pronunciation}/</span>
               </div>
             </div>
@@ -2494,11 +2494,11 @@ function renderMultipleFrasesExercise() {
             <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.8rem; border-radius: 6px; font-size: 12px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇪🇸 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.question}</span>
+                <span style="color: #000000; font-weight: 600;">${h.question}</span>
               </div>
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇬🇧 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.english}</span>
+                <span style="color: #000000; font-weight: 600;">${h.english}</span>
                 <span style="color: #000000; font-size: 11px; font-style: italic;"> /${h.pronunciation}/</span>
               </div>
             </div>
@@ -2928,12 +2928,12 @@ function renderMultipleVerbosExercise() {
             <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.8rem; border-radius: 6px; font-size: 12px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇬🇧 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.question}</span>
+                <span style="color: #000000; font-weight: 600;">${h.question}</span>
                 <span style="color: #000000; font-size: 11px; font-style: italic;"> /${h.pronunciation}/</span>
               </div>
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇪🇸 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.spanish}</span>
+                <span style="color: #000000; font-weight: 600;">${h.spanish}</span>
               </div>
             </div>
           `).join('')}
@@ -3222,11 +3222,11 @@ ${(verb.conjugations.map((c, idx) => ({...c, pronoun: c.pronoun || pronouns[idx]
             <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.8rem; border-radius: 6px; font-size: 12px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇪🇸 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.spanish}</span>
+                <span style="color: #000000; font-weight: 600;">${h.spanish}</span>
               </div>
               <div style="margin-bottom: 0.4rem;">
                 <span style="color: #000000;">🇬🇧 </span>
-                <span style="color: var(--text-primary); font-weight: 600;">${h.english}</span>
+                <span style="color: #000000; font-weight: 600;">${h.english}</span>
                 <span style="color: #000000; font-size: 11px; font-style: italic;"> /${h.pronunciation}/</span>
               </div>
             </div>
@@ -3764,7 +3764,7 @@ function renderAlphabetMultiple() {
               <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.6rem; border-radius: 6px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
                 <div>
                   <span style="color: #000000;">/${h.pronunciation}/ = </span>
-                  <span style="color: var(--text-primary); font-weight: 600;">${h.correct}</span>
+                  <span style="color: #000000; font-weight: 600;">${h.correct}</span>
                 </div>
               </div>
             `).join('')}
@@ -3908,7 +3908,7 @@ ${(alphabetPairsLeft.filter(item => alphabetPairsMatches[item.letter])).length >
           ${alphabetPairsHistory.map((h) => `
             <div style="background: ${h.isCorrect ? '#d4edda' : '#f8d7da'}; padding: 0.8rem; border-radius: 6px; font-size: 12px; border-left: 3px solid ${h.isCorrect ? '#22c55e' : '#ef4444'};">
               <div style="margin-bottom: 0.4rem;">
-                <span style="color: var(--text-primary); font-weight: 600; font-size: 14px;">${h.letter}</span>
+                <span style="color: #000000; font-weight: 600; font-size: 14px;">${h.letter}</span>
                 <span style="color: #000000;"> = /${h.correct}/</span>
               </div>
             </div>
