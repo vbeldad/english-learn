@@ -322,6 +322,183 @@
       color: var(--text-primary);
       margin-bottom: 0.5rem;
     }
+
+    /* PRINT STYLES */
+    @media print {
+      body {
+        background: white;
+        color: black;
+        padding: 0;
+        margin: 0;
+      }
+
+      #homeScreen {
+        display: none !important;
+      }
+
+      #appContent {
+        display: block !important;
+        max-width: 100%;
+        padding: 0 1in;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
+      /* Hide navigation and interactive elements */
+      .nav-main {
+        display: none !important;
+      }
+
+      .nav-tab {
+        display: none !important;
+      }
+
+      .navigation {
+        display: none !important;
+      }
+
+      .button-group {
+        display: none !important;
+      }
+
+      button {
+        display: none !important;
+      }
+
+      /* Print button specifically */
+      #printBtn {
+        display: none !important;
+      }
+
+      /* Optimize layout for printing */
+      .section {
+        display: block !important;
+        page-break-inside: avoid;
+      }
+
+      .learning-card {
+        page-break-inside: avoid;
+        border: 1px solid black;
+        background: white;
+        color: black;
+        margin-bottom: 0.5in;
+      }
+
+      .learning-card * {
+        color: black !important;
+      }
+
+      .stat-card {
+        display: inline-block;
+        width: 30%;
+        border: 1px solid black;
+        margin-right: 2%;
+        page-break-inside: avoid;
+      }
+
+      .stats {
+        display: block !important;
+        margin-bottom: 1in;
+      }
+
+      .theme-card {
+        display: none !important;
+      }
+
+      .theme-grid {
+        display: none !important;
+      }
+
+      .card-label {
+        font-weight: bold;
+        margin-bottom: 0.2in;
+        color: black;
+      }
+
+      .card-content {
+        color: black;
+      }
+
+      .word-english {
+        font-weight: bold;
+        font-size: 16pt;
+        color: black;
+      }
+
+      .word-pronunciation {
+        display: block !important;
+        font-style: italic;
+        color: black;
+      }
+
+      .translation {
+        display: block !important;
+        font-weight: bold;
+        color: black;
+        margin-top: 0.2in;
+        border-top: 1px solid black;
+        padding-top: 0.2in;
+      }
+
+      .conjugation-box {
+        display: block !important;
+        border: 1px solid black;
+        margin-top: 0.2in;
+        padding: 0.2in;
+      }
+
+      .conjugation-item {
+        border: none;
+        border-bottom: 1px dotted black;
+        color: black;
+      }
+
+      .conjugation-person {
+        color: black;
+        font-weight: bold;
+      }
+
+      .conjugation-form {
+        color: black;
+      }
+
+      .conjugation-spanish {
+        color: black;
+      }
+
+      .progress {
+        color: black;
+        page-break-after: avoid;
+      }
+
+      /* Header styling for print */
+      .header {
+        page-break-after: avoid;
+        border-bottom: 2px solid black;
+        padding-bottom: 0.3in;
+      }
+
+      h1, h2, h3 {
+        color: black !important;
+      }
+
+      .subtitle {
+        color: black;
+      }
+
+      /* Margins and page setup */
+      @page {
+        margin: 0.5in;
+      }
+
+      /* Ensure good spacing */
+      * {
+        widows: 3;
+        orphans: 3;
+      }
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -338,9 +515,14 @@
       <p style="font-size: 18px; color: var(--text-secondary); margin-bottom: 0.5rem;">Bienvenido al mundo del inglés</p>
       <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 2rem;">Aprende vocabulario, verbos, frases y mucho más de forma divertida</p>
 
-      <button onclick="startApp()" style="padding: 14px 32px; background: var(--fill-accent); color: black; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 2rem; transition: all 0.3s; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);">
-        Comenzar ejercicios →
-      </button>
+      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem;">
+        <button onclick="startApp()" style="padding: 14px 32px; background: var(--fill-accent); color: black; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);">
+          Comenzar ejercicios →
+        </button>
+        <button id="printBtn" onclick="window.print()" style="padding: 14px 32px; background: var(--surface-1); color: var(--text-primary); border: 0.5px solid var(--border); border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+          🖨️ Imprimir
+        </button>
+      </div>
     </div>
 
     <!-- CATEGORÍAS -->
