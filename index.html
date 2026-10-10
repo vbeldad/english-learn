@@ -343,7 +343,7 @@
       body {
         background: white;
         color: black;
-        padding: 0;
+        padding: 1in;
         margin: 0;
       }
 
@@ -354,11 +354,14 @@
       #appContent {
         display: block !important;
         max-width: 100%;
-        padding: 0 1in;
+        padding: 0;
+        margin: 0;
       }
 
       .container {
         max-width: 100%;
+        margin: 0;
+        padding: 0;
       }
 
       /* Hide navigation and interactive elements */
@@ -404,10 +407,16 @@
         background: white;
         color: black;
         margin-bottom: 0.5in;
+        padding: 0.3in;
+        overflow: visible !important;
+        word-wrap: break-word;
+        white-space: normal;
       }
 
       .learning-card * {
         color: black !important;
+        word-wrap: break-word;
+        overflow: visible !important;
       }
 
       .stat-card {
@@ -434,22 +443,34 @@
         font-weight: bold;
         margin-bottom: 0.2in;
         color: black;
+        word-wrap: break-word;
+        white-space: normal;
       }
 
       .card-content {
         color: black;
+        word-wrap: break-word;
+        white-space: normal;
+        overflow: visible;
       }
 
       .word-english {
         font-weight: bold;
-        font-size: 16pt;
+        font-size: 14pt;
         color: black;
+        word-wrap: break-word;
+        white-space: normal;
+        display: block;
+        width: 100%;
       }
 
       .word-pronunciation {
         display: block !important;
         font-style: italic;
         color: black;
+        word-wrap: break-word;
+        white-space: normal;
+        font-size: 11pt;
       }
 
       .translation {
@@ -459,6 +480,9 @@
         margin-top: 0.2in;
         border-top: 1px solid black;
         padding-top: 0.2in;
+        word-wrap: break-word;
+        white-space: normal;
+        font-size: 12pt;
       }
 
       .conjugation-box {
@@ -466,30 +490,47 @@
         border: 1px solid black;
         margin-top: 0.2in;
         padding: 0.2in;
+        word-wrap: break-word;
+        white-space: normal;
+        overflow: visible;
       }
 
       .conjugation-item {
         border: none;
         border-bottom: 1px dotted black;
         color: black;
+        word-wrap: break-word;
+        white-space: normal;
+        padding: 0.1in 0;
       }
 
       .conjugation-person {
         color: black;
         font-weight: bold;
+        word-wrap: break-word;
+        white-space: normal;
+        font-size: 11pt;
       }
 
       .conjugation-form {
         color: black;
+        word-wrap: break-word;
+        white-space: normal;
+        font-size: 11pt;
       }
 
       .conjugation-spanish {
         color: black;
+        word-wrap: break-word;
+        white-space: normal;
+        font-size: 10pt;
       }
 
       .progress {
         color: black;
         page-break-after: avoid;
+        word-wrap: break-word;
+        white-space: normal;
       }
 
       /* Hide exercise completion summary */
@@ -504,18 +545,22 @@
 
       h1, h2, h3 {
         color: black !important;
+        word-wrap: break-word;
+        white-space: normal;
       }
 
       .subtitle {
         color: black;
+        word-wrap: break-word;
+        white-space: normal;
       }
 
       /* Margins and page setup */
       @page {
-        margin: 0.5in;
+        margin: 1in;
       }
 
-      /* Ensure good spacing */
+      /* Ensure good spacing and prevent text cutoff */
       * {
         widows: 3;
         orphans: 3;
