@@ -136,7 +136,7 @@
     
     .theme-card.active {
       background: var(--fill-accent);
-      color: var(--on-accent);
+      color: black;
       border-color: var(--fill-accent);
     }
     
@@ -291,7 +291,7 @@
     
     button.primary {
       background: var(--fill-accent);
-      color: var(--on-accent);
+      color: black;
       border-color: var(--fill-accent);
     }
     
@@ -338,7 +338,7 @@
       <p style="font-size: 18px; color: var(--text-secondary); margin-bottom: 0.5rem;">Bienvenido al mundo del inglés</p>
       <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 2rem;">Aprende vocabulario, verbos, frases y mucho más de forma divertida</p>
 
-      <button onclick="startApp()" style="padding: 14px 32px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 2rem; transition: all 0.3s; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);">
+      <button onclick="startApp()" style="padding: 14px 32px; background: var(--fill-accent); color: black; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 2rem; transition: all 0.3s; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);">
         Comenzar ejercicios →
       </button>
     </div>
@@ -1544,7 +1544,7 @@ ${(blockToGlobalIdx.filter(idx => paresPalabrasMatches[idx]).map(idx => words[id
       `}
 
       <div style="text-align: center;">
-        <button onclick="selectParesPalabrasTheme('${paresPalabrasTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+        <button onclick="selectParesPalabrasTheme('${paresPalabrasTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
       </div>
     `;
     return;
@@ -1623,12 +1623,12 @@ ${(blockToGlobalIdx.filter(idx => paresPalabrasMatches[idx]).map(idx => words[id
 
     if (isMatched) {
       bgColor = '#22c55e';
-      textColor = 'white';
+      textColor = 'black';
       icon = ' ✓';
       cursor = 'default';
     } else if (isFailed) {
       bgColor = '#ef4444';
-      textColor = 'white';
+      textColor = 'black';
       icon = ' ✗';
       cursor = 'default';
     }
@@ -1660,17 +1660,17 @@ ${(blockToGlobalIdx.filter(idx => paresPalabrasMatches[idx]).map(idx => words[id
     if (paresPalabrasShowFeedback) {
       if (word === paresPalabrasFeedbackSelected && word === paresPalabrasFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (word === paresPalabrasFeedbackSelected && word !== paresPalabrasFeedbackCorrect) {
         bgColor = '#ef4444';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (word === paresPalabrasFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       }
@@ -1859,7 +1859,7 @@ function renderMultipleWordsExercise() {
 
     html += `
       <div style="text-align: center;">
-        <button onclick="selectMultipleWordsTheme('${multipleWordsTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+        <button onclick="selectMultipleWordsTheme('${multipleWordsTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
       </div>
     `;
 
@@ -1931,17 +1931,17 @@ function renderMultipleWordsExercise() {
     if (multipleWordsShowFeedback) {
       if (option === multipleWordsFeedbackSelected && option === multipleWordsFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (option === multipleWordsFeedbackSelected && option !== multipleWordsFeedbackCorrect) {
         bgColor = '#ef4444';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (option === multipleWordsFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       }
@@ -2150,7 +2150,7 @@ ${(frases.filter((_, idx) => paresFrasesMatches[idx])).length > 0 ? `
       `}
 
       <div style="text-align: center;">
-        <button onclick="selectParesFrasesTheme('${paresFrasesTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+        <button onclick="selectParesFrasesTheme('${paresFrasesTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
       </div>
     `;
     return;
@@ -2226,12 +2226,12 @@ ${(frases.filter((_, idx) => paresFrasesMatches[idx])).length > 0 ? `
 
     if (isMatched) {
       bgColor = '#22c55e';
-      textColor = 'white';
+      textColor = 'black';
       icon = ' ✓';
       cursor = 'default';
     } else if (isFailed) {
       bgColor = '#ef4444';
-      textColor = 'white';
+      textColor = 'black';
       icon = ' ✗';
       cursor = 'default';
     }
@@ -2263,17 +2263,17 @@ ${(frases.filter((_, idx) => paresFrasesMatches[idx])).length > 0 ? `
     if (paresFrasesShowFeedback) {
       if (frase === paresFrasesFeedbackSelected && frase === paresFrasesFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (frase === paresFrasesFeedbackSelected && frase !== paresFrasesFeedbackCorrect) {
         bgColor = '#ef4444';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (frase === paresFrasesFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       }
@@ -2460,7 +2460,7 @@ function renderMultipleFrasesExercise() {
 
     html += `
       <div style="text-align: center;">
-        <button onclick="selectMultipleFrasesTheme('${multipleFrasesTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+        <button onclick="selectMultipleFrasesTheme('${multipleFrasesTheme}')" style="padding: 10px 20px; background: var(--fill-accent); color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
       </div>
     `;
 
@@ -2531,17 +2531,17 @@ function renderMultipleFrasesExercise() {
     if (multipleFrasesShowFeedback) {
       if (option === multiplefrasesFeedbackSelected && option === multiplefrasesFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (option === multiplefrasesFeedbackSelected && option !== multiplefrasesFeedbackCorrect) {
         bgColor = '#ef4444';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (option === multiplefrasesFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       }
@@ -2704,7 +2704,7 @@ function renderFrasesExercise() {
     
     <div class="navigation">
       <button class="nav-btn" onclick="previousFrase()" ${frasesCurrentIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="nav-btn" onclick="checkFrasesAnswer()" class="primary" style="background: var(--fill-accent); color: var(--on-accent); border-color: var(--fill-accent);">Verificar</button>
+      <button class="nav-btn" onclick="checkFrasesAnswer()" class="primary" style="background: var(--fill-accent); color: black; border-color: var(--fill-accent);">Verificar</button>
       <button class="nav-btn" onclick="nextFrase()" ${frasesCurrentIndex === total - 1 ? 'disabled' : ''}>Siguiente →</button>
     </div>
   `;
@@ -2894,7 +2894,7 @@ function renderMultipleVerbosExercise() {
 
     html += `
       <div style="text-align: center;">
-        <button onclick="renderMultipleVerbosGrid()" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+        <button onclick="renderMultipleVerbosGrid()" style="padding: 10px 20px; background: var(--fill-accent); color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
       </div>
     `;
 
@@ -2966,17 +2966,17 @@ function renderMultipleVerbosExercise() {
     if (multipleVerbosShowFeedback) {
       if (option === multipleVerbasFeedbackSelected && option === multipleVerbasFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (option === multipleVerbasFeedbackSelected && option !== multipleVerbasFeedbackCorrect) {
         bgColor = '#ef4444';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (option === multipleVerbasFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       }
@@ -3189,7 +3189,7 @@ ${(verb.conjugations.map((c, idx) => ({...c, pronoun: c.pronoun || pronouns[idx]
       `}
 
       <div style="text-align: center;">
-        <button onclick="selectParesVerbosVerb('${verb.en}')" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+        <button onclick="selectParesVerbosVerb('${verb.en}')" style="padding: 10px 20px; background: var(--fill-accent); color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
       </div>
     `;
     return;
@@ -3253,12 +3253,12 @@ ${(verb.conjugations.map((c, idx) => ({...c, pronoun: c.pronoun || pronouns[idx]
 
     if (isMatched) {
       bgColor = '#22c55e';
-      textColor = 'white';
+      textColor = 'black';
       icon = ' ✓';
       cursor = 'default';
     } else if (isFailed) {
       bgColor = '#ef4444';
-      textColor = 'white';
+      textColor = 'black';
       icon = ' ✗';
       cursor = 'default';
     }
@@ -3290,17 +3290,17 @@ ${(verb.conjugations.map((c, idx) => ({...c, pronoun: c.pronoun || pronouns[idx]
     if (paresVerbosShowFeedback) {
       if (english === paresVerbasFeedbackSelected && english === paresVerbasFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (english === paresVerbasFeedbackSelected && english !== paresVerbasFeedbackCorrect) {
         bgColor = '#ef4444';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       } else if (english === paresVerbasFeedbackCorrect) {
         bgColor = '#22c55e';
-        textColor = 'white';
+        textColor = 'black';
         borderColor = 'transparent';
         cursor = 'default';
       }
@@ -3739,7 +3739,7 @@ function renderAlphabetMultiple() {
         `}
 
         <div style="text-align: center; margin-top: 2rem;">
-          <button onclick="startAlphabetMultiple()" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+          <button onclick="startAlphabetMultiple()" style="padding: 10px 20px; background: var(--fill-accent); color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
         </div>
       </div>
     `;
@@ -3779,7 +3779,7 @@ function renderAlphabetMultiple() {
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem;">
         ${options.map(option => `
-          <button onclick="checkAlphabetMultiple('${option}', '${current.letter}')" style="padding: 12px; background: ${alphabetMultipleShowFeedback && option === alphabetMultipleFeedbackSelected ? (option === alphabetMultipleFeedbackCorrect ? '#22c55e' : '#ef4444') : (alphabetMultipleShowFeedback && option === alphabetMultipleFeedbackCorrect ? '#22c55e' : 'var(--surface-2)')}; border: 0.5px solid ${alphabetMultipleShowFeedback && (option === alphabetMultipleFeedbackSelected || option === alphabetMultipleFeedbackCorrect) ? 'transparent' : 'var(--border)'}; border-radius: 8px; cursor: ${alphabetMultipleShowFeedback ? 'default' : 'pointer'}; font-size: 24px; font-weight: 700; color: ${alphabetMultipleShowFeedback && (option === alphabetMultipleFeedbackSelected || option === alphabetMultipleFeedbackCorrect) ? 'white' : 'var(--text-primary)'}; transition: all 0.2s;" ${!alphabetMultipleShowFeedback ? "onmouseover=\"this.style.transform='scale(1.05)'\" onmouseout=\"this.style.transform='scale(1)'\"" : ''}>
+          <button onclick="checkAlphabetMultiple('${option}', '${current.letter}')" style="padding: 12px; background: ${alphabetMultipleShowFeedback && option === alphabetMultipleFeedbackSelected ? (option === alphabetMultipleFeedbackCorrect ? '#22c55e' : '#ef4444') : (alphabetMultipleShowFeedback && option === alphabetMultipleFeedbackCorrect ? '#22c55e' : 'var(--surface-2)')}; border: 0.5px solid ${alphabetMultipleShowFeedback && (option === alphabetMultipleFeedbackSelected || option === alphabetMultipleFeedbackCorrect) ? 'transparent' : 'var(--border)'}; border-radius: 8px; cursor: ${alphabetMultipleShowFeedback ? 'default' : 'pointer'}; font-size: 24px; font-weight: 700; color: ${alphabetMultipleShowFeedback && (option === alphabetMultipleFeedbackSelected || option === alphabetMultipleFeedbackCorrect) ? 'black' : 'var(--text-primary)'}; transition: all 0.2s;" ${!alphabetMultipleShowFeedback ? "onmouseover=\"this.style.transform='scale(1.05)'\" onmouseout=\"this.style.transform='scale(1)'\"" : ''}>
             ${option}
           </button>
         `).join('')}
@@ -3893,7 +3893,7 @@ ${(alphabetPairsLeft.filter(item => alphabetPairsMatches[item.letter])).length >
         `}
 
         <div style="text-align: center; margin-top: 2rem;">
-          <button onclick="startAlphabetPairs()" style="padding: 10px 20px; background: var(--fill-accent); color: var(--on-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
+          <button onclick="startAlphabetPairs()" style="padding: 10px 20px; background: var(--fill-accent); color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Intentar de nuevo</button>
         </div>
       </div>
     `;
@@ -3925,7 +3925,7 @@ ${(alphabetPairsLeft.filter(item => alphabetPairsMatches[item.letter])).length >
             const isMatched = alphabetPairsMatches[item.letter];
             const isFailed = alphabetPairsFailed[item.letter];
             return `
-            <button onclick="selectAlphabetLeft('${item.letter}')" style="padding: 12px; background: ${isMatched ? '#22c55e' : (isFailed ? '#ef4444' : 'var(--surface-2)')}; border: 2px solid ${isMatched || isFailed ? 'transparent' : 'var(--border)'}; border-radius: 8px; cursor: ${isMatched || isFailed ? 'default' : 'pointer'}; text-align: left; color: ${isMatched || isFailed ? 'white' : 'var(--text-primary)'}; font-weight: 500; transition: all 0.2s;" ${!(isMatched || isFailed) ? "onmouseover=\"this.style.transform='translateX(4px)'\" onmouseout=\"this.style.transform='translateX(0)'\"" : ''}>
+            <button onclick="selectAlphabetLeft('${item.letter}')" style="padding: 12px; background: ${isMatched ? '#22c55e' : (isFailed ? '#ef4444' : 'var(--surface-2)')}; border: 2px solid ${isMatched || isFailed ? 'transparent' : 'var(--border)'}; border-radius: 8px; cursor: ${isMatched || isFailed ? 'default' : 'pointer'}; text-align: left; color: ${isMatched || isFailed ? 'black' : 'var(--text-primary)'}; font-weight: 500; transition: all 0.2s;" ${!(isMatched || isFailed) ? "onmouseover=\"this.style.transform='translateX(4px)'\" onmouseout=\"this.style.transform='translateX(0)'\"" : ''}>
               <span style="font-size: 18px; font-weight: 700;">${item.letter}</span>
               ${isMatched ? ` <span style="margin-left: 8px;">${item.pronunciation}</span>` : (isFailed ? ` <span style="margin-left: 8px;">${isFailed}</span>` : '')}
             </button>
