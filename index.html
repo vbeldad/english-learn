@@ -570,6 +570,32 @@
     /* ===== ENGLISH FILE (ejercicios del libro) ===== */
     #efLessonChips { margin-bottom: 1rem; }
     .ef-chip-n { opacity: .7; font-weight: 400; margin-left: 2px; }
+    .ef-tools { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .ef-search { flex: 1 1 200px; min-width: 0; font-size: 15px; padding: 9px 12px; border-radius: 10px; border: 0.5px solid var(--border-strong); background: var(--page-bg); color: var(--text-primary); font-family: inherit; }
+    .ef-search:focus { outline: 2px solid var(--fill-accent); }
+    .ef-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .ef-filter { font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 0.5px solid var(--border-strong); background: var(--surface-1); color: var(--text-primary); cursor: pointer; font-family: inherit; }
+    .ef-filter.on { background: var(--fill-accent); border-color: var(--fill-accent); color: black; }
+    .ef-index { margin-bottom: 1rem; }
+    .ef-idx-group { font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--text-secondary); margin: 14px 0 6px; text-transform: uppercase; }
+    .ef-idx-lesson { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 12px; margin-bottom: 8px; }
+    .ef-idx-lesson > summary { list-style: none; cursor: pointer; padding: 10px 12px; display: flex; gap: 8px; align-items: baseline; }
+    .ef-idx-lesson > summary::-webkit-details-marker { display: none; }
+    .ef-idx-lesson > summary::before { content: '▸'; color: var(--text-secondary); }
+    .ef-idx-lesson[open] > summary::before { content: '▾'; }
+    .ef-idx-id { font-weight: 700; color: var(--text-accent); white-space: nowrap; }
+    .ef-idx-name { flex: 1; font-size: 14px; color: var(--text-primary); font-weight: 500; }
+    .ef-idx-prog { font-size: 12px; color: var(--text-secondary); white-space: nowrap; }
+    .ef-idx-desc { font-size: 13px; color: var(--text-secondary); padding: 0 12px 8px 30px; }
+    .ef-idx-open { margin: 0 12px 8px 30px; }
+    .ef-idx-ex { display: block; width: 100%; text-align: left; background: none; border: none; border-top: 0.5px solid var(--border); padding: 8px 12px 8px 30px; cursor: pointer; font-family: inherit; color: var(--text-primary); }
+    .ef-idx-ex:hover { background: var(--surface-1); }
+    .ef-idx-ex-t { font-size: 14px; font-weight: 500; }
+    .ef-idx-ex-i { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .ef-tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--bg-accent); color: var(--text-accent); margin-left: 6px; font-weight: 500; vertical-align: 1px; }
+    .ef-res-head { font-size: 13px; color: var(--text-secondary); margin: 4px 0 8px; }
+    .ef-card.ef-flash { outline: 2px solid var(--fill-accent); transition: outline-color 1.5s; }
+    .ef-back { background: none; border: none; color: var(--text-accent); font-size: 13px; cursor: pointer; padding: 0; margin-top: 4px; font-family: inherit; }
     .ef-lesson-head { margin: 0.6rem 0 1rem; }
     .ef-lesson-title { font-size: 17px; font-weight: 600; color: var(--text-primary); }
     .ef-lesson-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
@@ -840,7 +866,13 @@
 
   <div id="englishFile" class="section">
     <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 0.4rem; color: var(--text-secondary);">ENGLISH FILE ELEMENTARY</h3>
-    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem;">Ejercicios de las lecciones del libro. Elige una lección. 🔊 lee en voz alta.</p>
+    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem;">Ejercicios de las lecciones del libro. Busca lo que quieres practicar, abre el índice o elige una lección. 🔊 lee en voz alta.</p>
+    <div class="ef-tools">
+      <input id="efSearch" class="ef-search" type="search" placeholder="🔍 Buscar: verbos, la hora, familia, can, pasado…" autocomplete="off">
+      <button id="efIndexBtn" class="ef-btn ef-primary" type="button">📑 Índice</button>
+    </div>
+    <div class="ef-filters" id="efFilters"></div>
+    <div id="efIndex" class="ef-index" style="display:none"></div>
     <div class="theme-grid" id="efLessonChips"></div>
     <div id="efLessonBody"></div>
   </div>
@@ -5360,6 +5392,134 @@ window.addEventListener('DOMContentLoaded', () => {
         ];
 
 
+        // ===== ÍNDICE =====
+        const DESC = {
+            '1A': ['Saludos y verbo be', "Saludar y presentarse, contracciones 'm/'s/'re, sonidos vocálicos, acento de palabras, comida/tecnología/lugares."],
+            '1B': ['Países, nacionalidades y be (− y ?)', 'Continentes, países y nacionalidades, sonidos consonánticos, negativas y preguntas con be, respuestas cortas y números 21–100.'],
+            '1C': ['Clase, alfabeto y posesivos', 'Frases de clase, el alfabeto y deletrear, abreviaturas, preguntas personales y my/your/his/her.'],
+            'PE1': ['Inglés práctico: en el hotel', 'Hacer el check-in, pedir y ofrecer cosas, saludos y frases sociales.'],
+            '2A': ['Objetos, a/an y plurales', 'Objetos cotidianos, a o an, plurales y su pronunciación, in/on/under.'],
+            '2B': ['Colores, adjetivos y EE. UU.', 'Colores, iconos americanos, posición del adjetivo, contrarios, vocales largas y cortas, inglés británico y americano.'],
+            'R1-2': ['Repaso unidades 1 y 2', 'Gramática de las unidades 1–2, preposiciones, verbos de clase, palabra intrusa, contrarios, sonidos, acento y números.'],
+            '2C': ['Emociones e imperativos', "Cómo te sientes (hungry, tired…), be + emoción, imperativos, Let's / Let's not, señales y consejos de viaje."],
+            '3A': ['Presente simple (+ y −)', "Expresiones con verbos, la -s de he/she/it, don't/doesn't, pronunciación de la -s final y Gran Bretaña."],
+            '3B': ['Preguntas con Do/Does y profesiones', 'Do/Does, respuestas cortas, profesiones y los sonidos /ɜː/ y /ə/.'],
+            '3C': ['Orden de las preguntas', 'Palabras interrogativas (What, Where, How many…), orden en preguntas, mostrar interés y acento de frase.'],
+            'PE2': ['Inglés práctico: la hora y la cafetería', 'Decir la hora, pedir un café, la carta y frases sociales.'],
+            '4A': ['Familia y posesivo ’s', "La 's posesiva, Whose / Who's, la familia, sonidos de la letra o y look at / look like."],
+            '4B': ['Rutina diaria y preposiciones', 'Rutina diaria, at/in/on para el tiempo, at/in/to para lugares y preguntas sobre tu día.'],
+            '4C': ['Meses y adverbios de frecuencia', 'Meses, always/usually/never…, dónde va el adverbio, once a week, la h muda y hábitos sanos.'],
+            'R3-4': ['Repaso unidades 3 y 4', 'Gramática, preposiciones, expresiones con verbos, palabra intrusa, palabras interrogativas, sonidos y acento.'],
+            '5A': ["can / can't y tiempo libre", "Expresiones de tiempo libre, significados de can/can't, oír can o can't, talentos y how well."],
+            '5B': ['Presente continuo y ruidos', 'Ruidos de vecinos, upstairs/downstairs, la forma -ing y el presente continuo.'],
+            '5C': ['El tiempo y presente simple vs continuo', 'El tiempo, estaciones, presente simple o continuo, Londres y frases en un taxi.'],
+            'PE3': ['Inglés práctico: comprar ropa', 'Ropa, frases en una tienda, precios en libras, this/these y tallas.'],
+            '6A': ['Pronombres objeto y un cuento', 'Me, him, them…, vocabulario del cuento, sonidos /aɪ/ /ɪ/ /iː/ y pares de palabras de oído.'],
+            '6B': ['Fechas, ordinales y like + -ing', 'Números ordinales, decir fechas, la th, love/like/hate + -ing y sinónimos.'],
+            '6C': ['Música y be o do', 'Instrumentos y músicos, be o do en preguntas, tipos de música y el sonido /j/.'],
+            'WB': ['Escritura y comunicación', 'Mayúsculas, palabras de tiempo (after/then/until), sinónimos de good y bad, y repasos de comunicación.'],
+            'GB1-3': ['Gramática unidades 1–3', 'am/is/are, negativos, posesivos, a/an, plurales, adjetivos, imperativos, presente simple y orden de preguntas.'],
+            'GB4-6': ['Gramática unidades 4–6', "Whose, 's, preposiciones, adverbios, can, presente continuo, -ing, simple vs continuo, pronombres y be/do."],
+            'VB': ['Vocabulario: días, números, países, clase, objetos', 'Días, números hasta millones, países y nacionalidades, continentes, frases de clase y objetos.'],
+            'LIS': ['Comprensión auditiva y email informal', 'Contracciones y estructura de un email, y preguntas sobre los audios del libro.'],
+            'VB3-4': ['Vocabulario: adjetivos, verbos, trabajos, familia', 'Contrarios, modificadores, expresiones con verbos, profesiones y el árbol familiar.'],
+            'VB5-6': ['Vocabulario: rutina, hora, verbos, tiempo y fechas', 'Rutina diaria, usos de have, la hora, frecuencia, más verbos, el tiempo, años y fechas.'],
+            'IRR': ['Verbos irregulares y sonidos', 'Pasados y participios irregulares, rimas, sonidos vocálicos y consonánticos especiales.'],
+        };
+        const DESC_FALLBACK = l => [l.title, ''];
+        const lessonName = l => (DESC[l.id] || DESC_FALLBACK(l))[0];
+        const lessonDesc = l => (DESC[l.id] || DESC_FALLBACK(l))[1];
+        const GROUPS = [
+            ['Lecciones del libro', id => /^\d[ABC]$|^PE\d$/.test(id)],
+            ['Repasos', id => /^R\d/.test(id)],
+            ['Grammar Bank', id => /^GB/.test(id)],
+            ['Vocabulary Bank', id => /^VB/.test(id) || id === 'IRR'],
+            ['Escritura y audios', () => true],
+        ];
+        const TYPES = { listen: '🔊 Escuchar', choice: '☑️ Elegir', gap: '✍️ Escribir', stress: '🎯 Acento' };
+        function exType(ex) {
+            if (ex.type === 'stress') return 'stress';
+            if (ex.type === 'gap') return 'gap';
+            if (typeof ex.items === 'function' || /🔊/.test(ex.instr)) return 'listen';
+            return 'choice';
+        }
+        const fold = t => String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’‘´`]/g, "'");
+        const ENTRIES = [];
+        // se rellena después de declarar LESSONS (abajo)
+        function buildEntries() {
+            LESSONS.forEach(l => l.ex.forEach((ex, i) => {
+                let words = '';
+                if (Array.isArray(ex.items)) try {
+                    words = ex.items.map(it => [it.q, it.t, it.a, it.say, it.s && it.s.join('')].flat().filter(Boolean).join(' ')).join(' ');
+                } catch (e) {}
+                ENTRIES.push({ l, i, ex, type: exType(ex),
+                    hayEx: fold([ex.title, ex.instr, TYPES[exType(ex)], words].join(' ')),
+                    hayL: fold([l.id, l.title, lessonName(l), lessonDesc(l)].join(' ')) });
+            }));
+        }
+        let typeFilter = 'all';
+        function exRow(e) {
+            const done = BEST[exKey(e.l, e.i)] === 'full' ? ' ✅' : '';
+            return `<button class="ef-idx-ex" data-go="${e.l.id}" data-i="${e.i}"><div class="ef-idx-ex-t">${esc(e.ex.title)}${done}<span class="ef-tag">${TYPES[e.type]}</span></div><div class="ef-idx-ex-i">${esc(e.l.id)} · ${esc(e.ex.instr)}</div></button>`;
+        }
+        function renderIndex() {
+            const box = document.getElementById('efIndex');
+            const q = fold(document.getElementById('efSearch').value.trim());
+            const pass = e => typeFilter === 'all' || e.type === typeFilter;
+            if (q) {
+                const terms = q.split(/\s+/);
+                let hits = ENTRIES.filter(e => pass(e) && terms.every(t => e.hayEx.includes(t)));
+                if (!hits.length) hits = ENTRIES.filter(e => pass(e) && terms.every(t => (e.hayEx + ' ' + e.hayL).includes(t)));
+                box.innerHTML = `<div class="ef-res-head">${hits.length} ejercicio${hits.length === 1 ? '' : 's'} encontrado${hits.length === 1 ? '' : 's'}</div>` +
+                    (hits.length ? `<div class="ef-idx-lesson">${hits.map(exRow).join('')}</div>` : '<div class="ef-idx-desc" style="padding-left:0">Prueba con otra palabra (en español o en inglés).</div>');
+            } else {
+                const used = new Set();
+                box.innerHTML = GROUPS.map(([g, test]) => {
+                    const ls = LESSONS.filter(l => !used.has(l.id) && test(l.id));
+                    ls.forEach(l => used.add(l.id));
+                    if (!ls.length) return '';
+                    return `<div class="ef-idx-group">${g}</div>` + ls.map(l => {
+                        const es = ENTRIES.filter(e => e.l === l && pass(e));
+                        if (!es.length) return '';
+                        const done = l.ex.filter((x, i) => BEST[exKey(l, i)] === 'full').length;
+                        return `<details class="ef-idx-lesson"><summary><span class="ef-idx-id">${esc(l.id)}</span><span class="ef-idx-name">${esc(lessonName(l))}</span><span class="ef-idx-prog">${done}/${l.ex.length}</span></summary>` +
+                            `<div class="ef-idx-desc">${esc(lessonDesc(l))} <span style="opacity:.7">(Student Book ${esc(l.pages)})</span></div>` +
+                            `<button class="ef-btn ef-idx-open" data-go="${l.id}">Abrir lección completa →</button>` + es.map(exRow).join('') + '</details>';
+                    }).join('');
+                }).join('');
+            }
+            box.querySelectorAll('[data-go]').forEach(b => b.onclick = () => goTo(b.dataset.go, b.dataset.i));
+        }
+        function showIndex(on) {
+            document.getElementById('efIndex').style.display = on ? '' : 'none';
+            document.getElementById('efIndexBtn').textContent = on ? '✕ Cerrar índice' : '📑 Índice';
+            if (on) renderIndex();
+        }
+        function goTo(id, i) {
+            showIndex(false);
+            document.getElementById('efSearch').value = '';
+            openLesson(id, i === undefined);
+            if (i !== undefined) {
+                const card = document.querySelector(`#efLessonBody .ef-card[data-i="${i}"]`);
+                if (card) {
+                    window.scrollTo({ top: card.getBoundingClientRect().top + window.pageYOffset - 16, behavior: 'smooth' });
+                    card.classList.add('ef-flash'); setTimeout(() => card.classList.remove('ef-flash'), 1800);
+                }
+            }
+        }
+        function initIndex() {
+            buildEntries();
+            const f = document.getElementById('efFilters');
+            f.innerHTML = [['all', 'Todos'], ...Object.entries(TYPES)].map(([k, v]) => `<button class="ef-filter ${k === typeFilter ? 'on' : ''}" data-f="${k}">${v}</button>`).join('');
+            f.querySelectorAll('[data-f]').forEach(b => b.onclick = () => {
+                typeFilter = b.dataset.f;
+                f.querySelectorAll('[data-f]').forEach(x => x.classList.toggle('on', x === b));
+                showIndex(true);
+            });
+            document.getElementById('efIndexBtn').onclick = () => showIndex(document.getElementById('efIndex').style.display === 'none');
+            document.getElementById('efSearch').addEventListener('input', () => showIndex(true));
+        }
+
         // ===== MOTOR =====
         let BEST = {};
         try { BEST = JSON.parse(localStorage.getItem('ef-ex-best') || '{}'); } catch (e) {}
@@ -5408,8 +5568,9 @@ window.addEventListener('DOMContentLoaded', () => {
             try { localStorage.setItem('ef-ex-lesson', id); } catch (e) {}
             const l = LESSONS.find(x => x.id === id);
             const body = document.getElementById('efLessonBody');
-            body.innerHTML = `<div class="ef-lesson-head"><div class="ef-lesson-title">${l.id} · ${esc(l.title)}</div><div class="ef-lesson-sub">Student Book ${l.pages}</div></div>`;
-            l.ex.forEach((ex, i) => { const c = document.createElement('div'); c.className = 'ef-card'; body.appendChild(c); renderCard(c, l, i); });
+            body.innerHTML = `<div class="ef-lesson-head"><div class="ef-lesson-title">${l.id} · ${esc(l.title)}</div><div class="ef-lesson-sub">${esc(lessonName(l))} · Student Book ${l.pages}</div><button class="ef-back" type="button">📑 Ver índice</button></div>`;
+            body.querySelector('.ef-back').onclick = () => { showIndex(true); window.scrollTo({ top: document.getElementById('englishFile').getBoundingClientRect().top + window.pageYOffset - 10, behavior: 'smooth' }); };
+            l.ex.forEach((ex, i) => { const c = document.createElement('div'); c.className = 'ef-card'; c.dataset.i = i; body.appendChild(c); renderCard(c, l, i); });
             renderChips();
             if (scroll) {
                 const top = body.getBoundingClientRect().top + window.pageYOffset - 20;
@@ -5507,7 +5668,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         let ready = false;
         window.renderEnglishFile = function () {
-            if (!ready) { ready = true; openLesson(curLesson, false); }
+            if (!ready) { ready = true; initIndex(); openLesson(curLesson, false); }
         };
 })();
 </script>
