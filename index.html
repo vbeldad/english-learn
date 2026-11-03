@@ -5672,15 +5672,23 @@ window.addEventListener('DOMContentLoaded', () => {
                     return t;
                 };
                 const W = 210, M = 16, CW = W - 2 * M, BOTTOM = 297 - 14;
-                let y = M;
-                const need = h => { if (y + h > BOTTOM) { doc.addPage(); y = M; } };
+                let y = M, dry = false; // dry = solo medir, sin dibujar
+                const need = h => { if (!dry && y + h > BOTTOM) { doc.addPage(); y = M; } };
+                const T = (...a) => { if (!dry) doc.text(...a); };
+                // Mide lo que ocupa fn(); si no cabe en lo que queda de página (y sí en una entera), salta de página
+                const keepTogether = fn => {
+                    const y0 = y; dry = true; y = 0; let h;
+                    try { fn(); h = y; } finally { dry = false; y = y0; }
+                    if (y + h > BOTTOM && h <= BOTTOM - M && y > M + 1) { doc.addPage(); y = M; }
+                    return fn();
+                };
                 const text = (t, size, opt = {}) => {
                     doc.setFont(F, opt.bold ? 'bold' : 'normal'); doc.setFontSize(size);
                     doc.setTextColor(...(opt.color || [20, 20, 20]));
                     const x = M + (opt.indent || 0);
                     const lines = doc.splitTextToSize(clean(t), CW - (opt.indent || 0));
                     const lh = size * 0.42;
-                    lines.forEach(ln => { need(lh); doc.text(ln, x, y + lh * 0.8); y += lh; });
+                    lines.forEach(ln => { need(lh); T(ln, x, y + lh * 0.8); y += lh; });
                     y += opt.after || 0;
                 };
                 const BL = '_____________';
@@ -5694,8 +5702,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 const keys = [];
                 l.ex.forEach((ex, i) => {
                     const items = typeof ex.items === 'function' ? ex.items() : ex.items.slice();
+                    keepTogether(() => {
                     need(18);
-                    doc.setDrawColor(200); doc.line(M, y, W - M, y); y += 3;
+                    if (!dry) { doc.setDrawColor(200); doc.line(M, y, W - M, y); } y += 3;
                     text((i + 1) + '. ' + ex.title, 12.5, { bold: true, after: 0.5 });
                     let instr = ex.instr;
                     if (ex.type === 'stress') instr = 'Subraya la sílaba acentuada (la que suena más fuerte).';
@@ -5718,14 +5727,14 @@ window.addEventListener('DOMContentLoaded', () => {
                             const rows = Math.ceil(cells.length / 2);
                             for (let r = 0; r < rows; r++) {
                                 need(lh); doc.setFont(F, 'normal'); doc.setFontSize(10.5); doc.setTextColor(20);
-                                doc.text(cells[r], M + 2, y + 4.5);
-                                if (cells[r + rows]) doc.text(cells[r + rows], M + 4 + half, y + 4.5);
+                                T(cells[r], M + 2, y + 4.5);
+                                if (cells[r + rows]) T(cells[r + rows], M + 4 + half, y + 4.5);
                                 y += lh;
                             }
                         } else cells.forEach(c => text(c, 10.5, { indent: 2, after: 1.6 }));
                         items.forEach((it, j) => ans.push((j + 1) + ') ' + clean(it.a)));
                         y += 3;
-                        keys.push([(i + 1) + '. ' + ex.title, ans.join('    ')]);
+                        if (!dry) keys.push([(i + 1) + '. ' + ex.title, ans.join('    ')]);
                         return;
                     }
                     items.forEach((it, j) => {
@@ -5749,13 +5758,14 @@ window.addEventListener('DOMContentLoaded', () => {
                         }
                     });
                     y += 3;
-                    keys.push([(i + 1) + '. ' + ex.title, ans.join('    ')]);
+                    if (!dry) keys.push([(i + 1) + '. ' + ex.title, ans.join('    ')]);
+                    });
                 });
 
                 // Soluciones
                 doc.addPage(); y = M;
                 text('Soluciones · ' + l.id + ' ' + l.title, 15, { bold: true, after: 4 });
-                keys.forEach(([t, a]) => { need(12); text(t, 11, { bold: true, after: 0.5 }); text(a, 9.5, { color: [60, 60, 60], after: 3 }); });
+                keys.forEach(([t, a]) => keepTogether(() => { text(t, 11, { bold: true, after: 0.5 }); text(a, 9.5, { color: [60, 60, 60], after: 3 }); }));
 
                 // Pie de página
                 const pages = doc.getNumberOfPages();
