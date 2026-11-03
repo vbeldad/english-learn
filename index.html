@@ -5876,5 +5876,335 @@ window.addEventListener('DOMContentLoaded', () => {
         };
 })();
 </script>
+<script>
+/* ===== IMPRIMIR / PDF DE TODA LA APP ===== */
+(function () {
+  let fontB64 = null;
+  async function loadFont() {
+    if (fontB64 !== null) return fontB64;
+    try {
+      const r = await fetch('https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf');
+      if (!r.ok) throw 0;
+      const buf = new Uint8Array(await r.arrayBuffer());
+      let bin = ''; for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
+      fontB64 = btoa(bin);
+    } catch (e) { fontB64 = ''; }
+    return fontB64;
+  }
+  const shuffle = a => a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(v => v[1]);
+  const chunk = (a, n) => { const o = []; for (let i = 0; i < a.length; i += n) o.push(a.slice(i, i + n)); return o; };
+  const BL = '_____________';
+  const LETTERS = 'abcdefghijklmnopqrstuvwxyz';
+
+  async function newDoc() {
+    const f = await loadFont();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    let F = 'helvetica';
+    if (f) { doc.addFileToVFS('DejaVuSans.ttf', f); doc.addFont('DejaVuSans.ttf', 'DejaVu', 'normal'); doc.addFont('DejaVuSans.ttf', 'DejaVu', 'bold'); F = 'DejaVu'; }
+    const P = { doc, F, W: 210, M: 16, y: 16, dry: false };
+    P.CW = P.W - 2 * P.M; P.BOTTOM = 297 - 14;
+    P.clean = t => {
+      t = String(t == null ? '' : t).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, '').replace(/\s+/g, ' ').trim();
+      if (!f) t = t.replace(/→/g, '->').replace(/↔/g, '<->').replace(/[^\x00-\xFF]/g, '?');
+      return t;
+    };
+    P.need = h => { if (!P.dry && P.y + h > P.BOTTOM) { doc.addPage(); P.y = P.M; } };
+    P.T = (...a) => { if (!P.dry) doc.text(...a); };
+    P.font = (size, bold, color) => { doc.setFont(F, bold ? 'bold' : 'normal'); doc.setFontSize(size); doc.setTextColor(...(color || [20, 20, 20])); };
+    P.text = (t, size, opt = {}) => {
+      P.font(size, opt.bold, opt.color);
+      const ind = opt.indent || 0, lh = size * 0.42;
+      doc.splitTextToSize(P.clean(t), P.CW - ind).forEach(ln => { P.need(lh); P.T(ln, P.M + ind, P.y + lh * 0.8); P.y += lh; });
+      P.y += opt.after || 0;
+    };
+    // Mide fn(); si no cabe en lo que queda de página (y sí en una entera), salta de página antes
+    P.keep = fn => {
+      const y0 = P.y; P.dry = true; P.y = 0; let h;
+      try { fn(); h = P.y; } finally { P.dry = false; P.y = y0; }
+      if (P.y + h > P.BOTTOM && h <= P.BOTTOM - P.M && P.y > P.M + 1) { doc.addPage(); P.y = P.M; }
+      fn();
+    };
+    P.rule = (c = 200) => { if (!P.dry) { doc.setDrawColor(c); doc.line(P.M, P.y, P.W - P.M, P.y); } };
+    // Fila de varias columnas con texto que se ajusta
+    P.row = (cells, widths, size, opt = {}) => {
+      P.font(size, opt.bold);
+      const lines = cells.map((c, i) => doc.splitTextToSize(P.clean(c), widths[i] - 3));
+      const lh = size * 0.42, h = Math.max(1, ...lines.map(l => l.length)) * lh + (opt.pad == null ? 2.2 : opt.pad);
+      P.need(h);
+      let x = P.M + (opt.indent || 0);
+      lines.forEach((ls, i) => {
+        P.font(size, opt.bold, (opt.colors && opt.colors[i]) || [20, 20, 20]);
+        ls.forEach((ln, k) => P.T(ln, x, P.y + lh * 0.8 + k * lh));
+        x += widths[i];
+      });
+      P.y += h;
+      if (opt.line && !P.dry) { doc.setDrawColor(228); doc.line(P.M, P.y - 0.9, P.W - P.M, P.y - 0.9); }
+    };
+    P.header = (sup, title, sub, nameLine) => {
+      P.text(sup, 9, { color: [120, 120, 120], after: 1 });
+      P.text(title, 18, { bold: true, after: 1 });
+      if (sub) P.text(sub, 10, { color: [90, 90, 90], after: 2 });
+      if (nameLine) P.text('Nombre: ______________________________     Fecha: ______________', 10, { after: 5 }); else P.y += 3;
+    };
+    P.finish = (file, footer) => {
+      const n = doc.getNumberOfPages();
+      for (let i = 1; i <= n; i++) {
+        doc.setPage(i); P.font(8, false, [150, 150, 150]);
+        doc.text(footer + ' · ' + i + '/' + n, P.W / 2, 297 - 7, { align: 'center' });
+      }
+      doc.save(file);
+    };
+    return P;
+  }
+
+  // ---------- Dibujo de bloques ----------
+  // kinds: list (tabla para estudiar), gap (escribir), write (traducir en línea larga), choice (elegir), match (unir)
+  function drawBlock(P, b, num, keys) {
+    const head = () => {
+      P.rule(); P.y += 3;
+      P.text((num ? num + '. ' : '') + b.title, 12.5, { bold: true, after: 0.5 });
+      if (b.instr) P.text(b.instr, 9.5, { color: [90, 90, 90], after: 2 });
+    };
+    const ans = [];
+    if (b.kind === 'list') {
+      const tableHead = () => { head(); P.row(b.cols, b.widths, 9, { colors: b.cols.map(() => [120, 120, 120]), pad: 1.5, line: true }); };
+      // cabecera junto con las primeras filas
+      P.keep(() => { tableHead(); b.rows.slice(0, 3).forEach(r => P.row(r, b.widths, 10.5, { colors: b.colors, line: true })); });
+      b.rows.slice(3).forEach(r => P.row(r, b.widths, 10.5, { colors: b.colors, line: true }));
+      P.y += 4;
+      return;
+    }
+    const body = () => {
+      head();
+      if (b.kind === 'gap') {
+        const cells = b.items.map((it, j) => (j + 1) + ') ' + (it.q.includes('___') ? it.q.replace(/___/g, BL) : it.q + '  ' + BL));
+        P.font(10.5);
+        const half = (P.CW - 4) / 2;
+        if (cells.every(c => P.doc.getTextWidth(P.clean(c)) < half - 3)) {
+          const rows = Math.ceil(cells.length / 2);
+          for (let r = 0; r < rows; r++) {
+            P.need(6.2); P.font(10.5);
+            P.T(P.clean(cells[r]), P.M + 2, P.y + 4.5);
+            if (cells[r + rows]) P.T(P.clean(cells[r + rows]), P.M + 4 + half, P.y + 4.5);
+            P.y += 6.2;
+          }
+        } else cells.forEach(c => P.text(c, 10.5, { indent: 2, after: 1.8 }));
+        b.items.forEach((it, j) => ans.push((j + 1) + ') ' + it.a));
+      } else if (b.kind === 'write') {
+        b.items.forEach((it, j) => {
+          P.text((j + 1) + ') ' + it.q, 11, { indent: 2, after: 1 });
+          P.need(8); if (!P.dry) { P.doc.setDrawColor(150); P.doc.line(P.M + 7, P.y + 5, P.W - P.M, P.y + 5); } P.y += 8;
+          ans.push((j + 1) + ') ' + it.a);
+        });
+      } else if (b.kind === 'choice') {
+        b.items.forEach((it, j) => {
+          P.text((j + 1) + ') ' + it.q, 11, { indent: 2, after: 0.6 });
+          P.text(it.opts.map(o => '( ) ' + o).join('      '), 10.5, { indent: 7, color: [50, 50, 50], after: 2 });
+          ans.push((j + 1) + ') ' + it.a);
+        });
+      } else if (b.kind === 'match') {
+        const right = shuffle(b.pairs.map((p, i) => ({ t: p[1], i })));
+        const half = (P.CW - 4) / 2;
+        b.pairs.forEach((p, j) => P.row([(j + 1) + ') ' + p[0] + '   ____', LETTERS[j] + ') ' + right[j].t], [half + 4, half], 10.5, { indent: 2, pad: 3 }));
+        b.pairs.forEach((p, j) => ans.push((j + 1) + '-' + LETTERS[right.findIndex(r => r.i === j)]));
+      }
+      P.y += 4;
+    };
+    // los bloques se generan una vez (barajado incluido) y se miden antes de dibujar
+    if (b.kind === 'match') {
+      const right = shuffle(b.pairs.map((p, i) => ({ t: p[1], i })));
+      const half = (P.CW - 4) / 2;
+      const draw = () => {
+        head(); ans.length = 0;
+        b.pairs.forEach((p, j) => P.row([(j + 1) + ') ' + p[0] + '   ____', LETTERS[j] + ') ' + right[j].t], [half + 4, half], 10.5, { indent: 2, pad: 3 }));
+        b.pairs.forEach((p, j) => ans.push((j + 1) + '-' + LETTERS[right.findIndex(r => r.i === j)]));
+        P.y += 4;
+      };
+      P.keep(draw);
+    } else {
+      P.keep(() => { ans.length = 0; body(); });
+    }
+    keys.push([(num ? num + '. ' : '') + b.title, ans.join('    ')]);
+  }
+
+  // ---------- Contenido de cada sección ----------
+  const V = () => vocabularyData, FR = () => frasesData;
+  const conjVerbs = () => verbsData.filter(v => v.conjugations && v.conjugations.length);
+  const pick = (pool, right, n) => shuffle([right, ...shuffle([...new Set(pool.filter(x => x !== right))]).slice(0, n - 1)]);
+
+  const SECTIONS = {
+    vocabulary: { name: 'Vocabulario', themes: () => Object.keys(V()), modes: ['study', 'ex'],
+      build: (th, mode) => th.map(t => mode === 'study'
+        ? { kind: 'list', title: t, cols: ['Inglés', 'Pronunciación', 'Español'], widths: [62, 48, 68], colors: [[20, 20, 20], [110, 110, 110], [40, 40, 40]], rows: V()[t].map(w => [w.en, w.pro, w.es]) }
+        : { kind: 'gap', title: t, instr: 'Escribe la palabra en inglés.', items: shuffle(V()[t]).map(w => ({ q: w.es + ' →', a: w.en })) }) },
+    paresPalabras: { name: 'Pares Palabras', themes: () => Object.keys(V()),
+      build: th => th.flatMap(t => chunk(shuffle(V()[t]), 8).map((c, k, all) => ({ kind: 'match', title: t + (all.length > 1 ? ' (' + (k + 1) + ')' : ''), instr: 'Une cada palabra con su traducción: escribe la letra.', pairs: c.map(w => [w.en, w.es]) }))) },
+    multipleWords: { name: 'Opción Múltiple', themes: () => Object.keys(V()),
+      build: th => th.map(t => ({ kind: 'choice', title: t, instr: 'Marca la traducción correcta.', items: shuffle(V()[t]).map(w => ({ q: w.en, a: w.es, opts: pick(V()[t].map(x => x.es), w.es, Math.min(4, V()[t].length)) })) })) },
+    frases: { name: 'Frases', themes: () => Object.keys(FR()), modes: ['study', 'ex', 'ex2'],
+      build: (th, mode) => th.map(t => mode === 'study'
+        ? { kind: 'list', title: t, cols: ['Español', 'Inglés', 'Pronunciación'], widths: [62, 62, 54], colors: [[40, 40, 40], [20, 20, 20], [110, 110, 110]], rows: FR()[t].map(f => [f.es, f.en, f.en_pro || '']) }
+        : mode === 'ex' ? { kind: 'write', title: t, instr: 'Traduce al inglés.', items: shuffle(FR()[t]).map(f => ({ q: f.es, a: f.en })) }
+        : { kind: 'write', title: t, instr: 'Traduce al español.', items: shuffle(FR()[t]).map(f => ({ q: f.en, a: f.es })) }) },
+    paresFrases: { name: 'Pares Frases', themes: () => Object.keys(FR()),
+      build: th => th.map(t => ({ kind: 'match', title: t, instr: 'Une cada frase con su traducción: escribe la letra.', pairs: shuffle(FR()[t]).map(f => [f.es, f.en]) })) },
+    multipleFrases: { name: 'Opción Múltiple Frases', themes: () => Object.keys(FR()),
+      build: th => th.map(t => ({ kind: 'choice', title: t, instr: 'Marca la traducción correcta.', items: shuffle(FR()[t]).map(f => ({ q: f.es, a: f.en, opts: pick(FR()[t].map(x => x.en), f.en, Math.min(3, FR()[t].length)) })) })) },
+    verbos: { name: 'Verbos', themes: () => ['Lista de verbos', 'Conjugaciones'], modes: ['study', 'ex'],
+      build: (th, mode) => th.flatMap(t => {
+        if (t === 'Lista de verbos') return mode === 'study'
+          ? [{ kind: 'list', title: 'Los ' + verbsData.length + ' verbos más usados', cols: ['Inglés', 'Pronunciación', 'Español'], widths: [58, 52, 68], colors: [[20, 20, 20], [110, 110, 110], [40, 40, 40]], rows: verbsData.map(v => [v.en, v.pro, v.es]) }]
+          : chunk(shuffle(verbsData), 20).map((c, k) => ({ kind: 'gap', title: 'Verbos (' + (k + 1) + ')', instr: 'Escribe el verbo en inglés.', items: c.map(v => ({ q: v.es + ' →', a: v.en })) }));
+        return conjVerbs().map(v => mode === 'study'
+          ? { kind: 'list', title: v.en + ' · ' + v.es, cols: ['Inglés', 'Pronunciación', 'Español'], widths: [58, 52, 68], colors: [[20, 20, 20], [110, 110, 110], [40, 40, 40]], rows: v.conjugations.map(c => [c.pronoun + ' ' + c.form, c.pronoun + ' ' + c.pro, c.es]) }
+          : { kind: 'gap', title: v.en + ' (' + v.es + ')', instr: 'Completa con la forma correcta.', items: v.conjugations.map(c => ({ q: c.pronoun + ' ___', a: c.form })) });
+      }) },
+    multipleVerbos: { name: 'Opción Múltiple Verbos', themes: () => conjVerbs().map(v => v.en),
+      build: th => conjVerbs().filter(v => th.includes(v.en)).map(v => {
+        const forms = [...new Set(v.conjugations.map(c => c.form))];
+        const pool = forms.length > 2 ? forms : [...forms, ...conjVerbs().flatMap(x => x.conjugations.map(c => c.form))];
+        return { kind: 'choice', title: v.en + ' (' + v.es + ')', instr: 'Marca la forma correcta.', items: v.conjugations.map(c => ({ q: c.es + ' → ' + c.pronoun + ' ___', a: c.form, opts: pick(pool, c.form, 3) })) };
+      }) },
+    paresVerbos: { name: 'Pares Verbos', themes: () => conjVerbs().map(v => v.en),
+      build: th => conjVerbs().filter(v => th.includes(v.en)).map(v => ({ kind: 'match', title: v.en + ' (' + v.es + ')', instr: 'Une cada forma en español con su forma en inglés.', pairs: v.conjugations.map(c => [c.es, c.pronoun + ' ' + c.form]) })) },
+    abecedario: { name: 'Abecedario', themes: () => ['Abecedario'], modes: ['study', 'ex'],
+      build: (th, mode) => mode === 'study'
+        ? [{ kind: 'list', title: 'The alphabet', cols: ['Letra', 'Se pronuncia', 'Palabra', 'Pronunciación'], widths: [22, 40, 58, 58], colors: [[20, 20, 20], [40, 40, 40], [20, 20, 20], [110, 110, 110]], rows: alphabetData.map(a => [a.letter, a.pronunciation, a.word, a.wordPro]) }]
+        : [{ kind: 'gap', title: '¿Qué letra es?', instr: 'Escribe la letra que se pronuncia así.', items: shuffle(alphabetData).map(a => ({ q: a.pronunciation + ' →', a: a.letter })) },
+           ...chunk(shuffle(alphabetData), 9).map((c, k) => ({ kind: 'match', title: 'Letra y pronunciación (' + (k + 1) + ')', instr: 'Une cada letra con su pronunciación.', pairs: c.map(a => [a.letter, a.pronunciation]) })),
+           { kind: 'gap', title: 'Palabras', instr: 'Escribe la letra con la que empieza cada palabra y cómo se pronuncia esa letra.', items: shuffle(alphabetData).slice(0, 12).map(a => ({ q: a.word + ' → letra ___ , se dice', a: a.letter + ' (' + a.pronunciation + ')' })) }] },
+  };
+  const MODE_LABEL = { study: '📋 Lista para estudiar', ex: '✍️ Ejercicios', ex2: '✍️ Ejercicios (inglés → español)' };
+  const modeLabelFor = (sec, m) => sec === 'frases' && m === 'ex' ? '✍️ Ejercicios (español → inglés)' : MODE_LABEL[m];
+
+  async function makePdf(secId, themes, mode, withKey, btn) {
+    if (!window.jspdf) { alert('No se ha podido cargar el generador de PDF. Comprueba la conexión.'); return; }
+    const sec = SECTIONS[secId];
+    const label = btn && btn.textContent;
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Preparando PDF…'; }
+    try {
+      const P = await newDoc();
+      // Bloques largos se parten en trozos que caben en una página
+      const MAXI = { gap: 36, choice: 13, write: 11 };
+      const blocks = sec.build(themes, mode).flatMap(b => {
+        const max = MAXI[b.kind];
+        if (!max || b.items.length <= max) return [b];
+        const parts = chunk(b.items, Math.ceil(b.items.length / Math.ceil(b.items.length / max)));
+        return parts.map((it, k) => Object.assign({}, b, { title: b.title + ' (' + (k + 1) + '/' + parts.length + ')', items: it }));
+      });
+      const study = mode === 'study';
+      const sub = (themes.length === sec.themes().length ? 'Todos los temas' : themes.join(', ')) + ' · ' + modeLabelFor(secId, mode).replace(/^\S+\s/, '');
+      P.header('Learn English · ' + sec.name, sec.name, sub, !study);
+      const keys = [];
+      blocks.forEach((b, i) => drawBlock(P, b, study ? 0 : i + 1, keys));
+      if (!study && withKey) {
+        P.doc.addPage(); P.y = P.M;
+        P.text('Soluciones · ' + sec.name, 15, { bold: true, after: 4 });
+        keys.forEach(([t, a]) => P.keep(() => { P.text(t, 11, { bold: true, after: 0.5 }); P.text(a, 9.5, { color: [60, 60, 60], after: 3 }); }));
+      }
+      const fname = (sec.name + (study ? ' lista' : ' ejercicios')).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w]+/g, '_');
+      P.finish(fname + '.pdf', 'Learn English · ' + sec.name);
+    } catch (e) { console.error(e); alert('No se ha podido crear el PDF.'); }
+    finally { if (btn) { btn.disabled = false; btn.textContent = label; } }
+  }
+
+  // ---------- Ventana de opciones ----------
+  const css = document.createElement('style');
+  css.textContent = `
+    .apdf-bar { display: flex; justify-content: flex-end; margin: -0.4rem 0 0.8rem; }
+    .apdf-open { padding: 7px 14px; border-radius: 2rem; border: 1px solid var(--gold); background: transparent; color: var(--gold-light); font-size: 12.5px; font-weight: 500; cursor: pointer; font-family: inherit; }
+    .apdf-open:hover { background: var(--gold); color: var(--page-bg); }
+    .apdf-ov { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .apdf-box { background: var(--surface-2); color: var(--text-primary); border: 1px solid #c9a84c50; border-radius: 1.2rem; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; padding: 18px; box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+    .apdf-box h3 { font-family: var(--font-serif); color: var(--gold-light); font-size: 20px; margin: 0 0 12px; }
+    .apdf-lbl { font-size: 11px; letter-spacing: .5px; text-transform: uppercase; color: var(--text-secondary); margin: 12px 0 6px; }
+    .apdf-box select { width: 100%; padding: 8px 10px; border-radius: 10px; font-size: 14px; }
+    .apdf-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .apdf-chip { padding: 6px 11px; border-radius: 2rem; border: 1px solid #c9a84c40; background: transparent; color: var(--text-primary); font-size: 12.5px; cursor: pointer; font-family: inherit; }
+    .apdf-chip.on { background: var(--gold); border-color: var(--gold); color: var(--page-bg); }
+    .apdf-check { display: flex; align-items: center; gap: 8px; font-size: 13.5px; margin-top: 12px; cursor: pointer; }
+    .apdf-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+    .apdf-actions button { padding: 9px 16px; border-radius: 2rem; font-size: 13.5px; font-weight: 600; cursor: pointer; font-family: inherit; border: 1px solid #c9a84c40; background: transparent; color: var(--text-primary); }
+    .apdf-actions .apdf-go { background: var(--gold); border-color: var(--gold); color: var(--page-bg); }
+    .apdf-actions .apdf-go:disabled { opacity: .5; }
+    @media print { .apdf-bar, .apdf-ov { display: none !important; } }`;
+  document.head.appendChild(css);
+
+  function openDialog(secId) {
+    secId = SECTIONS[secId] ? secId : 'vocabulary';
+    const ov = document.createElement('div');
+    ov.className = 'apdf-ov';
+    ov.innerHTML = `<div class="apdf-box" role="dialog" aria-label="Imprimir">
+      <h3>🖨️ Imprimir / PDF</h3>
+      <div class="apdf-lbl">Sección</div>
+      <select class="apdf-sec">${Object.entries(SECTIONS).map(([k, s]) => `<option value="${k}">${s.name}</option>`).join('')}</select>
+      <div class="apdf-modes-wrap"><div class="apdf-lbl">Qué quieres imprimir</div><div class="apdf-chips apdf-modes"></div></div>
+      <div class="apdf-themes-wrap"><div class="apdf-lbl">Temas</div><div class="apdf-chips apdf-themes"></div></div>
+      <label class="apdf-check apdf-key-wrap"><input type="checkbox" class="apdf-key" checked> Incluir las soluciones al final</label>
+      <div class="apdf-actions"><button class="apdf-cancel" type="button">Cancelar</button><button class="apdf-go" type="button">Crear PDF</button></div>
+    </div>`;
+    document.body.appendChild(ov);
+    const $ = s => ov.querySelector(s);
+    let mode = 'ex', chosen = new Set();
+    const render = () => {
+      const sec = SECTIONS[$('.apdf-sec').value];
+      const modes = sec.modes || ['ex'];
+      if (!modes.includes(mode)) mode = modes.includes('ex') ? 'ex' : modes[0];
+      $('.apdf-modes-wrap').style.display = modes.length > 1 ? '' : 'none';
+      $('.apdf-modes').innerHTML = modes.map(m => `<button type="button" class="apdf-chip ${m === mode ? 'on' : ''}" data-m="${m}">${modeLabelFor($('.apdf-sec').value, m)}</button>`).join('');
+      const themes = sec.themes();
+      chosen = new Set([...chosen].filter(t => themes.includes(t)));
+      $('.apdf-themes-wrap').style.display = themes.length > 1 ? '' : 'none';
+      const all = chosen.size === 0 || chosen.size === themes.length;
+      $('.apdf-themes').innerHTML = `<button type="button" class="apdf-chip ${all ? 'on' : ''}" data-all="1">Todos</button>` +
+        themes.map(t => `<button type="button" class="apdf-chip ${!all && chosen.has(t) ? 'on' : ''}" data-t="${t.replace(/"/g, '&quot;')}">${t}</button>`).join('');
+      $('.apdf-key-wrap').style.display = mode === 'study' ? 'none' : '';
+      ov.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { mode = b.dataset.m; render(); });
+      ov.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
+        if (chosen.size === themes.length) chosen.clear();
+        chosen.has(b.dataset.t) ? chosen.delete(b.dataset.t) : chosen.add(b.dataset.t); render();
+      });
+      $('[data-all]').onclick = () => { chosen.clear(); render(); };
+    };
+    $('.apdf-sec').value = secId;
+    $('.apdf-sec').onchange = () => { chosen.clear(); render(); };
+    render();
+    const close = () => ov.remove();
+    $('.apdf-cancel').onclick = close;
+    ov.addEventListener('click', e => { if (e.target === ov) close(); });
+    $('.apdf-go').onclick = async () => {
+      const id = $('.apdf-sec').value, themes = SECTIONS[id].themes();
+      const sel = chosen.size ? themes.filter(t => chosen.has(t)) : themes;
+      await makePdf(id, sel, mode, $('.apdf-key').checked, $('.apdf-go'));
+      close();
+    };
+  }
+  window.openPrintDialog = openDialog;
+
+  // Botón en cada sección
+  Object.keys(SECTIONS).forEach(id => {
+    const sec = document.getElementById(id);
+    if (!sec) return;
+    const bar = document.createElement('div');
+    bar.className = 'apdf-bar';
+    bar.innerHTML = '<button type="button" class="apdf-open">🖨️ Imprimir / PDF</button>';
+    bar.firstChild.onclick = () => openDialog(id);
+    sec.insertBefore(bar, sec.firstChild);
+  });
+  // Y en "Ejercicios de Escritura"
+  const ee = document.getElementById('ejerciciosEscritura');
+  if (ee) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = '🖨️ Imprimir cualquier sección (listas y ejercicios)';
+    b.style.cssText = 'padding: 12px; border-radius: 2rem; border: 1px solid var(--gold); background: var(--gold); color: var(--page-bg); font-weight: 600; cursor: pointer; width: 100%; margin-bottom: 12px; font-family: inherit;';
+    b.onclick = () => openDialog('vocabulary');
+    const anchor = ee.querySelector('div');
+    ee.insertBefore(b, anchor);
+  }
+  window.__appPdfTest = makePdf;
+})();
+</script>
 </body>
 </html>
