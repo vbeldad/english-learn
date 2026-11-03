@@ -585,6 +585,8 @@
     .ef-card.ef-flash { outline: 2px solid var(--fill-accent); transition: outline-color 1.5s; }
     .ef-back { background: none; border: none; color: var(--text-accent); font-size: 13px; cursor: pointer; padding: 0; margin-top: 4px; font-family: inherit; }
     .ef-lesson-head { margin: 0.6rem 0 1rem; }
+    .ef-head-btns { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .ef-head-btns .ef-back { margin-top: 0; }
     .ef-lesson-title { font-size: 17px; font-weight: 600; color: var(--text-primary); }
     .ef-lesson-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
     .ef-card { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
@@ -5628,7 +5630,8 @@ window.addEventListener('DOMContentLoaded', () => {
             try { localStorage.setItem('ef-ex-lesson', id); } catch (e) {}
             const l = LESSONS.find(x => x.id === id);
             const body = document.getElementById('efLessonBody');
-            body.innerHTML = `<div class="ef-lesson-head"><div class="ef-lesson-title">${l.id} · ${esc(l.title)}</div><div class="ef-lesson-sub">${esc(lessonName(l))} · Student Book ${l.pages}</div><button class="ef-back" type="button">📑 Ver índice</button></div>`;
+            body.innerHTML = `<div class="ef-lesson-head"><div class="ef-lesson-title">${l.id} · ${esc(l.title)}</div><div class="ef-lesson-sub">${esc(lessonName(l))} · Student Book ${l.pages}</div><div class="ef-head-btns"><button class="ef-back" type="button">📑 Ver índice</button><button class="ef-btn ef-primary ef-pdf" type="button">🖨️ Imprimir / PDF</button></div></div>`;
+            body.querySelector('.ef-pdf').onclick = e => lessonPdf(l, e.currentTarget);
             body.querySelector('.ef-back').onclick = () => { showIndex(true); window.scrollTo({ top: document.getElementById('englishFile').getBoundingClientRect().top + window.pageYOffset - 10, behavior: 'smooth' }); };
             l.ex.forEach((ex, i) => { const c = document.createElement('div'); c.className = 'ef-card'; c.dataset.i = i; body.appendChild(c); renderCard(c, l, i); });
             renderChips();
@@ -5637,6 +5640,137 @@ window.addEventListener('DOMContentLoaded', () => {
                 window.scrollTo({ top, behavior: 'smooth' });
             }
         }
+
+
+        // ===== PDF IMPRIMIBLE DE UNA LECCIÓN =====
+        let pdfFont = null; // base64 de DejaVu Sans (incluye símbolos fonéticos)
+        async function loadPdfFont() {
+            if (pdfFont !== null) return pdfFont;
+            try {
+                const r = await fetch('https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf');
+                if (!r.ok) throw 0;
+                const buf = new Uint8Array(await r.arrayBuffer());
+                let bin = ''; for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
+                pdfFont = btoa(bin);
+            } catch (e) { pdfFont = ''; }
+            return pdfFont;
+        }
+        async function lessonPdf(l, btn) {
+            if (!window.jspdf) { alert('No se ha podido cargar el generador de PDF. Comprueba la conexión.'); return; }
+            const label = btn ? btn.textContent : '';
+            if (btn) { btn.disabled = true; btn.textContent = '⏳ Preparando PDF…'; }
+            try {
+                const font = await loadPdfFont();
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+                let F = 'helvetica';
+                if (font) { doc.addFileToVFS('DejaVuSans.ttf', font); doc.addFont('DejaVuSans.ttf', 'DejaVu', 'normal'); doc.addFont('DejaVuSans.ttf', 'DejaVu', 'bold'); F = 'DejaVu'; }
+                // Quita emojis; sin la fuente, también los símbolos que Helvetica no tiene
+                const clean = t => {
+                    t = String(t).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, '').replace(/\s+/g, ' ').trim();
+                    if (!font) t = t.replace(/→/g, '->').replace(/↔/g, '<->').replace(/[^\x00-\xFF]/g, '?');
+                    return t;
+                };
+                const W = 210, M = 16, CW = W - 2 * M, BOTTOM = 297 - 14;
+                let y = M;
+                const need = h => { if (y + h > BOTTOM) { doc.addPage(); y = M; } };
+                const text = (t, size, opt = {}) => {
+                    doc.setFont(F, opt.bold ? 'bold' : 'normal'); doc.setFontSize(size);
+                    doc.setTextColor(...(opt.color || [20, 20, 20]));
+                    const x = M + (opt.indent || 0);
+                    const lines = doc.splitTextToSize(clean(t), CW - (opt.indent || 0));
+                    const lh = size * 0.42;
+                    lines.forEach(ln => { need(lh); doc.text(ln, x, y + lh * 0.8); y += lh; });
+                    y += opt.after || 0;
+                };
+                const BL = '_____________';
+
+                // Cabecera
+                text('English File Elementary · ' + l.id, 9, { color: [120, 120, 120], after: 1 });
+                text(l.title, 18, { bold: true, after: 1 });
+                text(lessonName(l) + ' · Student Book ' + l.pages, 10, { color: [90, 90, 90], after: 2 });
+                text('Nombre: ______________________________     Fecha: ______________', 10, { after: 5 });
+
+                const keys = [];
+                l.ex.forEach((ex, i) => {
+                    const items = typeof ex.items === 'function' ? ex.items() : ex.items.slice();
+                    need(18);
+                    doc.setDrawColor(200); doc.line(M, y, W - M, y); y += 3;
+                    text((i + 1) + '. ' + ex.title, 12.5, { bold: true, after: 0.5 });
+                    let instr = ex.instr;
+                    if (ex.type === 'stress') instr = 'Subraya la sílaba acentuada (la que suena más fuerte).';
+                    else if (exType(ex) === 'listen') instr = instr.replace(/Pulsa 🔊( y| para oír la palabra y)?/i, 'Lee la palabra y').replace(/^Lee la palabra y\s*:?/, 'Lee la palabra y ');
+                    text(instr, 9.5, { color: [90, 90, 90], after: 2 });
+                    const ans = [];
+                    // Opciones comunes a todos los ítems: se ponen una vez y los ítems van en dos columnas con hueco
+                    if (ex.type === 'choice' && ex.opts && !items.some(it => it.opts)) {
+                        const opts = ex.opts.map(o => clean(o)).filter(Boolean);
+                        text('Opciones:  ' + opts.join('   ·   '), 10.5, { indent: 2, color: [40, 40, 40], after: 2 });
+                        const cells = items.map((it, j) => {
+                            const q = clean(it.q || it.say || '');
+                            return (j + 1) + ') ' + (q.includes('___') ? q.replace(/___/g, BL) : q + '  ' + BL);
+                        });
+                        doc.setFont(F, 'normal'); doc.setFontSize(10.5);
+                        const half = (CW - 4) / 2;
+                        const two = cells.every(c => doc.getTextWidth(c) < half - 3);
+                        const lh = 6.2;
+                        if (two) {
+                            const rows = Math.ceil(cells.length / 2);
+                            for (let r = 0; r < rows; r++) {
+                                need(lh); doc.setFont(F, 'normal'); doc.setFontSize(10.5); doc.setTextColor(20);
+                                doc.text(cells[r], M + 2, y + 4.5);
+                                if (cells[r + rows]) doc.text(cells[r + rows], M + 4 + half, y + 4.5);
+                                y += lh;
+                            }
+                        } else cells.forEach(c => text(c, 10.5, { indent: 2, after: 1.6 }));
+                        items.forEach((it, j) => ans.push((j + 1) + ') ' + clean(it.a)));
+                        y += 3;
+                        keys.push([(i + 1) + '. ' + ex.title, ans.join('    ')]);
+                        return;
+                    }
+                    items.forEach((it, j) => {
+                        const n = (j + 1) + ') ';
+                        if (ex.type === 'choice') {
+                            const opts = (it.opts || ex.opts).map(o => clean(o)).filter(Boolean);
+                            const q = it.q || (it.say ? '(Escucha) ' + it.say.replace(/, /g, '') : '');
+                            const isTeen = !it.q && typeof ex.items === 'function';
+                            const qq = isTeen ? 'Rodea el número que oigas: ' : q;
+                            need(11);
+                            text(n + qq, 11, { indent: 2, after: 0.6 });
+                            text(opts.map(o => '( ) ' + o).join('      '), 10.5, { indent: 7, color: [50, 50, 50], after: 2 });
+                            ans.push(n + clean(it.a));
+                        } else if (ex.type === 'gap') {
+                            const t = it.t === '___' && it.say ? '(Escucha el deletreo) ' + BL : it.t.replace(/___/g, BL);
+                            text(n + t, 11, { indent: 2, after: 2.2 });
+                            ans.push(n + it.a.join(' / '));
+                        } else if (ex.type === 'stress') {
+                            text(n + it.s.join(' · '), 11, { indent: 2, after: 2 });
+                            ans.push(n + it.s.map((sy, k) => k === it.a ? sy.toUpperCase() : sy).join(''));
+                        }
+                    });
+                    y += 3;
+                    keys.push([(i + 1) + '. ' + ex.title, ans.join('    ')]);
+                });
+
+                // Soluciones
+                doc.addPage(); y = M;
+                text('Soluciones · ' + l.id + ' ' + l.title, 15, { bold: true, after: 4 });
+                keys.forEach(([t, a]) => { need(12); text(t, 11, { bold: true, after: 0.5 }); text(a, 9.5, { color: [60, 60, 60], after: 3 }); });
+
+                // Pie de página
+                const pages = doc.getNumberOfPages();
+                for (let pnum = 1; pnum <= pages; pnum++) {
+                    doc.setPage(pnum); doc.setFont(F, 'normal'); doc.setFontSize(8); doc.setTextColor(150);
+                    doc.text('Learn English · English File ' + l.id + ' · ' + pnum + '/' + pages, W / 2, 297 - 7, { align: 'center' });
+                }
+                doc.save('English_File_' + l.id + '.pdf');
+            } catch (e) {
+                console.error(e); alert('No se ha podido crear el PDF.');
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = label; }
+            }
+        }
+        window.efLessonPdf = id => lessonPdf(LESSONS.find(x => x.id === id));
 
         function renderCard(card, lesson, idx) {
             const ex = lesson.ex[idx], key = exKey(lesson, idx);
