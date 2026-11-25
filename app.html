@@ -4928,6 +4928,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const V2 = ['fish /ɪ/', 'tree /iː/', 'cat /æ/', 'car /ɑː/', 'clock /ɒ/', 'horse /ɔː/', 'bull /ʊ/', 'boot /uː/'];
         const words = (list, opts) => list.map(([w, i]) => ({ q: w, say: w.replace(/^the /, ''), a: opts[i] }));
 
+        const ABC = (q, o, i) => ({ q, opts: o, a: o[i] });
         const LESSONS = [
         { id: '1A', title: 'Hello, everybody', pages: 'pp. 8–9', ex: [
             { title: 'Saludos', instr: 'Elige la palabra que significa lo mismo.', type: 'choice',
@@ -5029,6 +5030,46 @@ window.addEventListener('DOMContentLoaded', () => {
             { title: 'Social English', instr: 'Elige la respuesta adecuada.', type: 'choice',
               opts: ['Sure.', 'Yes, I am.', "It's nice. I like it.", "No, I'm a student.", "You're welcome."],
               items: [['Can I take a photo?', 'Sure.'], ["You're American, right?", 'Yes, I am.'], ['What do you think of London?', "It's nice. I like it."], ['Are you on holiday?', "No, I'm a student."], ['Thank you.', "You're welcome."]].map(([q, a]) => ({ q, say: q, a })) },
+        ]},
+        { id: 'CYR1', title: 'Can you remember…? 1', pages: 'p. 23', book: 'Workbook', ex: [
+            { title: 'Grammar: one word', instr: 'Completa las frases con una palabra.', type: 'gap',
+              items: [
+                ["Milan ___ in the south of Italy. It's in the north.", ["isn't", 'is not']],
+                ['Please turn off ___ phone.', ['your']],
+                ["They ___ from New Zealand. They're Australian.", ["aren't", 'are not']],
+                ["I'm 19. How old are ___?", ['you']],
+                ['___ your teacher English or American?', ['Is']],
+              ].map(([t, a]) => ({ t, a })) },
+            { title: 'Vocabulary: odd one out', instr: 'Elige la palabra que es diferente.', type: 'choice',
+              items: [
+                ABC('four · nineteen · eleven · today', ['four', 'nineteen', 'eleven', 'today'], 3),
+                ABC('thirteen · forty · seventy · ninety', ['thirteen', 'forty', 'seventy', 'ninety'], 0),
+                ABC('Polish · Mexico · Italy · Russia', ['Polish', 'Mexico', 'Italy', 'Russia'], 0),
+                ABC('China · Europe · Spain · Türkiye', ['China', 'Europe', 'Spain', 'Türkiye'], 1),
+                ABC('Japanese · Irish · Swiss · Germany', ['Japanese', 'Irish', 'Swiss', 'Germany'], 3),
+                ABC('listen · understand · answer · door', ['listen', 'understand', 'answer', 'door'], 3),
+                ABC('desk · repeat · table · chair', ['desk', 'repeat', 'table', 'chair'], 1),
+              ] },
+            { title: 'Pronunciation: different sound', instr: 'Elige la palabra que tiene un sonido diferente al del dibujo.', type: 'choice',
+              items: [
+                ABC('🚆 train /eɪ/: bye · eight · say · they', ['bye', 'eight', 'say', 'they'], 0),
+                ABC('🚲 bike /aɪ/: I · five · his · my', ['I', 'five', 'his', 'my'], 2),
+                ABC('📞 phone /əʊ/: do · know · mobile · Poland', ['do', 'know', 'mobile', 'Poland'], 0),
+                ABC('💻 computer /ə/: Asia · Ireland · Saturday · table', ['Asia', 'Ireland', 'Saturday', 'table'], 3),
+                ABC('🎷 jazz /dʒ/: German · go · Japan · page', ['German', 'go', 'Japan', 'page'], 1),
+              ] },
+            { title: 'Class profile: Class A', instr: 'Lee el texto y elige a, b o c.', type: 'choice',
+              items: [
+                ABC('Yokohama ___ a city south of Tokyo.', ['am', 'is', 'are'], 1),
+                ABC('Suki is 25. ___ email address is s.ito@mail.com.', ['Her', 'His', 'Its'], 0),
+                ABC('Enzo and Vitor ___ students, too.', ['am', 'is', 'are'], 2),
+                ABC("They're ___, from Salvador in the east of the country.", ['Spain', 'Brazilian', 'Brazil'], 1),
+                ABC('___ surname is Oliveira.', ['Their', 'Your', 'His'], 0),
+                ABC('___ name is Susan McGuirre.', ['I', 'Her', 'My'], 2),
+                ABC("I'm an English teacher, but I ___ English.", ["'m not", 'not be', 'am no'], 0),
+                ABC("I'm from Edinburgh in ___.", ['Scotland', 'Irish', 'Scottish'], 0),
+                ABC('Suki, Enzo and Vitor are my students, and ___ very good!', ["he's", "they're", "she's"], 1),
+              ] },
         ]},
         { id: '2A', title: 'Your desk and you', pages: 'pp. 24–25', ex: [
             { title: 'Things', instr: 'Escribe la palabra en inglés.', type: 'gap', noArticle: true,
@@ -5209,6 +5250,33 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['Use the old cable cars.', 'Travel around the city'],
               ].map(([q, a]) => ({ q, a })) },
         ]},
+        { id: 'ES1', title: 'Exam skills 1 · Reading: matching headings', pages: 'p. 38', book: 'Workbook', ex: [
+            { title: 'What to see in Bangkok', instr: 'Une cada texto con su título (A–I). El texto 0 es el ejemplo (G). Dos títulos no corresponden a ningún texto.', type: 'choice', fixed: true,
+              opts: ['See a very large statue in a big collection', 'Find lots of expensive products here', 'History and culture in the same area', 'Sculptures by modern artists',
+                     'Buy some presents to remember your visit', 'Enjoy looking at this building from different places', 'Go up to see everything below', 'A shopping street that\'s very popular', 'Take a break from the city streets'],
+              items: [
+                ["Text 1: The Grand Palace has more than 100 buildings. Kings lived here in the past, but now it's only used for ceremonies. You can see the country's most important statue in the Temple of the Emerald Buddha.", 'History and culture in the same area'],
+                ["Text 2: Chatuchak Weekend Market is a very big market. There are more than 15,000 stalls selling local products like jewellery and clothing. Take a map with you because it's easy to get lost.", 'Buy some presents to remember your visit'],
+                ['Text 3: Go to Lumphini Park and see a quiet and peaceful side of Bangkok. Get there early to go walking or running, or try Tai Chi. Later in the day, you can go on a boat on the lake.', 'Take a break from the city streets'],
+                ["Text 4: The temples at Wat Pho have over 1,000 images of Buddha. The most famous is the Reclining Buddha: a statue of Buddha lying down. The statue is covered in gold, and it's 15 metres high and over 46 metres long.", 'See a very large statue in a big collection'],
+                ["Text 5: Siam Paragon is a shopping centre where people often go to look, but not always to buy. There's an aquarium and a large cinema, as well as 250 luxury shops and restaurants. There's even a large shop that sells Ferrari cars!", 'Find lots of expensive products here'],
+                ['Text 6: Visit Wat Arun – the Temple of Dawn – twice if you can. See its beautiful 80-metre central tower and four shorter towers during the day. At night, watch the lights come on from the other side of the river.', 'Enjoy looking at this building from different places'],
+              ].map(([q, a]) => ({ q, a })) },
+            { title: 'Two headings with no text', instr: '¿Este título corresponde a algún texto?', type: 'choice',
+              opts: ['Yes', 'No'],
+              items: [['D Sculptures by modern artists', 'No'], ["H A shopping street that's very popular", 'No'], ['A See a very large statue in a big collection', 'Yes'], ['I Take a break from the city streets', 'Yes']].map(([q, a]) => ({ q, a })) },
+            { title: 'True or false?', instr: 'Lee los textos otra vez. ¿Verdadero o falso?', type: 'choice',
+              opts: ['True', 'False'],
+              items: [
+                ['Wat Saket is on the only hill in Bangkok.', 'True'],
+                ['Kings live in the Grand Palace now.', 'False'],
+                ['There are more than 15,000 stalls at Chatuchak Market.', 'True'],
+                ['You can go on a boat in Lumphini Park.', 'True'],
+                ['The Reclining Buddha is 46 metres high.', 'False'],
+                ['Siam Paragon has an aquarium and a cinema.', 'True'],
+                ['It\'s a good idea to see Wat Arun only at night.', 'False'],
+              ].map(([q, a]) => ({ q, a })) },
+        ]},
         { id: '3A', title: 'Great Britain?', pages: 'pp. 40–41', ex: [
             { title: 'Verb phrases', instr: 'Escribe la expresión en inglés.', type: 'gap', shuffle: true,
               items: [['cocinar la cena',['cook dinner']],['tocar la guitarra',['play the guitar']],['beber agua mineral',['drink mineral water']],['ver la tele',['watch TV']],['hablar alemán',['speak German']],['gustarle los animales',['like animals']],['vivir en un piso',['live in a flat']],['trabajar en una oficina',['work in an office']],['llevar gafas',['wear glasses']],['tener hijos',['have children']],['leer el periódico',['read the newspaper']],['ir al gimnasio',['go to the gym']]].map(([w, a]) => ({ t: w + ' → ___', a })) },
@@ -5359,6 +5427,46 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['Do you want to go out sometime?', 'Me? Yes.'],
               ].map(([q, a]) => ({ q, a })) },
         ]},
+        { id: 'CYR1-3', title: 'Can you remember…? 1–3', pages: 'p. 55', book: 'Workbook', ex: [
+            { title: 'Grammar: verbs in brackets', instr: 'Completa con la forma correcta del verbo entre paréntesis.', type: 'gap',
+              items: [
+                ['Nurses ___ very long hours. (work)', ['work']],
+                ['___ the TV. I want to watch this programme. (not turn off)', ["Don't turn off", 'Do not turn off']],
+                ["It's a small town. It ___ an airport. (not have)", ["doesn't have", 'does not have']],
+                ["___ you hungry? It's lunch time. (be)", ['Are']],
+                ['(your teacher / wear) glasses? → ___', ['Does your teacher wear glasses?', 'Does your teacher wear glasses']],
+              ].map(([t, a]) => ({ t, a })) },
+            { title: 'Vocabulary: odd one out', instr: 'Elige la palabra que es diferente.', type: 'choice',
+              items: [
+                ABC('window · coin · purse · wallet', ['window', 'coin', 'purse', 'wallet'], 0),
+                ABC('strong · bag · expensive · young', ['strong', 'bag', 'expensive', 'young'], 1),
+                ABC('wrong · wear · tall · clean', ['wrong', 'wear', 'tall', 'clean'], 1),
+                ABC('cheap · worried · bored · angry', ['cheap', 'worried', 'bored', 'angry'], 0),
+                ABC('cook · drink · eat · late', ['cook', 'drink', 'eat', 'late'], 3),
+                ABC('tissue · doctor · lawyer · vet', ['tissue', 'doctor', 'lawyer', 'vet'], 0),
+                ABC('who · watch · where · which', ['who', 'watch', 'where', 'which'], 1),
+              ] },
+            { title: 'Pronunciation: different sound', instr: 'Elige la palabra que tiene un sonido diferente al del dibujo.', type: 'choice',
+              items: [
+                ABC('🐂 bull /ʊ/: blue · cook · footballer · full', ['blue', 'cook', 'footballer', 'full'], 0),
+                ABC('🐟 fish /ɪ/: builder · high · live · rich', ['builder', 'high', 'live', 'rich'], 1),
+                ABC('🐱 cat /æ/: actor · bag · black · charger', ['actor', 'bag', 'black', 'charger'], 3),
+                ABC('🦓 zebra /z/: does · drives · travels · watches', ['does', 'drives', 'travels', 'watches'], 3),
+                ABC('🚿 shower /ʃ/: hairdresser · musician · Russian · shop', ['hairdresser', 'musician', 'Russian', 'shop'], 0),
+              ] },
+            { title: 'My day', instr: 'Lee el artículo sobre Evie Granger y elige a, b o c.', type: 'choice',
+              items: [
+                ABC('Evie ___ with dogs, but she isn\'t a vet.', ['job', 'work', 'works'], 2),
+                ABC("…but she isn't a ___. She's a dog walker.", ['doctor', 'vet', 'a vet'], 1),
+                ABC('Evie works from Monday to Friday. She ___ at weekends.', ["doesn't work", 'not work', "don't work"], 0),
+                ABC('In the morning, she has a group of two or three ___.', ['big dogs', 'dogs big', 'bigs dogs'], 0),
+                ABC('She takes them for ___ on the beach.', ['a long walk', 'long walk', 'a walk long'], 0),
+                ABC("The dogs are very ___ after their walk, but they're happy.", ['bored', 'tired', 'stressed'], 1),
+                ABC('The dogs love the park and they ___ to go home.', ["doesn't want", 'not want', "don't want"], 2),
+                ABC('Does Evie like ___ job?', ['her', 'his', 'your'], 0),
+                ABC('Yes, she ___. She loves animals.', ['do', 'does', 'is'], 1),
+              ] },
+        ]},
         { id: '4A', title: "Who's that in the photo?", pages: 'pp. 56–57', ex: [
             { title: "Possessive 's", instr: "Escribe la frase con 's (o solo ' si es plural).", type: 'gap',
               items: [
@@ -5488,6 +5596,26 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['He finishes work very late at night.', ['✅ True', '❌ False'], 0],
               ].map(([q, opts, i]) => ({ q, opts, a: opts[i] })) },
         ]},
+        { id: 'ES3', title: 'Exam skills 3 · Reading: multiple-choice', pages: 'p. 70', book: 'Workbook', ex: [
+            { title: 'Briggs and Lulu', instr: 'Lee el texto sobre la película Dog y elige A, B o C.', type: 'choice',
+              items: [
+                ABC('1 What did Channing Tatum do in the film Dog?', ['He directed and wrote the story for it.', 'He directed and acted in it.', 'He wrote the story and acted in it.'], 1),
+                ABC('2 How were Briggs and his friend Riley similar?', ['They both had dogs.', 'They were born in the same town.', 'They had the same job.'], 2),
+                ABC('3 The relationship between Briggs and Lulu…', ['changes during the film.', 'is always good.', 'is always bad.'], 0),
+                ABC("4 What is the writer's opinion of the film?", ["It's boring in places.", "It's sometimes sad and sometimes funny.", "It's funny from the beginning to the end."], 1),
+              ] },
+            { title: 'True or false?', instr: 'Lee el texto otra vez. ¿Verdadero o falso?', type: 'choice',
+              opts: ['True', 'False'],
+              items: [
+                ['The film is from a story by Brett Rodriguez and Reid Carolin.', 'True'],
+                ['Four different dogs play Lulu.', 'False'],
+                ['Riley died in a plane accident.', 'False'],
+                ["Riley's hometown is more than 2,500 kilometres away.", 'True'],
+                ['At first, Briggs and Lulu like each other.', 'False'],
+                ['Lulu is difficult because she gets nervous.', 'True'],
+                ['The writer thinks the film is only for people who love dogs.', 'False'],
+              ].map(([q, a]) => ({ q, a })) },
+        ]},
         { id: '5A', title: 'Sing me a song', pages: 'pp. 72–73', ex: [
             { title: 'Verb phrases', instr: 'Elige el verbo que va con cada palabra.', type: 'choice', shuffle: true,
               opts: ['play', 'do', 'go', 'watch', 'have', 'listen'],
@@ -5607,6 +5735,50 @@ window.addEventListener('DOMContentLoaded', () => {
               opts: ["Thanks. You too.", "It's your city. I'm a tourist. I'm in your hands.", 'Follow me.', 'Sure.', "OK, thanks. Say 'hi' to Rob and the kids."],
               items: [['Wow! You look great.','Thanks. You too.'],['So, where do you want to go?',"It's your city. I'm a tourist. I'm in your hands."],['Where are we going?','Follow me.'],['Do you want to go in?','Sure.'],['Have a great time, Ben.',"OK, thanks. Say 'hi' to Rob and the kids."]].map(([q, a]) => ({ q, a })) },
         ]},
+        { id: 'CYR1-5', title: 'Can you remember…? 1–5', pages: 'p. 87', book: 'Workbook', ex: [
+            { title: 'Grammar: circle the correct word(s)', instr: 'Elige la forma correcta.', type: 'choice',
+              items: [
+                ABC('We have three ___ – one son and two daughters.', ['childs', 'children'], 1),
+                ABC('She ___ have a car.', ["doesn't", "don't"], 0),
+                ABC('My ___ wife is from Japan.', ["brothers'", "brother's"], 1),
+                ABC('___ your phone new?', ['Is', 'Are'], 0),
+                ABC("___! We're late!", ["Don't stop", 'Not stop'], 0),
+                ABC('He ___ to work on Mondays.', ['cycles usually', 'usually cycles'], 1),
+                ABC('He usually cycles to work ___ Mondays.', ['on', 'in'], 0),
+                ABC('___ that woman? Is she your manager?', ['Whose', "Who's"], 1),
+                ABC('Hi, Tom. Where ___?', ['are you going', 'do you go'], 0),
+              ] },
+            { title: 'Vocabulary: odd one out', instr: 'Elige la palabra que es diferente.', type: 'choice',
+              items: [
+                ABC('wife · stepfather · partner · soldier', ['wife', 'stepfather', 'partner', 'soldier'], 3),
+                ABC('have children · have dinner · have lunch · have breakfast', ['have children', 'have dinner', 'have lunch', 'have breakfast'], 0),
+                ABC('often · never · sometimes · easy', ['often', 'never', 'sometimes', 'easy'], 3),
+                ABC('run · speak · talk · sing', ['run', 'speak', 'talk', 'sing'], 0),
+                ABC('cry · argue · bark · cheap', ['cry', 'argue', 'bark', 'cheap'], 3),
+                ABC('sunny · cloudy · windy · eighty', ['sunny', 'cloudy', 'windy', 'eighty'], 3),
+                ABC('spring · winter · builder · summer', ['spring', 'winter', 'builder', 'summer'], 2),
+              ] },
+            { title: 'Pronunciation: different sound', instr: 'Elige la palabra que tiene un sonido diferente al del dibujo.', type: 'choice',
+              items: [
+                ABC('⏰ clock /ɒ/: coffee · mother · dog · watch', ['coffee', 'mother', 'dog', 'watch'], 1),
+                ABC('🐴 horse /ɔː/: warm · daughter · take · call', ['warm', 'daughter', 'take', 'call'], 2),
+                ABC('⬆️ up /ʌ/: son · lunch · hot · young', ['son', 'lunch', 'hot', 'young'], 2),
+                ABC('🏠 house /h/: help · hardly · hour · hungry', ['help', 'hardly', 'hour', 'hungry'], 2),
+                ABC('🎤 singer /ŋ/: lunch · wrong · eating · drink', ['lunch', 'wrong', 'eating', 'drink'], 0),
+              ] },
+            { title: 'How to deal with noisy neighbours', instr: 'Lee el artículo y elige a, b o c.', type: 'choice',
+              items: [
+                ABC('They often play loud music or they ___ noisy parties at night.', ['do', 'have', 'make'], 1),
+                ABC('So, what can you ___ when you have noisy neighbours?', ['do', 'doing', 'to do'], 0),
+                ABC('___ go to their house when the music is on; wait until it\'s quiet.', ["Doesn't", "Don't", 'Not'], 1),
+                ABC("When you speak to them, don't be ___ but say exactly how you feel.", ['angry', 'hungry', 'tired'], 0),
+                ABC("For example: 'I ___ your music, but I can't study when it's very loud.'", ["'m loving", 'love', 'loves'], 1),
+                ABC('If they ___ listen to you, write them a letter.', ["doesn't", 'not', "don't"], 2),
+                ABC("If the noise doesn't stop, you ___ help from the police.", ['like', 'need', 'want'], 1),
+                ABC('Call the police when your neighbours are ___ a lot of noise.', ['making', 'makes', 'make'], 0),
+                ABC('Then, they can see – and ___ – the problem when they get to your house.', ['look', 'listen', 'hear'], 2),
+              ] },
+        ]},
         { id: '6A', title: 'A traditional story', pages: 'pp. 88–89', ex: [
             { title: 'Object pronouns', instr: 'Elige el pronombre objeto.', type: 'choice', shuffle: true,
               opts: ['me', 'you', 'him', 'her', 'it', 'us', 'them'],
@@ -5688,6 +5860,96 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['I like him. He\'s ___.', ['great', 'awful'], 0], ['I really like her. She\'s ___.', ['fantastic', 'terrible'], 0],
                 ["I don't like them. They're ___.", ['awful', 'great'], 0], ["I don't like it. It's ___.", ['terrible', 'fantastic'], 0],
               ].map(([q, opts, i]) => ({ q, opts: sh(opts), a: opts[i] })) },
+        ]},
+        { id: 'R5-6', title: 'Revise and Check 5 & 6', pages: 'p. 94', ex: [
+            { title: 'Grammar: a, b or c', instr: 'Elige la opción correcta.', type: 'choice',
+              items: [
+                ABC('She ___ the piano.', ['can play', 'can to play', 'cans play'], 0),
+                ABC('___ come tonight?', ['Do you can', 'You can', 'Can you'], 2),
+                ABC("A What's that noise? B ___ a party upstairs.", ['They having', "They're having", "They're have"], 1),
+                ABC('The weather is cold, but ___ snowing.', ["it doesn't", "it isn't", 'it not'], 1),
+                ABC("A What ___ doing? B I'm trying to open the door.", ['are you', 'do you', 'you are'], 0),
+                ABC("It ___! Let's stay at home.", ['is rain', 'rains', 'is raining'], 2),
+                ABC('The museum ___ at 2.00 on Mondays.', ['closes', 'is closing', 'close'], 0),
+                ABC("A What ___? B I'm a nurse.", ['are you doing', 'do you do', 'do you'], 1),
+                ABC('Our son always calls ___ every day.', ['we', 'us', 'our'], 1),
+                ABC('Is your sister at home? I need to speak to ___.', ['him', 'she', 'her'], 2),
+                ABC('Do you like ___ in the sea?', ['swimming', 'swim', 'swims'], 0),
+                ABC("I don't mind ___ early.", ['get up', 'getting up', 'to get up'], 1),
+                ABC("A ___ hungry? B Yes. What's for dinner?", ['Do you', 'Have you', 'Are you'], 2),
+                ABC('What song ___ listening to?', ['are you', 'do you', 'you are'], 0),
+                ABC('What time ___ she usually meet her friends?', ['do', 'is', 'does'], 2),
+              ] },
+            { title: 'at, for, in, on, to', instr: 'Completa con at, for, in, on o to.', type: 'choice',
+              opts: ['at', 'for', 'in', 'on', 'to'],
+              items: [
+                ["She gets home ___ about seven o'clock.", 'at'],
+                ['They have their TV ___ very loud.', 'on'],
+                ["I can't find the keys. Can you look ___ them?", 'for'],
+                ['I need to talk ___ the doctor.', 'to'],
+                ["I'm coming! Wait ___ me!", 'for'],
+                ["My birthday's ___ July.", 'in'],
+                ['Their wedding is ___ 2nd March.', 'on'],
+              ].map(([q, a]) => ({ q, a })) },
+            { title: 'Vocabulary: odd one out', instr: 'Elige la palabra que es diferente.', type: 'choice',
+              items: [
+                ABC('cloudy · fog · sunny · windy', ['cloudy', 'fog', 'sunny', 'windy'], 1),
+                ABC('cold · warm · snow · hot', ['cold', 'warm', 'snow', 'hot'], 2),
+                ABC('autumn · season · spring · winter', ['autumn', 'season', 'spring', 'winter'], 1),
+                ABC('first · seven · third · twelfth', ['first', 'seven', 'third', 'twelfth'], 1),
+                ABC('twenty-second · twenty-five · twenty-one · twenty-three', ['twenty-second', 'twenty-five', 'twenty-one', 'twenty-three'], 0),
+                ABC('desert · field · mountain · ring', ['desert', 'field', 'mountain', 'ring'], 3),
+                ABC('accordion · guitar · saxophone · violinist', ['accordion', 'guitar', 'saxophone', 'violinist'], 3),
+                ABC('drummer · keyboard · pianist · trumpeter', ['drummer', 'keyboard', 'pianist', 'trumpeter'], 1),
+              ] },
+            { title: 'Verb phrases', instr: 'Completa con un verbo: buy, call, dance, forget, hear, practise, run, sing, take, tell.', type: 'choice',
+              opts: ['buy', 'call', 'dance', 'forget', 'hear', 'practise', 'run', 'sing', 'take', 'tell'],
+              items: [
+                ['___ a noise', 'hear'], ['___ a musical instrument', 'practise'], ["___ somebody's birthday", 'forget'], ['___ a present for your niece', 'buy'],
+                ['___ somebody a secret', 'tell'], ['___ a song', 'sing'], ['___ a photo', 'take'], ['___ a marathon', 'run'], ['___ a taxi', 'call'], ['___ the tango', 'dance'],
+              ].map(([q, a]) => ({ q, a })) },
+            { title: 'What sound?', instr: '¿Qué sonido tienen las letras marcadas? Elige el dibujo del Sound Bank.', type: 'choice',
+              opts: ['bull /ʊ/', 'boot /uː/', 'train /eɪ/', 'bike /aɪ/', 'singer /ŋ/', 'thumb /θ/', 'mother /ð/', 'yacht /j/'],
+              items: [['cook', 'oo', 'bull /ʊ/'], ['sitting', 'ng', 'singer /ŋ/'], ['tenth', 'th', 'thumb /θ/'], ['there', 'th', 'mother /ð/'], ['violin', 'i', 'bike /aɪ/']]
+                .map(([w, l, a]) => ({ q: w + ' (letras «' + l + '») =', say: w, a })) },
+            { title: 'Word stress', instr: 'Toca la sílaba acentuada.', type: 'stress', shuffle: true,
+              items: [['neigh|bour',0],['re|mem|ber',1],['fif|ti|eth',0],['sa|xo|phone',0],['pi|a|nist',0]].map(([w, a]) => ({ s: w.split('|'), a })) },
+        ]},
+        { id: 'ES5', title: 'Exam skills 5 · Speaking: social interaction', pages: 'p. 102', book: 'Workbook', ex: [
+            { title: 'Phrases and exam tips', instr: 'Une cada frase de la conversación con su consejo de examen (1, 2 o 3).', type: 'choice',
+              opts: ["1 give your opinion about other people's ideas", '2 extend your answers with examples and reasons', '3 ask questions or make suggestions'],
+              items: [
+                ["That's a great idea!", "1 give your opinion about other people's ideas"],
+                ["I'm not sure about that.", "1 give your opinion about other people's ideas"],
+                ["I don't think that's a very good idea.", "1 give your opinion about other people's ideas"],
+                ["Why's that?", '3 ask questions or make suggestions'],
+                ['What do you think?', '3 ask questions or make suggestions'],
+                ['How about / What about (going to the cinema)?', '3 ask questions or make suggestions'],
+                ['… for example (sandwiches and salads)', '2 extend your answers with examples and reasons'],
+                ['… like (go for a walk or play games)', '2 extend your answers with examples and reasons'],
+                ["… because (we can't talk in the cinema)", '2 extend your answers with examples and reasons'],
+              ].map(([q, a]) => ({ q, a })) },
+            { title: 'Useful phrases', instr: '¿Cómo se dice en inglés?', type: 'choice',
+              opts: ["That's a great idea!", "I'm not sure about that.", "I don't think that's a very good idea.", "Why's that?", 'What do you think?', 'What about going to the cinema?', 'for example', 'because'],
+              items: [
+                ['¡Qué buena idea!', "That's a great idea!"],
+                ['No estoy seguro de eso.', "I'm not sure about that."],
+                ['No creo que sea muy buena idea.', "I don't think that's a very good idea."],
+                ['¿Por qué?', "Why's that?"],
+                ['¿Tú qué opinas?', 'What do you think?'],
+                ['¿Y si vamos al cine?', 'What about going to the cinema?'],
+                ['por ejemplo', 'for example'],
+                ['porque', 'because'],
+              ].map(([q, a]) => ({ q, a })) },
+            { title: 'A holiday with friends: your ideas', instr: 'Completa estas ideas para la tarea del ejercicio c (escribe la palabra que falta).', type: 'gap',
+              items: [
+                ["We can rent a house ___ it's cheap.", ['because']],
+                ['What ___ going to the beach, for example, in the south of Spain?', ['about']],
+                ['We can do lots of things, ___ example, go swimming or play volleyball.', ['for']],
+                ["That's a great ___!", ['idea']],
+                ["I'm not ___ about that. It's very expensive.", ['sure']],
+                ['What do you ___?', ['think']],
+              ].map(([t, a]) => ({ t, a })) },
         ]},
         { id: 'WB', title: 'Writing Bank y Communication', pages: 'pp. 104–119', ex: [
             { title: 'Capital letters', instr: '¿Va con mayúscula en inglés?', type: 'choice', shuffle: true,
@@ -6059,6 +6321,13 @@ window.addEventListener('DOMContentLoaded', () => {
             'PE1': ['Inglés práctico: en el hotel', 'Hacer el check-in, pedir y ofrecer cosas, saludos y frases sociales.'],
             '2A': ['Objetos, a/an y plurales', 'Objetos cotidianos, a o an, plurales y su pronunciación, in/on/under.'],
             '2B': ['Colores, adjetivos y EE. UU.', 'Colores, iconos americanos, posición del adjetivo, contrarios, vocales largas y cortas, inglés británico y americano.'],
+            'CYR1': ['Can you remember…? 1', 'Workbook: repaso del File 1 — una palabra, palabra intrusa, sonidos y texto Class A.'],
+            'ES1': ['Exam skills 1: reading', 'Workbook: unir textos sobre Bangkok con sus títulos, verdadero o falso.'],
+            'CYR1-3': ['Can you remember…? 1–3', 'Workbook: verbos, palabra intrusa, sonidos y texto My day (Evie, paseadora de perros).'],
+            'ES3': ['Exam skills 3: reading', 'Workbook: preguntas de opción múltiple sobre la película Dog (Briggs and Lulu).'],
+            'CYR1-5': ['Can you remember…? 1–5', 'Workbook: gramática, palabra intrusa, sonidos y texto sobre vecinos ruidosos.'],
+            'R5-6': ['Repaso unidades 5 y 6', 'Gramática de las unidades 5–6, preposiciones, palabra intrusa, verbos, sonidos y acento.'],
+            'ES5': ['Exam skills 5: speaking', 'Workbook: frases para dar tu opinión, ampliar respuestas y hacer sugerencias.'],
             'R1-2': ['Repaso unidades 1 y 2', 'Gramática de las unidades 1–2, preposiciones, verbos de clase, palabra intrusa, contrarios, sonidos, acento y números.'],
             '2C': ['Emociones e imperativos', "Cómo te sientes (hungry, tired…), be + emoción, imperativos, Let's / Let's not, señales y consejos de viaje."],
             '3A': ['Presente simple (+ y −)', "Expresiones con verbos, la -s de he/she/it, don't/doesn't, pronunciación de la -s final y Gran Bretaña."],
@@ -6091,6 +6360,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const GROUPS = [
             ['Lecciones del libro', id => /^\d[ABC]$|^PE\d$/.test(id)],
             ['Repasos', id => /^R\d/.test(id)],
+            ['Workbook: Can you remember y Exam skills', id => /^(CYR|ES)\d/.test(id)],
             ['Grammar Bank', id => /^GB/.test(id)],
             ['Vocabulary Bank', id => /^VB/.test(id) || id === 'IRR'],
             ['Escritura y audios', () => true],
@@ -6142,7 +6412,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         if (!es.length) return '';
                         const done = l.ex.filter((x, i) => BEST[exKey(l, i)] === 'full').length;
                         return `<details class="ef-idx-lesson"><summary><span class="ef-idx-id">${esc(l.id)}</span><span class="ef-idx-name">${esc(lessonName(l))}</span><span class="ef-idx-prog">${done}/${l.ex.length}</span></summary>` +
-                            `<div class="ef-idx-desc">${esc(lessonDesc(l))} <span style="opacity:.7">(Student Book ${esc(l.pages)})</span></div>` +
+                            `<div class="ef-idx-desc">${esc(lessonDesc(l))} <span style="opacity:.7">(${l.book || 'Student Book'} ${esc(l.pages)})</span></div>` +
                             `<button class="ef-btn ef-idx-open" data-go="${l.id}">Abrir lección completa →</button>` + es.map(exRow).join('') + '</details>';
                     }).join('');
                 }).join('');
@@ -6229,7 +6499,7 @@ window.addEventListener('DOMContentLoaded', () => {
             try { localStorage.setItem('ef-ex-lesson', id); } catch (e) {}
             const l = LESSONS.find(x => x.id === id);
             const body = document.getElementById('efLessonBody');
-            body.innerHTML = `<div class="ef-lesson-head"><div class="ef-lesson-title">${l.id} · ${esc(l.title)}</div><div class="ef-lesson-sub">${esc(lessonName(l))} · Student Book ${l.pages}</div><div class="ef-head-btns"><button class="ef-back" type="button">📑 Ver índice</button><button class="ef-btn ef-primary ef-pdf" type="button">🖨️ Imprimir / PDF</button></div></div>`;
+            body.innerHTML = `<div class="ef-lesson-head"><div class="ef-lesson-title">${l.id} · ${esc(l.title)}</div><div class="ef-lesson-sub">${esc(lessonName(l))} · ${l.book || 'Student Book'} ${l.pages}</div><div class="ef-head-btns"><button class="ef-back" type="button">📑 Ver índice</button><button class="ef-btn ef-primary ef-pdf" type="button">🖨️ Imprimir / PDF</button></div></div>`;
             body.querySelector('.ef-pdf').onclick = e => lessonPdf(l, e.currentTarget);
             body.querySelector('.ef-back').onclick = () => { showIndex(true); window.scrollTo({ top: document.getElementById('englishFile').getBoundingClientRect().top + window.pageYOffset - 10, behavior: 'smooth' }); };
             l.ex.forEach((ex, i) => { const c = document.createElement('div'); c.className = 'ef-card'; c.dataset.i = i; body.appendChild(c); renderCard(c, l, i); });
@@ -6295,7 +6565,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 // Cabecera
                 text('English File A1/A2 (5th ed.) · ' + l.id, 9, { color: [120, 120, 120], after: 1 });
                 text(l.title, 18, { bold: true, after: 1 });
-                text(lessonName(l) + ' · Student Book ' + l.pages, 10, { color: [90, 90, 90], after: 2 });
+                text(lessonName(l) + ' · ' + (l.book || 'Student Book') + ' ' + l.pages, 10, { color: [90, 90, 90], after: 2 });
                 text('Nombre: ______________________________     Fecha: ______________', 10, { after: 5 });
 
                 const keys = [];
@@ -6415,7 +6685,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const mark = BEST[key] === 'full' ? ' ✅' : '';
             // Modo «banco»: las opciones comunes se muestran una sola vez arriba y en cada pregunta se escribe la respuesta
             const bank = ex.type === 'choice' && ex.opts && ex.opts.length >= 2 && exType(ex) === 'choice' && items.every(it => !it.opts || it.opts === ex.opts);
-            const bankOpts = bank ? sh(ex.opts.slice()) : [];
+            const bankOpts = bank ? (ex.fixed ? ex.opts.slice() : sh(ex.opts.slice())) : [];
             const L = k => String.fromCharCode(65 + k);
             const bankW = bank ? Math.min(240, Math.max(70, Math.max(...ex.opts.map(o => String(o).length)) * 9 + 26)) : 0;
             const instr = bank ? ex.instr.replace(/\b([Ee])lige\b/g, (m, e) => e === 'E' ? 'Escribe' : 'escribe') + ' Escribe la respuesta (o la letra) en el cuadro; también puedes tocar una opción.' : ex.instr;
