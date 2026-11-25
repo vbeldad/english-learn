@@ -700,6 +700,101 @@
       }
       .ef-lesson-head { break-after: avoid; page-break-after: avoid; margin: 0 0 8px !important; }
     }
+  /* ===== GRAMÁTICA (mismo diseño que Aprèn Català) ===== */
+  #gramatica, #grPrint { --dark: #1a1208; --dark2: #2b1f0a; --cream: #f7f0e0; --red: #c0392b; --green: #27ae60; }
+  #gramatica .lb-intro { font-size: 13px; color: var(--text-secondary); margin-bottom: 0.6rem; line-height: 1.5; }
+  #gramatica .lb-btn { padding: 0.45rem 1rem; border-radius: 2rem; border: 1px solid var(--gold); background: transparent; color: var(--gold); font-size: 0.82rem; font-weight: 500; cursor: pointer; font-family: inherit; }
+  #gramatica .lb-btn.lb-primary { background: var(--gold); color: var(--dark); }
+  #gramatica .lb-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  #gramatica .lb-back { background: none; border: none; color: var(--gold); font-size: 0.85rem; cursor: pointer; padding: 0; font-family: inherit; }
+  #gramatica .lb-card { background: var(--dark2); border: 1px solid #c9a84c25; border-radius: 1rem; margin-bottom: 1rem; box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
+  #gramatica .lb-idx-group { font-size: 0.75rem; letter-spacing: .12em; color: var(--gold); margin: 16px 0 6px; text-transform: uppercase; }
+  #gramatica .lb-idx-id { font-weight: 700; color: var(--gold); min-width: 1.4em; }
+  #gramatica .lb-idx-name { font-size: 0.92rem; color: var(--cream); }
+  #gramatica .lb-res-head { font-size: 0.82rem; color: #a89060; margin: 4px 0 8px; }
+  .lb-lesson-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--cream); }
+  .lb-lesson-sub { font-size: 0.75rem; color: var(--gold); letter-spacing: .08em; text-transform: uppercase; margin-top: 2px; }
+  .lb-lesson-goal { font-size: 0.85rem; color: #b8a478; font-style: italic; margin-top: 4px; }
+  .lb-opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .lb-opt { background: var(--dark); color: var(--cream); border: 1px solid #c9a84c40; border-radius: 0.5rem; font-size: 0.9rem; padding: 0.4rem 0.7rem; cursor: pointer; font-family: inherit; }
+  .lb-opt:hover:not(:disabled) { border-color: var(--gold); }
+  .lb-opt:disabled { cursor: default; }
+  .lb-opt:disabled:not(.ok):not(.bad) { opacity: .45; }
+  .lb-opt.ok { background: #1a3320; border-color: var(--green); color: #c8f7d4; }
+  .lb-opt.bad { background: #2e1010; border-color: var(--red); color: #f5c4c0; text-decoration: line-through; }
+  @media print { #grPrint .lb-opt { display: inline-block; background: #fff !important; border: 1px solid #888 !important; border-radius: 4px; padding: 2px 8px; margin: 2px 3px 2px 0; font-size: 10.5pt; } }
+  /* ===== GRAMÀTICA ===== */
+  .gr-tools { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 0.6rem 0 0.4rem; }
+  .gr-tools .lb-search, #grSearch { flex: 1 1 220px; min-width: 0; background: var(--dark2); border: 1px solid #c9a84c40; border-radius: 2rem; color: var(--cream); padding: 0.55rem 1rem; font-family: inherit; font-size: 0.9rem; outline: none; }
+  #grSearch:focus { border-color: var(--gold); }
+  .gr-prog { font-size: 0.75rem; color: #a89060; margin: 2px 0 8px; }
+  .gr-msg { display: none; background: #3d2e10; border: 1px solid var(--gold); color: var(--gold-light); border-radius: 0.6rem; padding: 8px 12px; font-size: 0.85rem; margin: 6px 0; }
+  .gr-idx-item { display: flex; width: 100%; gap: 10px; align-items: center; text-align: left; background: var(--dark2); border: 1px solid #c9a84c25; border-radius: 0.8rem; margin-bottom: 6px; padding: 10px 12px; cursor: pointer; font-family: inherit; color: var(--cream); }
+  .gr-idx-item:hover { border-color: var(--gold); }
+  .gr-idx-txt { flex: 1; display: flex; flex-direction: column; }
+  .gr-idx-es { font-size: 0.76rem; color: #a89060; }
+  .gr-done { color: #4ade80; font-weight: 700; }
+  .gr-arrow { color: var(--gold); font-size: 1.2rem; }
+  .gr-nav { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 6px 0 10px; flex-wrap: wrap; }
+  .gr-card { padding: 1.2rem 1.2rem 1rem; }
+  .gr-topic-head { margin-bottom: 0.8rem; }
+  .gr-body { font-size: 0.95rem; line-height: 1.6; color: var(--cream); }
+  .gr-body p { margin: 0.5rem 0; }
+  .gr-h { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.08rem; margin: 1.1rem 0 0.3rem; }
+  .gr-tw { overflow-x: auto; margin: 0.6rem 0; }
+  .gr-table { border-collapse: collapse; width: 100%; font-size: 0.86rem; }
+  .gr-table th { background: #c9a84c25; color: var(--gold-light); text-align: left; font-weight: 500; padding: 6px 8px; border: 1px solid #c9a84c30; }
+  .gr-table td { padding: 6px 8px; border: 1px solid #c9a84c20; vertical-align: top; }
+  .gr-table tr:nth-child(even) td { background: #1a120860; }
+  .gr-ex { list-style: none; margin: 0.5rem 0; padding: 0; }
+  .gr-ex li { padding: 6px 10px; border-left: 3px solid var(--gold); background: #1a120880; margin-bottom: 4px; border-radius: 0 0.4rem 0.4rem 0; }
+  .gr-ca { display: block; color: var(--cream); cursor: pointer; }
+  .gr-ca::after { content: ' 🔊'; font-size: 0.7rem; opacity: 0.45; }
+  .gr-es { display: block; font-size: 0.8rem; color: #a89060; font-style: italic; }
+  .gr-note, .gr-warn { border-radius: 0.6rem; padding: 8px 12px; margin: 0.7rem 0; font-size: 0.88rem; line-height: 1.5; }
+  .gr-note { background: #1a3320; border: 1px solid #27ae6060; color: #c8f7d4; }
+  .gr-warn { background: #2e1a08; border: 1px solid #e6a23c70; color: #f5d9a8; }
+  .gr-quiz { margin-top: 1.2rem; border-top: 1px dashed #c9a84c40; padding-top: 0.8rem; }
+  .gr-quiz-t { font-weight: 600; color: var(--gold); margin-bottom: 6px; }
+  .gr-q { padding: 6px 0; }
+  .gr-q-t { font-size: 0.92rem; margin-bottom: 4px; }
+  .gr-qres { margin-top: 10px; font-size: 0.92rem; color: var(--gold-light); }
+  .gr-qres .lb-btn { margin-left: 8px; }
+  .gr-pn { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 1rem; }
+  .gr-pn .lb-btn { max-width: 48%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .gr-pr-opts { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; font-size: 0.88rem; }
+  .gr-pr-group { background: var(--dark2); border: 1px solid #c9a84c25; border-radius: 0.8rem; padding: 8px 12px; margin: 8px 0; }
+  .gr-pr-gl { display: block; font-weight: 600; color: var(--gold); padding: 4px 0; cursor: pointer; }
+  .gr-pr-item { display: block; padding: 5px 0 5px 20px; font-size: 0.9rem; cursor: pointer; border-top: 1px solid #c9a84c15; }
+  .gr-pr-opts input, .gr-pr-group input { accent-color: var(--gold); width: 16px; height: 16px; vertical-align: -3px; margin-right: 6px; }
+  #grPrint { display: none; }
+
+  @media print {
+    :root { color-scheme: light !important; }
+    body.gr-printing > *:not(#grPrint) { display: none !important; }
+    body.gr-printing #grPrint { display: block !important; font-size: 10.5pt; line-height: 1.45; }
+    #grPrint .gr-pr-title { font-size: 16pt; font-weight: 700; margin-bottom: 2px; }
+    #grPrint .gr-pr-sub { font-size: 9pt; color: #555 !important; margin-bottom: 10px; border-bottom: 1px solid #999; padding-bottom: 6px; }
+    #grPrint .gr-pr-topic { margin-bottom: 14px; }
+    #grPrint .gr-pr-break { break-before: page; page-break-before: always; }
+    #grPrint .lb-lesson-title { font-size: 14pt; font-weight: 700; }
+    #grPrint .lb-lesson-sub { font-size: 8pt; text-transform: uppercase; letter-spacing: .06em; }
+    #grPrint .lb-lesson-goal { font-style: italic; font-size: 10pt; }
+    #grPrint .gr-topic-head, #grPrint .gr-h { break-after: avoid; page-break-after: avoid; }
+    #grPrint .gr-h { font-size: 11.5pt; margin: 8px 0 3px; }
+    #grPrint .gr-table { font-size: 9.5pt; }
+    #grPrint .gr-table th { background: #eee !important; border: 1px solid #888 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    #grPrint .gr-table td { background: #fff !important; border: 1px solid #aaa !important; }
+    #grPrint .gr-tw, #grPrint .gr-table tr, #grPrint .gr-ex li, #grPrint .gr-note, #grPrint .gr-warn, #grPrint .gr-q { break-inside: avoid; page-break-inside: avoid; }
+    #grPrint .gr-tw { overflow: visible; }
+    #grPrint .gr-ex li { background: #fff !important; border-left: 3px solid #888 !important; padding: 2px 8px; }
+    #grPrint .gr-ca::after { content: ''; }
+    #grPrint .gr-es { color: #555 !important; }
+    #grPrint .gr-note, #grPrint .gr-warn { background: #fff !important; border: 1px solid #888 !important; }
+    #grPrint .gr-quiz { border-top: 1px dashed #888; }
+    #grPrint .gr-pr-sol { break-before: page; page-break-before: always; font-size: 9.5pt; }
+    #grPrint .gr-pr-sol > div { margin: 3px 0; }
+  }
 </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -795,7 +890,7 @@
 
 <div id="appContent" style="display: none;">
 
-<button id="printFab" onclick="window.print()" aria-label="Imprimir">🖨️ Imprimir</button>
+<button id="printFab" onclick="(document.getElementById('gramatica').classList.contains('active') && window.gramPrintCurrent) ? gramPrintCurrent() : window.print()" aria-label="Imprimir">🖨️ Imprimir</button>
 
 <div class="container">
   <div class="header" style="position:relative">
@@ -817,6 +912,7 @@
     <button class="nav-tab" onclick="switchSection('ejerciciosEscritura')">Ejercicios de Escritura</button>
     <button class="nav-tab" onclick="switchSection('abecedario')">Abecedario</button>
     <button class="nav-tab" onclick="switchSection('englishFile')">📘 English File</button>
+    <button class="nav-tab" onclick="switchSection('gramatica')">📐 Gramática</button>
   </div>
 
   <div class="stats" id="stats">
@@ -950,6 +1046,21 @@
     <div id="efIndex" class="ef-index" style="display:none"></div>
     <div class="theme-grid" id="efLessonChips"></div>
     <div id="efLessonBody"></div>
+  </div>
+
+  <div id="gramatica" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 0.4rem; color: var(--text-secondary);">GRAMÁTICA - GRAMMAR</h3>
+    <p class="lb-intro">Las normas del inglés explicadas en español, con ejemplos y preguntas para repasar: artículos, plurales, tiempos verbales, preposiciones… Busca un tema o abre el índice. Toca un ejemplo 🔊 para escucharlo.</p>
+    <div class="gr-tools">
+      <input id="grSearch" type="search" placeholder="🔍 Buscar: some/any, pasado, there is, preposiciones…" autocomplete="off">
+      <button id="grIndexBtn" class="lb-btn lb-primary" type="button">📑 Índice</button>
+      <button id="grPrintBtn" class="lb-btn" type="button">🖨️ Imprimir por temas</button>
+    </div>
+    <div class="gr-prog" id="grProg"></div>
+    <div class="gr-msg" id="grMsg"></div>
+    <div id="grIndex"></div>
+    <div id="grPrintPanel" style="display:none"></div>
+    <div id="grTopic" style="display:none"></div>
   </div>
 </div>
 
@@ -2150,6 +2261,8 @@ function switchSection(section) {
     s.classList.remove('active');
   });
   document.getElementById(section).classList.add('active');
+  document.body.classList.remove('gr-printing');
+  if (section === 'gramatica' && window.renderGramaticaEn) renderGramaticaEn();
   
   document.querySelectorAll('.nav-tab').forEach(tab => {
     tab.classList.remove('active');
@@ -6692,5 +6805,698 @@ window.addEventListener('DOMContentLoaded', () => {
   window.__appPdfTest = makePdf;
 })();
 </script>
+<script>
+/* ===== GRAMÁTICA: normas explicadas, índice e impresión por temas ===== */
+(function () {
+    // ===== CONTENIDO: temas de gramática inglesa =====
+    const T = (head, rows) => '<div class="gr-tw"><table class="gr-table"><thead><tr>' + head.map(h => '<th>' + h + '</th>').join('') +
+        '</tr></thead><tbody>' + rows.map(r => '<tr>' + r.map(c => '<td>' + c + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>';
+    const E = list => '<ul class="gr-ex">' + list.map(([en, es]) => '<li><span class="gr-ca">' + en + '</span>' + (es ? '<span class="gr-es">' + es + '</span>' : '') + '</li>').join('') + '</ul>';
+    const R = txt => '<div class="gr-note">💡 <b>Recuerda:</b> ' + txt + '</div>';
+    const W = txt => '<div class="gr-warn">⚠️ ' + txt + '</div>';
+    const H = txt => '<h4 class="gr-h">' + txt + '</h4>';
+    const P = txt => '<p>' + txt + '</p>';
+
+    const GROUPS = [
+        ['orto', '🔤 Pronunciación y escritura'],
+        ['nom', '🏷️ Nombres y determinantes'],
+        ['pron', '👥 Pronombres y adjetivos'],
+        ['verb', '📖 Verbos'],
+        ['frase', '🧩 La frase'],
+        ['err', '🚫 Errores frecuentes']
+    ];
+
+    const TOPICS = [
+    // ---------------- PRONUNCIACIÓN Y ESCRITURA ----------------
+    { id: 'sonidos', g: 'orto', t: 'Pronunciation: difficult sounds', es: 'Pronunciación: sonidos difíciles', k: 'pronunciacion sonidos vocales largas cortas th schwa letras mudas silent',
+      b: P('El inglés <b>no se lee como se escribe</b>. Estos son los puntos que más cuestan a los hispanohablantes:') +
+        H('Vocales cortas y largas') +
+        P('En español solo hay 5 vocales; en inglés hay unas 12. La duración cambia el significado:') +
+        T(['Corta', 'Larga'], [['ship /ɪ/ (barco)', 'sheep /iː/ (oveja)'], ['live /ɪ/ (vivir)', 'leave /iː/ (irse)'], ['full /ʊ/ (lleno)', 'fool /uː/ (tonto)'], ['cat /æ/ (gato)', 'cart /ɑː/ (carro)']]) +
+        H('La vocal neutra /ə/ (schwa)') +
+        P('Es el sonido más frecuente del inglés: una vocal débil y relajada en las sílabas <b>sin acento</b>.') +
+        E([['banana → /bə-NAA-nə/', 'la 1ª y la última a suenan /ə/'], ['doctor → /DOK-tə/', ''], ['I want <b>to</b> go → /tə/', 'las palabras pequeñas también se debilitan']]) +
+        H('Consonantes difíciles') +
+        T(['Sonido', 'Cómo se hace', 'Ejemplos'], [
+            ['<b>th</b> /θ/', 'lengua entre los dientes, sin voz (como la z de España)', 'think, three, thank you'],
+            ['<b>th</b> /ð/', 'igual pero con voz (vibra)', 'the, this, mother'],
+            ['<b>h</b> /h/', 'aspirada suave, como un suspiro (no j fuerte)', 'house, hello, happy'],
+            ['<b>v</b> /v/', 'dientes de arriba sobre el labio de abajo (distinta de b)', 'very, live, video'],
+            ['<b>s + consonante</b>', 'sin poner «e» delante', 'Spain, school, street (no «espein»)'],
+            ['<b>sh</b> /ʃ/', 'como pidiendo silencio', 'she, shop, fish']]) +
+        H('Letras mudas (silent letters)') +
+        E([['<b>k</b>now, <b>k</b>nife', 'la k delante de n no suena'], ['<b>w</b>rite, <b>w</b>rong', 'la w delante de r no suena'], ['ha<b>l</b>f, ta<b>l</b>k, wa<b>l</b>k', 'la l no suena'],
+           ['<b>h</b>our, <b>h</b>onest', 'h muda en algunas palabras'], ['lis<b>t</b>en, cas<b>t</b>le', 't muda'], ['cli<b>mb</b>, lam<b>b</b>', 'b muda después de m']]) +
+        R('aprende la pronunciación de cada palabra nueva desde el principio. En esta app, toca los ejemplos 🔊 para escucharlos.'),
+      q: [['¿Qué palabra tiene la vocal LARGA /iː/?', ['ship', 'sheep', 'live'], 1],
+          ['En «know», ¿qué letra no suena?', ['n', 'k', 'w'], 1],
+          ['¿Cómo se pronuncia «Spain»?', ['/espein/', '/spein/'], 1]] },
+
+    { id: 'mayusculas', g: 'orto', t: 'Capital letters and punctuation', es: 'Mayúsculas y puntuación', k: 'mayusculas dias meses idiomas nacionalidades I signos interrogacion',
+      b: P('En inglés se usan <b>más mayúsculas</b> que en español:') +
+        T(['Con mayúscula en inglés', 'Ejemplo', 'En español'], [
+            ['El pronombre <b>I</b> (yo), siempre', 'Yesterday <b>I</b> went out.', 'yo'],
+            ['Días de la semana', '<b>M</b>onday, <b>F</b>riday', 'lunes, viernes'],
+            ['Meses', '<b>J</b>anuary, <b>A</b>ugust', 'enero, agosto'],
+            ['Idiomas', 'I speak <b>S</b>panish and <b>E</b>nglish.', 'español, inglés'],
+            ['Nacionalidades', 'She\'s <b>I</b>talian.', 'italiana'],
+            ['Títulos de libros y películas (palabras principales)', '<b>T</b>he <b>L</b>ord of the <b>R</b>ings', 'El señor de los anillos']]) +
+        R('las <b>estaciones</b> van en minúscula: <i>spring, summer, autumn, winter</i>.') +
+        H('Puntuación') +
+        E([['Where do you live<b>?</b>', 'solo signo al final (no «¿» al principio)'], ['What a nice day<b>!</b>', 'tampoco «¡»'], ['1,000 / 2.5', 'la coma separa miles y el punto los decimales (al revés que en España)']]),
+      q: [['¿Cuál está bien escrita?', ['I live in spain', 'I live in Spain', 'i live in Spain'], 1],
+          ['¿Cuál está bien escrita?', ['on monday', 'on Monday'], 1],
+          ['«Dos mil quinientos» en números ingleses:', ['2.500', '2,500'], 1]] },
+
+    { id: 'contracciones', g: 'orto', t: 'Contractions', es: 'Las contracciones', k: 'contracciones apostrofo im dont cant wont its isnt arent',
+      b: P('En inglés hablado (y en mensajes) se unen el sujeto y el verbo, o el verbo y <b>not</b>, con un <b>apóstrofo</b> (\'):') +
+        T(['Forma completa', 'Contracción', 'Forma completa', 'Contracción'], [
+            ['I am', "I'm", 'is not', "isn't"], ['you are', "you're", 'are not', "aren't"], ['he is / he has', "he's", 'do not', "don't"],
+            ['we have', "we've", 'does not', "doesn't"], ['I will', "I'll", 'did not', "didn't"], ['I would / I had', "I'd", 'cannot', "can't"],
+            ['let us', "let's", 'will not', "<b>won't</b>"], ['there is', "there's", 'have not', "haven't"]]) +
+        E([["I'm tired.", 'Estoy cansado.'], ["She doesn't like coffee.", 'No le gusta el café.'], ["We won't be late.", 'No llegaremos tarde.']]) +
+        W("<b>it's</b> = it is / it has (<i>It's cold</i>). <b>its</b> = su, de ello (<i>The dog wants its food</i>). ¡No confundir!") +
+        R('no se contrae al final de una respuesta corta: <i>Are you tired? Yes, I <b>am</b></i> (no «Yes, I\'m»).'),
+      q: [['«No lo haré» → I ___ do it.', ["willn't", "won't", "don't"], 1],
+          ['«El perro mueve su cola» → The dog moves ___ tail.', ["it's", 'its'], 1],
+          ['«Are you ready? Yes, ___»', ["I'm", 'I am'], 1]] },
+
+    // ---------------- NOMBRES Y DETERMINANTES ----------------
+    { id: 'articulos', g: 'nom', t: 'Articles: a, an, the', es: 'Los artículos: a, an, the', k: 'articulos a an the sin articulo general',
+      b: T(['Artículo', 'Uso', 'Ejemplo'], [
+            ['<b>a</b>', 'uno/una, delante de <b>sonido</b> consonante', 'a car, a book, a university /ju/'],
+            ['<b>an</b>', 'uno/una, delante de <b>sonido</b> vocal', 'an apple, an egg, an hour (h muda)'],
+            ['<b>the</b>', 'el, la, los, las (algo concreto o conocido)', 'the car, the children']]) +
+        H('Diferencias con el español') +
+        E([['She\'s <b>a</b> doctor.', 'Es médica. (profesión: con a/an)'], ['I like dogs.', 'Me gustan <b>los</b> perros. (en general: sin artículo)'],
+           ['Life is beautiful.', '<b>La</b> vida es bonita.'], ['I play tennis / I speak English.', 'Juego <b>al</b> tenis / Hablo inglés.'],
+           ['I have breakfast at 8.', 'Desayuno a las 8. (comidas: sin artículo)'], ['I go to work / to school / home.', 'Voy al trabajo / al colegio / a casa.']]) +
+        P('Se usa <b>the</b> cuando hablamos de algo concreto: <i>I like <b>the</b> dogs in this park</i> (los perros de este parque).') +
+        R('lo que cuenta es el <b>sonido</b>, no la letra: <i>an hour</i> (/aʊə/), pero <i>a university</i> (/juː/) y <i>a European</i>.'),
+      q: [['«Soy profesor» → I\'m ___ teacher.', ['—', 'a', 'the'], 1],
+          ['«Me gusta la música» → I like ___ music.', ['the', '—'], 1],
+          ['«Una hora» → ___ hour', ['a', 'an'], 1]] },
+
+    { id: 'plural', g: 'nom', t: 'Plural nouns', es: 'El plural de los nombres', k: 'plural s es ies ves irregulares children people men women feet teeth',
+      b: T(['Regla', 'Ejemplos'], [
+            ['General: <b>+ s</b>', 'car → cars, book → books'],
+            ['Acabados en <b>-s, -ss, -sh, -ch, -x, -o</b>: <b>+ es</b>', 'bus → buses, glass → glasses, dish → dishes, watch → watches, box → boxes, tomato → tomatoes'],
+            ['Consonante + <b>y</b> → <b>-ies</b>', 'city → cities, baby → babies (pero: day → days, boy → boys)'],
+            ['<b>-f / -fe</b> → <b>-ves</b>', 'knife → knives, wife → wives, leaf → leaves, half → halves']]) +
+        H('Plurales irregulares (¡de memoria!)') +
+        T(['Singular', 'Plural', 'Singular', 'Plural'], [
+            ['man', 'men', 'woman', 'women'], ['child', 'children', 'person', 'people'], ['foot', 'feet', 'tooth', 'teeth'],
+            ['mouse', 'mice', 'fish', 'fish'], ['sheep', 'sheep', 'potato', 'potatoes']]) +
+        W('<b>people</b> ya es plural: <i>People <b>are</b> nice</i> (no «people is»). Y <i>police</i> también: <i>The police <b>are</b> here</i>.') +
+        R('algunas palabras solo existen en plural: <i>trousers, jeans, glasses (gafas), scissors</i> → <i>My jeans <b>are</b> new</i>.'),
+      q: [['Plural de «child»:', ['childs', 'children', 'childrens'], 1],
+          ['Plural de «city»:', ['citys', 'cities', 'cityes'], 1],
+          ['«La gente es simpática» →', ['People is nice', 'People are nice'], 1]] },
+
+    { id: 'contables', g: 'nom', t: 'Countable and uncountable', es: 'Contables e incontables (much, many, a lot of)', k: 'contables incontables much many a lot of how much how many few little too enough',
+      b: P('<b>Contables</b>: se pueden contar (one apple, two apples). <b>Incontables</b>: no tienen plural ni llevan <i>a/an</i> (water, money, bread).') +
+        T(['', 'Contables (plural)', 'Incontables'], [
+            ['muchos / mucho', '<b>many</b> books, <b>a lot of</b> books', '<b>much</b> money, <b>a lot of</b> money'],
+            ['pocos / poco', '<b>a few</b> friends, <b>few</b>', '<b>a little</b> time, <b>little</b>'],
+            ['¿cuántos? / ¿cuánto?', '<b>How many</b> brothers have you got?', '<b>How much</b> water do you drink?'],
+            ['demasiado(s)', '<b>too many</b> people', '<b>too much</b> sugar']]) +
+        E([['There isn\'t much milk.', 'No hay mucha leche.'], ['I\'ve got a lot of friends.', 'Tengo muchos amigos.'], ['How much is it?', '¿Cuánto cuesta?'], ['We haven\'t got enough chairs.', 'No tenemos suficientes sillas.']]) +
+        W('Son <b>incontables</b> en inglés (aunque en español no): <i>information, advice (consejos), news, furniture (muebles), homework, luggage (equipaje), bread, hair</i>. → <i>Some <b>advice</b></i>, nunca «advices».') +
+        R('<b>much</b> se usa sobre todo en negativas y preguntas. En frases afirmativas, mejor <b>a lot of</b>.'),
+      q: [['How ___ money have you got?', ['many', 'much'], 1],
+          ['¿Cuál es correcta?', ['some informations', 'some information'], 1],
+          ['There are too ___ cars.', ['much', 'many'], 1]] },
+
+    { id: 'some-any', g: 'nom', t: 'Some, any, no', es: 'Some, any, no y sus compuestos', k: 'some any no something anything nothing somebody anybody nobody everywhere',
+      b: T(['', 'Uso', 'Ejemplo'], [
+            ['<b>some</b>', 'frases afirmativas, y ofrecimientos o peticiones', 'There\'s some milk. Would you like some tea?'],
+            ['<b>any</b>', 'negativas y preguntas', 'There isn\'t any milk. Is there any milk?'],
+            ['<b>no</b>', '= not any (verbo en afirmativo)', 'There\'s no milk.']]) +
+        H('Compuestos') +
+        T(['', '+ thing (cosa)', '+ body / one (persona)', '+ where (lugar)'], [
+            ['some', 'something (algo)', 'somebody (alguien)', 'somewhere (en algún sitio)'],
+            ['any', 'anything', 'anybody', 'anywhere'], ['no', 'nothing (nada)', 'nobody (nadie)', 'nowhere (en ningún sitio)'],
+            ['every', 'everything (todo)', 'everybody (todo el mundo)', 'everywhere (en todas partes)']]) +
+        E([['I want something to eat.', 'Quiero algo de comer.'], ['Did you see anybody?', '¿Viste a alguien?'], ['I saw nobody. / I didn\'t see anybody.', 'No vi a nadie.']]) +
+        W('En inglés <b>no hay doble negación</b>: <i>I don\'t know <b>anything</b></i> o <i>I know <b>nothing</b></i>, pero nunca «I don\'t know nothing».') +
+        R('<b>everybody</b> va con verbo en singular: <i>Everybody <b>is</b> here</i>.'),
+      q: [['Is there ___ bread?', ['some', 'any'], 1],
+          ['«No sé nada» →', ["I don't know nothing", "I don't know anything"], 1],
+          ['«Todo el mundo está aquí» →', ['Everybody is here', 'Everybody are here'], 0]] },
+
+    { id: 'demostrativos', g: 'nom', t: 'This, that, these, those', es: 'Los demostrativos', k: 'this that these those este ese aquel',
+      b: T(['', 'Singular', 'Plural'], [['Cerca (este/esta)', '<b>this</b>', '<b>these</b>'], ['Lejos (ese/aquel)', '<b>that</b>', '<b>those</b>']]) +
+        E([['This is my brother.', 'Este es mi hermano.'], ['Those shoes are expensive.', 'Esos/aquellos zapatos son caros.'], ['What\'s that?', '¿Qué es eso?'], ['These are my friends.', 'Estos son mis amigos.']]) +
+        P('Como en español, pueden ir solos o con un nombre: <i>I like <b>this</b></i> / <i>I like <b>this</b> car</i>.') +
+        R('al teléfono: <i>Hello, <b>this is</b> Valentin</i> (Hola, soy Valentín). Y para presentar: <i><b>This is</b> my wife</i>.') +
+        W('Cuidado con la pronunciación: <b>this</b> /ðɪs/ (corta) y <b>these</b> /ðiːz/ (larga).'),
+      q: [['«Estos libros» →', ['this books', 'these books', 'those book'], 1],
+          ['«Aquella casa» →', ['that house', 'those house'], 0],
+          ['Al teléfono: «Hola, soy Ana» →', ['Hello, I am Ana', 'Hello, this is Ana'], 1]] },
+
+    { id: 'genitivo', g: 'nom', t: "Possessive 's", es: "El genitivo sajón ('s)", k: 'genitivo sajon posesivo s apostrofo de whose',
+      b: P('Para decir <b>de quién</b> es algo con personas (y animales), el inglés pone el poseedor <b>delante</b> con <b>\'s</b>:') +
+        E([["<b>Maria's</b> car", 'el coche de María'], ["my <b>brother's</b> wife", 'la mujer de mi hermano'], ["the <b>children's</b> toys", 'los juguetes de los niños (plural irregular: \'s)'],
+           ["my <b>parents'</b> house", 'la casa de mis padres (plural en -s: solo \')'], ["<b>James's</b> / <b>James'</b> book", 'nombre acabado en s: las dos formas']]) +
+        P('Con <b>cosas</b> se usa normalmente <b>of</b>: <i>the end <b>of</b> the film</i>, <i>the door <b>of</b> the house</i>.') +
+        H('Whose? (¿de quién?)') +
+        E([['Whose is this phone? It\'s Tom\'s.', '¿De quién es este móvil? Es de Tom.'], ['I\'m going to Ana\'s (house).', 'Voy a casa de Ana.']]) +
+        W("No confundas: <i>Maria<b>'s</b> car</i> (posesión) con <i>Maria<b>'s</b> here</i> (= Maria is here)."),
+      q: [['«El coche de mi padre» →', ["the car of my father", "my father's car"], 1],
+          ['«La casa de mis padres» →', ["my parents' house", "my parent's house"], 0],
+          ['«¿De quién es?» →', ['Who is it?', 'Whose is it?'], 1]] },
+
+    // ---------------- PRONOMBRES Y ADJETIVOS ----------------
+    { id: 'pronombres', g: 'pron', t: 'Subject and object pronouns', es: 'Pronombres sujeto y objeto', k: 'pronombres I me you he him she her it we us they them sujeto objeto',
+      b: T(['Sujeto', 'Objeto', 'Español'], [
+            ['I', 'me', 'yo / me, mí'], ['you', 'you', 'tú, usted / te, ti'], ['he', 'him', 'él / lo, le'], ['she', 'her', 'ella / la, le'],
+            ['it', 'it', 'ello (cosas, animales)'], ['we', 'us', 'nosotros / nos'], ['you', 'you', 'vosotros, ustedes / os'], ['they', 'them', 'ellos, ellas / los, les']]) +
+        P('El <b>sujeto</b> va delante del verbo; el <b>objeto</b>, detrás del verbo o de una preposición:') +
+        E([['<b>She</b> loves <b>him</b>.', 'Ella le quiere.'], ['Can you help <b>me</b>?', '¿Puedes ayudarme?'], ['This is for <b>you</b>.', 'Esto es para ti.'], ['Come with <b>us</b>.', 'Ven con nosotros.']]) +
+        W('En inglés el sujeto es <b>obligatorio</b>, incluso <b>it</b>: <i><b>It</b> is raining</i> (Llueve), <i><b>It</b>\'s late</i> (Es tarde), <i>Is <b>it</b> far?</i> (¿Está lejos?).') +
+        R('<b>you</b> sirve para tú, usted, vosotros y ustedes. En inglés no hay tratamiento de «usted»: se es educado con <i>please, could you…?</i>'),
+      q: [['«Llueve» →', ['Is raining', 'It is raining'], 1],
+          ['«Ayúdame» → Help ___!', ['I', 'me', 'my'], 1],
+          ['«Ellos nos conocen» →', ['They know us', 'Them know we'], 0]] },
+
+    { id: 'posesivos', g: 'pron', t: 'Possessive adjectives and pronouns', es: 'Posesivos: my / mine', k: 'posesivos my your his her its our their mine yours his hers ours theirs',
+      b: T(['Persona', 'Adjetivo (+ nombre)', 'Pronombre (solo)'], [
+            ['I', 'my', 'mine'], ['you', 'your', 'yours'], ['he', '<b>his</b>', 'his'], ['she', '<b>her</b>', 'hers'],
+            ['it', 'its', '—'], ['we', 'our', 'ours'], ['you (pl.)', 'your', 'yours'], ['they', 'their', 'theirs']]) +
+        E([['This is <b>my</b> car. It\'s <b>mine</b>.', 'Este es mi coche. Es mío.'], ['Is this <b>your</b> bag? Is it <b>yours</b>?', '¿Es tu bolso? ¿Es tuyo?'], ['<b>Their</b> house is big.', 'Su casa (de ellos) es grande.']]) +
+        W('El posesivo depende del <b>poseedor</b>, no de la cosa: <i>Juan and <b>his</b> sister</i> (Juan y su hermana); <i>Ana and <b>her</b> brother</i> (Ana y su hermano). En español «su» sirve para todo; en inglés no.') +
+        R('las partes del cuerpo y la ropa llevan posesivo: <i>I wash <b>my</b> hands</i> (me lavo las manos), <i>Take off <b>your</b> coat</i>.'),
+      q: [['«Ana y su padre» → Ana and ___ father', ['his', 'her', 'their'], 1],
+          ['«Es nuestro» → It\'s ___', ['our', 'ours'], 1],
+          ['«Me duele la cabeza» → ___ head hurts.', ['The', 'My'], 1]] },
+
+    { id: 'adjetivos', g: 'pron', t: 'Adjectives', es: 'Los adjetivos (posición, -ed / -ing)', k: 'adjetivos posicion orden ed ing bored boring interesting interested',
+      b: P('Dos reglas básicas muy distintas del español:') +
+        E([['a <b>red</b> car', 'un coche rojo → el adjetivo va <b>delante</b> del nombre'], ['red cars / two <b>old</b> houses', 'el adjetivo <b>no cambia</b> en plural ni en femenino']]) +
+        H('Orden de varios adjetivos') +
+        P('Opinión → tamaño → edad → forma → color → origen → material + nombre:') +
+        E([['a <b>beautiful big old</b> house', 'una casa vieja, grande y bonita'], ['a <b>small black Italian</b> bag', 'un bolso negro pequeño italiano']]) +
+        H('-ED y -ING') +
+        T(['-ed: cómo te sientes', '-ing: cómo es algo / alguien'], [
+            ['I\'m <b>bored</b>. (Estoy aburrido)', 'The film is <b>boring</b>. (es aburrida)'],
+            ['I\'m <b>interested</b> in art.', 'Art is <b>interesting</b>.'],
+            ['She was <b>tired</b>.', 'It was a <b>tiring</b> day.'], ['We\'re <b>excited</b>.', 'The match was <b>exciting</b>.']]) +
+        W('«I\'m boring» significa «soy aburrido» (¡un aburrido!), no «estoy aburrido».'),
+      q: [['«Una casa grande» →', ['a house big', 'a big house'], 1],
+          ['«Coches rápidos» →', ['fasts cars', 'fast cars'], 1],
+          ['«Estoy aburrido» →', ["I'm boring", "I'm bored"], 1]] },
+
+    { id: 'comparativos', g: 'pron', t: 'Comparatives and superlatives', es: 'Comparativos y superlativos', k: 'comparativos superlativos er est more most than as as better best worse worst',
+      b: T(['Adjetivo', 'Comparativo', 'Superlativo'], [
+            ['1 sílaba: <b>tall</b>', 'tall<b>er</b> (than)', 'the tall<b>est</b>'],
+            ['acabado en -e: <b>nice</b>', 'nice<b>r</b>', 'the nice<b>st</b>'],
+            ['vocal + consonante: <b>big</b>', 'bi<b>gg</b>er', 'the bi<b>gg</b>est'],
+            ['acabado en -y: <b>happy</b>', 'happ<b>ier</b>', 'the happ<b>iest</b>'],
+            ['2+ sílabas: <b>expensive</b>', '<b>more</b> expensive', 'the <b>most</b> expensive']]) +
+        H('Irregulares') +
+        T(['', 'Comparativo', 'Superlativo'], [['good', 'better', 'the best'], ['bad', 'worse', 'the worst'], ['far', 'farther / further', 'the farthest / furthest']]) +
+        E([['My brother is taller <b>than</b> me.', 'Mi hermano es más alto que yo.'], ['It\'s the best restaurant <b>in</b> town.', 'Es el mejor restaurante de la ciudad.'],
+           ['She\'s <b>as</b> tall <b>as</b> her mother.', 'Es tan alta como su madre.'], ['It isn\'t <b>as</b> cold <b>as</b> yesterday.', 'No hace tanto frío como ayer.']]) +
+        W('«que» = <b>than</b> (no «that»). Y «de» en superlativos = <b>in</b> con lugares: <i>the tallest building <b>in</b> the world</i>.'),
+      q: [['«Más barato que» →', ['more cheap than', 'cheaper than', 'cheaper that'], 1],
+          ['«El mejor» →', ['the goodest', 'the best', 'the better'], 1],
+          ['«Tan alto como tú» →', ['as tall as you', 'so tall like you'], 0]] },
+
+    { id: 'adverbios', g: 'pron', t: 'Adverbs and frequency', es: 'Adverbios (-ly) y de frecuencia', k: 'adverbios ly always usually often sometimes never frecuencia well fast hard',
+      b: H('Adverbios de modo: adjetivo + -ly') +
+        E([['slow → slow<b>ly</b>', 'lentamente'], ['quiet → quiet<b>ly</b>', 'en silencio'], ['easy → eas<b>ily</b>', 'fácilmente'], ['good → <b>well</b>', 'bien (irregular)'], ['fast → <b>fast</b>, hard → <b>hard</b>', 'no cambian']]) +
+        P('Van normalmente <b>detrás del verbo o del complemento</b>: <i>She speaks English <b>well</b></i> (no «She speaks well English»).') +
+        H('Adverbios de frecuencia') +
+        T(['100%', '', '', '', '0%'], [['always', 'usually', 'often', 'sometimes', 'never']]) +
+        P('Posición: <b>delante</b> del verbo principal, pero <b>detrás</b> de <i>be</i>:') +
+        E([['I <b>always</b> get up at 7.', 'Siempre me levanto a las 7.'], ['She is <b>never</b> late.', 'Nunca llega tarde.'], ['Do you <b>often</b> go out?', '¿Sales a menudo?'], ['I go to the gym <b>twice a week</b>.', 'Voy al gimnasio dos veces por semana (al final).']]) +
+        W('<b>never</b> ya es negativo: <i>I <b>never</b> drink coffee</i> (no «I don\'t never…»).'),
+      q: [['«Habla bien inglés» →', ['He speaks well English', 'He speaks English well'], 1],
+          ['«Siempre está cansado» →', ['He always is tired', 'He is always tired'], 1],
+          ['Adverbio de «good» →', ['goodly', 'well'], 1]] },
+
+    // ---------------- VERBOS ----------------
+    { id: 'be', g: 'verb', t: 'The verb to be', es: 'El verbo to be (ser / estar)', k: 'to be am is are was were ser estar',
+      b: P('<b>To be</b> = <b>ser</b> y <b>estar</b> a la vez.') +
+        T(['', 'Presente', 'Pasado'], [['I', 'am (I\'m)', 'was'], ['you', 'are (you\'re)', 'were'], ['he / she / it', 'is (\'s)', 'was'], ['we / you / they', 'are (\'re)', 'were']]) +
+        E([['I\'m from Spain.', 'Soy de España.'], ['She\'s tired.', 'Está cansada.'], ['They were at home.', 'Estaban en casa.']]) +
+        H('Negativa e interrogativa') +
+        E([['I\'m <b>not</b> / He <b>isn\'t</b> / They <b>aren\'t</b>', 'negativa: + not'], ['<b>Are</b> you ready? — Yes, I am. / No, I\'m not.', 'pregunta: se invierte el orden'], ['<b>Was</b> it expensive?', '¿Fue caro?']]) +
+        H('Usos con «be» que en español son con «tener»') +
+        E([['I\'m 30 (years old).', 'Tengo 30 años.'], ['I\'m hungry / thirsty / cold / hot.', 'Tengo hambre / sed / frío / calor.'], ['Are you afraid?', '¿Tienes miedo?'], ['You\'re right.', 'Tienes razón.']]),
+      q: [['«Tengo 25 años» →', ['I have 25 years', "I'm 25"], 1],
+          ['«Ellos estaban aquí» →', ['They was here', 'They were here'], 1],
+          ['«¿Estás cansado?» →', ['You are tired?', 'Are you tired?'], 1]] },
+
+    { id: 'present-simple', g: 'verb', t: 'Present simple', es: 'El presente simple', k: 'presente simple do does dont doesnt s es ies tercera persona rutinas',
+      b: P('Para <b>rutinas, hábitos y verdades generales</b>. Es igual para todas las personas excepto <b>he / she / it</b>, que añade <b>-s</b>.') +
+        T(['', 'Afirmativa', 'Negativa', 'Pregunta'], [
+            ['I / you / we / they', 'I work', 'I <b>don\'t</b> work', '<b>Do</b> you work?'],
+            ['he / she / it', 'she work<b>s</b>', 'she <b>doesn\'t</b> work', '<b>Does</b> she work?']]) +
+        H('Ortografía de la 3ª persona') +
+        E([['work → works, play → plays', '+ s'], ['watch → watch<b>es</b>, go → go<b>es</b>, do → do<b>es</b>, finish → finish<b>es</b>', '-ch, -sh, -ss, -x, -o: + es'], ['study → stud<b>ies</b>', 'consonante + y → ies'], ['have → <b>has</b>', 'irregular']]) +
+        W('Con <b>doesn\'t / does</b> el verbo va <b>sin -s</b>: <i>She doesn\'t <b>work</b></i>, <i>Does he <b>live</b> here?</i> (no «doesn\'t works»).') +
+        R('respuestas cortas: <i>Do you like it? — Yes, I <b>do</b>. / No, I <b>don\'t</b>.</i>'),
+      q: [['«Ella trabaja aquí» →', ['She work here', 'She works here'], 1],
+          ['«Él no vive aquí» →', ["He doesn't lives here", "He doesn't live here"], 1],
+          ['«¿Te gusta?» →', ['Do you like it?', 'You like it?', 'Like you it?'], 0]] },
+
+    { id: 'present-continuous', g: 'verb', t: 'Present continuous', es: 'El presente continuo', k: 'presente continuo ing am is are ahora now verbos de estado',
+      b: P('<b>am / is / are + verbo-ing</b>. Para lo que pasa <b>ahora mismo</b>, situaciones temporales y planes futuros acordados.') +
+        T(['', 'Afirmativa', 'Negativa', 'Pregunta'], [['I', 'I\'m working', 'I\'m not working', 'Am I working?'], ['he/she/it', 'he\'s working', 'he isn\'t working', 'Is he working?'], ['we/you/they', 'they\'re working', 'they aren\'t working', 'Are they working?']]) +
+        H('Ortografía de -ing') +
+        E([['make → mak<b>ing</b>', 'se pierde la -e'], ['run → ru<b>nn</b>ing, swim → swi<b>mm</b>ing', 'vocal + consonante: se dobla'], ['lie → l<b>ying</b>', '-ie → -ying'], ['play → play<b>ing</b>, study → study<b>ing</b>', 'la y se mantiene']]) +
+        E([['I\'m watching TV.', 'Estoy viendo la tele.'], ['She\'s living with her parents this month.', 'Vive con sus padres este mes (temporal).'], ['We\'re meeting Tom tomorrow.', 'Quedamos con Tom mañana (plan).']]) +
+        W('Los <b>verbos de estado</b> casi nunca van en continuo: <i>like, love, want, need, know, understand, believe, remember</i>. → <i>I <b>want</b> a coffee</i> (no «I\'m wanting»).'),
+      q: [['«Está lloviendo» →', ['It rains', "It's raining"], 1],
+          ['-ing de «swim» →', ['swiming', 'swimming'], 1],
+          ['«Ahora lo entiendo» →', ["I'm understanding it now", 'I understand it now'], 1]] },
+
+    { id: 'simple-vs-continuous', g: 'verb', t: 'Present simple or continuous?', es: '¿Presente simple o continuo?', k: 'simple continuo diferencia usually now at the moment',
+      b: T(['Present simple', 'Present continuous'], [
+            ['Rutinas y hábitos', 'Lo que pasa ahora'], ['Siempre / en general', 'Temporal, solo en este periodo'],
+            ['<i>usually, every day, often, never</i>', '<i>now, at the moment, today, this week</i>'],
+            ['I <b>work</b> in an office.', 'I\'m <b>working</b> at home this week.'], ['He <b>plays</b> tennis on Sundays.', 'He\'s <b>playing</b> tennis now.']]) +
+        E([['What do you do?', '¿A qué te dedicas? (trabajo)'], ['What are you doing?', '¿Qué estás haciendo? (ahora)'], ['It usually rains in April, but today it isn\'t raining.', 'Suele llover en abril, pero hoy no está lloviendo.']]) +
+        R('<b>What do you do?</b> pregunta por la profesión. Responde: <i>I\'m a driver</i>.'),
+      q: [['«Normalmente me levanto a las 7» →', ['I usually get up at 7', "I'm usually getting up at 7"], 0],
+          ['«¿Qué haces? (ahora)» →', ['What do you do?', 'What are you doing?'], 1],
+          ['«¿A qué te dedicas?» →', ['What do you do?', 'What are you doing?'], 0]] },
+
+    { id: 'have-got', g: 'verb', t: 'Have and have got', es: 'Have / have got (tener)', k: 'have got has got tener posesion',
+      b: P('Para <b>posesión, familia, características y enfermedades</b> se puede usar <b>have</b> o <b>have got</b> (más británico). Significan lo mismo.') +
+        T(['', 'have', 'have got'], [
+            ['Afirmativa', 'I have a car. / She has a car.', 'I\'ve got a car. / She\'s got a car.'],
+            ['Negativa', 'I don\'t have a car. / She doesn\'t have…', 'I haven\'t got a car. / She hasn\'t got…'],
+            ['Pregunta', 'Do you have a car? — Yes, I do.', 'Have you got a car? — Yes, I have.']]) +
+        E([['I\'ve got two sisters.', 'Tengo dos hermanas.'], ['She\'s got blue eyes.', 'Tiene los ojos azules.'], ['Have you got a cold?', '¿Estás resfriado?']]) +
+        W('<b>have got</b> solo se usa en presente. En pasado: <i>I <b>had</b> a dog</i>. Y <b>have</b> (no have got) en acciones: <i>have breakfast, have a shower, have a good time</i>.'),
+      q: [['«Ella tiene un perro» →', ['She have got a dog', "She's got a dog"], 1],
+          ['«¿Tienes hijos?» →', ['Have you got children?', 'Have got you children?'], 0],
+          ['«Me ducho» →', ['I have got a shower', 'I have a shower'], 1]] },
+
+    { id: 'there-is', g: 'verb', t: 'There is / there are', es: 'Hay: there is / there are', k: 'there is there are there was there were hay habia',
+      b: P('Para decir <b>hay</b>, el inglés distingue <b>singular</b> y <b>plural</b>:') +
+        T(['', 'Singular', 'Plural'], [
+            ['Presente', 'There<b>\'s</b> a bank.', 'There <b>are</b> two banks.'], ['Negativa', 'There <b>isn\'t</b> a bank.', 'There <b>aren\'t</b> any banks.'],
+            ['Pregunta', '<b>Is there</b> a bank?', '<b>Are there</b> any banks?'], ['Pasado', 'There <b>was</b> a…', 'There <b>were</b> many…']]) +
+        E([['There\'s a cat in the garden.', 'Hay un gato en el jardín.'], ['There are a lot of people.', 'Hay mucha gente.'], ['Is there a supermarket near here?', '¿Hay un supermercado cerca?'], ['There will be a party.', 'Habrá una fiesta.']]) +
+        W('No digas «It has» ni «Have» para «hay»: <i>There is…</i>.'),
+      q: [['«Hay tres sillas» →', ['There is three chairs', 'There are three chairs', 'It has three chairs'], 1],
+          ['«¿Hay leche?» →', ['Is there any milk?', 'There is milk?'], 0],
+          ['«Había mucha gente» →', ['There was a lot of people', 'There were a lot of people'], 1]] },
+
+    { id: 'past-simple', g: 'verb', t: 'Past simple', es: 'El pasado simple', k: 'pasado simple ed did didnt irregulares went was regular',
+      b: P('Para acciones <b>terminadas</b> en el pasado (<i>yesterday, last week, in 2010, ago</i>). Es <b>igual para todas las personas</b>.') +
+        T(['', 'Ejemplo'], [['Afirmativa (regular)', 'I work<b>ed</b> yesterday.'], ['Afirmativa (irregular)', 'She <b>went</b> to London.'], ['Negativa', 'I <b>didn\'t</b> work. She <b>didn\'t go</b>.'], ['Pregunta', '<b>Did</b> you work? <b>Did</b> she <b>go</b>?']]) +
+        H('Ortografía de -ed') +
+        E([['play → play<b>ed</b>', '+ ed'], ['like → like<b>d</b>', '-e: + d'], ['study → stud<b>ied</b>', 'consonante + y → ied'], ['stop → sto<b>pp</b>ed', 'vocal + consonante: se dobla']]) +
+        H('Pronunciación de -ed') +
+        T(['/t/', '/d/', '/ɪd/ (sílaba extra)'], [['worked, watched, stopped', 'played, lived, called', 'wanted, needed, started']]) +
+        H('Irregulares muy frecuentes') +
+        T(['Verbo', 'Pasado', 'Verbo', 'Pasado'], [
+            ['go', 'went', 'have', 'had'], ['do', 'did', 'make', 'made'], ['get', 'got', 'see', 'saw'], ['come', 'came', 'buy', 'bought'],
+            ['eat', 'ate', 'take', 'took'], ['say', 'said', 'think', 'thought'], ['write', 'wrote', 'leave', 'left']]) +
+        W('Con <b>didn\'t / did</b> el verbo vuelve a la forma base: <i>I didn\'t <b>go</b></i> (no «didn\'t went»).'),
+      q: [['«Ayer fui al cine» →', ['Yesterday I go to the cinema', 'Yesterday I went to the cinema'], 1],
+          ['«No lo vi» →', ["I didn't saw it", "I didn't see it"], 1],
+          ['Pasado de «study» →', ['studyed', 'studied'], 1]] },
+
+    { id: 'past-continuous', g: 'verb', t: 'Past continuous', es: 'El pasado continuo', k: 'pasado continuo was were ing while when estaba haciendo',
+      b: P('<b>was / were + -ing</b>. Para una acción <b>en progreso</b> en un momento del pasado (= estaba haciendo).') +
+        E([['At 8 o\'clock I <b>was having</b> dinner.', 'A las 8 estaba cenando.'], ['They <b>were</b>n\'t <b>listening</b>.', 'No estaban escuchando.'], ['What <b>were</b> you <b>doing</b>?', '¿Qué estabas haciendo?']]) +
+        H('Con el pasado simple: when / while') +
+        P('La acción larga va en continuo; la corta que la interrumpe, en pasado simple:') +
+        E([['I <b>was driving</b> when the phone <b>rang</b>.', 'Estaba conduciendo cuando sonó el teléfono.'], ['<b>While</b> she <b>was cooking</b>, I <b>cleaned</b> the house.', 'Mientras ella cocinaba, yo limpié la casa.']]) +
+        R('<b>while</b> + continuo (mientras); <b>when</b> + simple (cuando).'),
+      q: [['«Estaba durmiendo» →', ['I was sleeping', 'I were sleeping', 'I slept'], 0],
+          ['I was walking ___ I saw her.', ['while', 'when'], 1],
+          ['«¿Qué estaban haciendo?» →', ['What was they doing?', 'What were they doing?'], 1]] },
+
+    { id: 'present-perfect', g: 'verb', t: 'Present perfect', es: 'El presente perfecto', k: 'presente perfecto have has participio ever never just already yet for since been gone',
+      b: P('<b>have / has + participio</b> (<i>worked, been, seen…</i>). Une el pasado con el presente.') +
+        T(['Uso', 'Ejemplo', 'Español'], [
+            ['Experiencias (sin decir cuándo) — <b>ever / never</b>', 'Have you <b>ever</b> been to London?', '¿Has estado alguna vez en Londres?'],
+            ['Algo reciente — <b>just</b>', 'I\'ve <b>just</b> arrived.', 'Acabo de llegar.'],
+            ['<b>already</b> (ya) / <b>yet</b> (ya, todavía — al final)', 'I\'ve <b>already</b> eaten. Have you finished <b>yet</b>? I haven\'t finished <b>yet</b>.', 'Ya he comido. ¿Has terminado ya? Todavía no he terminado.'],
+            ['Desde hace / desde — <b>for / since</b>', 'I\'ve lived here <b>for</b> ten years / <b>since</b> 2015.', 'Vivo aquí desde hace diez años / desde 2015.']]) +
+        W('Si dices <b>cuándo</b> (yesterday, last year, in 2010, ago), usa el <b>pasado simple</b>: <i>I <b>saw</b> him yesterday</i> (no «I\'ve seen him yesterday»).') +
+        W('«Vivo aquí desde hace…» → <b>I\'ve lived</b> (no «I live here since…»). <b>for</b> + periodo; <b>since</b> + punto de inicio.') +
+        R('<b>been</b> vs <b>gone</b>: <i>She\'s <b>been</b> to Paris</i> (estuvo y volvió); <i>She\'s <b>gone</b> to Paris</i> (se ha ido y está allí).'),
+      q: [['«¿Has estado alguna vez en Roma?» →', ['Did you ever go to Rome?', 'Have you ever been to Rome?'], 1],
+          ['«Le vi ayer» →', ["I've seen him yesterday", 'I saw him yesterday'], 1],
+          ['«Trabajo aquí desde 2020» →', ["I work here since 2020", "I've worked here since 2020", "I've worked here for 2020"], 1]] },
+
+    { id: 'futuro', g: 'verb', t: 'Future: will, going to, present continuous', es: 'El futuro', k: 'futuro will going to wont planes predicciones decisiones',
+      b: T(['Forma', 'Uso', 'Ejemplo'], [
+            ['<b>be going to</b> + verbo', 'planes e intenciones; predicción con pruebas', 'I\'m going to buy a car. Look at the clouds — it\'s going to rain.'],
+            ['<b>will</b> + verbo', 'decisiones del momento, promesas, ofrecimientos, predicciones', 'I\'ll help you. It will be cold tomorrow. I won\'t tell anybody.'],
+            ['<b>present continuous</b>', 'citas y planes ya organizados (con fecha)', 'I\'m seeing the doctor on Monday.']]) +
+        E([['The phone\'s ringing. — I\'ll answer it!', 'Suena el teléfono. — ¡Ya lo cojo yo! (decisión ahora)'], ['We\'re going to visit Italy this summer.', 'Vamos a visitar Italia este verano (plan).'], ['Shall I open the window?', '¿Abro la ventana? (ofrecimiento con I / we)']]) +
+        W('<b>will</b> no lleva <b>to</b>: <i>I will <b>go</b></i> (no «will to go»). Y no lleva -s: <i>She will <b>come</b></i>.') +
+        R('después de <b>when, if, as soon as</b> se usa presente, no will: <i>I\'ll call you <b>when</b> I <b>arrive</b></i>.'),
+      q: [['«Te llamo cuando llegue» →', ["I'll call you when I'll arrive", "I'll call you when I arrive"], 1],
+          ['Decisión del momento: «¡Ya voy yo!» →', ["I'm going to go!", "I'll go!"], 1],
+          ['«Ella vendrá» →', ['She will comes', 'She will come', 'She will to come'], 1]] },
+
+    { id: 'modales', g: 'verb', t: 'Modal verbs: can, must, should, have to', es: 'Verbos modales: can, must, should, have to', k: 'modales can could must mustnt have to dont have to should may might obligacion permiso habilidad',
+      b: P('Los modales <b>no llevan -s</b> en 3ª persona, <b>no llevan to</b> después y hacen la negativa y la pregunta <b>solos</b> (sin do).') +
+        T(['Modal', 'Significado', 'Ejemplo'], [
+            ['<b>can / can\'t</b>', 'poder, saber (habilidad, permiso)', 'I can swim. Can I sit here?'],
+            ['<b>could</b>', 'podía / podría (pasado, petición educada)', 'I couldn\'t sleep. Could you help me?'],
+            ['<b>must</b>', 'deber (obligación que siente el que habla)', 'I must call my mum.'],
+            ['<b>have to</b>', 'tener que (obligación externa, normas)', 'I have to wear a uniform at work.'],
+            ['<b>mustn\'t</b>', '<b>prohibido</b>', 'You mustn\'t smoke here.'],
+            ['<b>don\'t have to</b>', '<b>no hace falta</b>', 'You don\'t have to come. (No es necesario)'],
+            ['<b>should / shouldn\'t</b>', 'deberías (consejo)', 'You should see a doctor.'],
+            ['<b>may / might</b>', 'puede que (posibilidad)', 'It might rain later.']]) +
+        W('«Tener que» = <b>have to</b>, no «have that». Y <i>She <b>can</b> drive</i> (no «cans», ni «can to drive»).') +
+        W('<b>mustn\'t</b> (prohibido) ≠ <b>don\'t have to</b> (no es obligatorio).') +
+        R('<b>have to</b> sí cambia: <i>She <b>has</b> to work. Do you <b>have to</b>…? I <b>had to</b> wait</i> (pasado).'),
+      q: [['«Él sabe nadar» →', ['He cans swim', 'He can swim', 'He can to swim'], 1],
+          ['«No hace falta que vengas» →', ["You mustn't come", "You don't have to come"], 1],
+          ['«Deberías descansar» →', ['You should rest', 'You should to rest'], 0]] },
+
+    { id: 'imperativo', g: 'verb', t: "Imperative and let's", es: "El imperativo y let's", k: 'imperativo ordenes dont lets instrucciones',
+      b: P('El imperativo es la <b>forma base</b> del verbo, igual para tú, usted y vosotros:') +
+        E([['<b>Open</b> the door, please.', 'Abre / Abra / Abrid la puerta, por favor.'], ['<b>Don\'t</b> touch it!', '¡No lo toques!'], ['<b>Be</b> careful!', '¡Ten cuidado!'], ['<b>Don\'t be</b> late.', 'No llegues tarde.']]) +
+        H("Let's (vamos a…, sugerencias)") +
+        E([['<b>Let\'s</b> go!', '¡Vamos!'], ['<b>Let\'s</b> have a coffee.', 'Tomemos un café.'], ['<b>Let\'s not</b> argue.', 'No discutamos.']]) +
+        R('para ser educado añade <b>please</b>, o usa <i>Could you…?</i>: <i>Could you close the window, please?</i>'),
+      q: [['«¡No corras!» →', ["Not run!", "Don't run!", "No run!"], 1],
+          ['«¡Vamos a la playa!» →', ["Let's go to the beach!", 'We go to the beach!'], 0],
+          ['«¡Ten cuidado!» →', ['Have careful!', 'Be careful!'], 1]] },
+
+    { id: 'verbo-ing-to', g: 'verb', t: 'Verb + -ing or to + infinitive', es: 'Verbo + -ing o to + infinitivo', k: 'like ing want to would like gerundio infinitivo enjoy hate love need decide',
+      b: T(['Verbo + <b>-ing</b>', 'Verbo + <b>to</b> + verbo'], [
+            ['like, love, hate, enjoy, don\'t mind', 'want, need, would like, decide, hope, learn'],
+            ['finish, stop, go (shopping/swimming)', 'try, plan, forget, promise'],
+            ['I <b>love cooking</b>.', 'I <b>want to cook</b>.'], ['She <b>enjoys reading</b>.', 'She <b>decided to leave</b>.']]) +
+        H('Like vs would like') +
+        E([['I <b>like</b> swimming.', 'Me gusta nadar (en general).'], ['I\'d <b>like to</b> swim.', 'Me gustaría nadar (ahora / un deseo).'], ['Would you like a coffee?', '¿Quieres un café? (ofrecimiento educado)']]) +
+        H('Después de preposición: siempre -ing') +
+        E([['I\'m good <b>at</b> cook<b>ing</b>.', 'Se me da bien cocinar.'], ['Thank you <b>for</b> com<b>ing</b>.', 'Gracias por venir.'], ['I\'m tired <b>of</b> wait<b>ing</b>.', 'Estoy cansado de esperar.']]) +
+        W('Para expresar finalidad («para» + verbo) se usa <b>to</b>: <i>I went to the shop <b>to buy</b> bread</i> (no «for buy»).'),
+      q: [['«Me gusta leer» →', ['I like read', 'I like reading'], 1],
+          ['«Quiero ir» →', ['I want going', 'I want to go'], 1],
+          ['«Fui para comprar pan» →', ['I went for buy bread', 'I went to buy bread'], 1]] },
+
+    { id: 'condicionales', g: 'verb', t: 'Conditionals (if)', es: 'Las condicionales (if)', k: 'condicional if will would first second zero si',
+      b: T(['Tipo', 'Estructura', 'Ejemplo', 'Uso'], [
+            ['Zero', 'if + presente, presente', 'If you heat ice, it melts.', 'verdades generales'],
+            ['First (1ª)', 'if + <b>presente</b>, <b>will</b> + verbo', 'If it rains, I\'ll stay at home.', 'situaciones reales / probables'],
+            ['Second (2ª)', 'if + <b>pasado</b>, <b>would</b> + verbo', 'If I had money, I would travel.', 'situaciones imaginarias']]) +
+        E([['If you study, you\'ll pass.', 'Si estudias, aprobarás.'], ['I\'ll call you if I need help.', 'Te llamaré si necesito ayuda (el if puede ir detrás).'], ['If I were you, I would accept.', 'Yo que tú, aceptaría.']]) +
+        W('Después de <b>if</b> nunca va <b>will</b> ni <b>would</b>: <i>If it <b>rains</b></i> (no «if it will rain»).') +
+        R('cuando <b>if</b> va al principio, se pone coma; si va en medio, no.'),
+      q: [['«Si llueve, no iré» →', ["If it will rain, I won't go", "If it rains, I won't go"], 1],
+          ['«Si fuera rico, compraría una casa» →', ['If I was rich, I will buy a house', 'If I were rich, I would buy a house'], 1],
+          ['Después de «if» en la 1ª condicional va…', ['will', 'presente'], 1]] },
+
+    // ---------------- LA FRASE ----------------
+    { id: 'orden', g: 'frase', t: 'Word order', es: 'El orden de la frase', k: 'orden frase sujeto verbo objeto lugar tiempo',
+      b: P('El inglés tiene un orden <b>fijo</b>, mucho más estricto que el español:') +
+        T(['Sujeto', 'Verbo', 'Objeto', 'Lugar', 'Tiempo'], [['I', 'met', 'Sarah', 'at the station', 'yesterday.'], ['She', 'plays', 'tennis', 'in the park', 'on Sundays.']]) +
+        E([['I like football <b>very much</b>.', 'Me gusta mucho el fútbol (no «I like very much football»).'], ['He speaks English <b>well</b>.', 'Habla bien inglés.'], ['<b>It</b>\'s important to rest.', 'Es importante descansar (sujeto obligatorio).']]) +
+        W('Nunca separes el verbo de su objeto: <i>I drink <b>coffee</b> every day</i> (no «I drink every day coffee»).') +
+        R('el sujeto siempre aparece, aunque en español se omita: <i><b>We</b> are tired</i> (Estamos cansados).'),
+      q: [['¿Cuál es correcta?', ['I like very much music', 'I like music very much'], 1],
+          ['¿Cuál es correcta?', ['I met her yesterday at the park', 'I met her at the park yesterday'], 1],
+          ['«Es tarde» →', ['Is late', "It's late"], 1]] },
+
+    { id: 'preguntas', g: 'frase', t: 'Questions', es: 'Las preguntas', k: 'preguntas what where when who why how which whose how much how many how old auxiliar',
+      b: T(['Palabra', 'Significado', 'Ejemplo'], [
+            ['What', 'qué', 'What\'s your name?'], ['Where', 'dónde', 'Where do you live?'], ['When', 'cuándo', 'When is your birthday?'],
+            ['Who', 'quién', 'Who is that man?'], ['Why', 'por qué', 'Why are you sad? — Because…'], ['How', 'cómo', 'How are you?'],
+            ['Which', 'cuál (entre opciones)', 'Which colour do you prefer?'], ['Whose', 'de quién', 'Whose bag is this?'],
+            ['How much / How many', 'cuánto / cuántos', 'How much is it? How many children have you got?'], ['How old / How long / How often', 'qué edad / cuánto tiempo / con qué frecuencia', 'How old are you?']]) +
+        H('El orden: QUASI') +
+        P('<b>Q</b>uestion word + <b>U</b>xiliar + <b>S</b>ujeto + <b>I</b>nfinitivo:') +
+        E([['Where <b>do</b> you <b>work</b>?', '¿Dónde trabajas?'], ['What <b>did</b> she <b>say</b>?', '¿Qué dijo?'], ['When <b>are</b> you <b>leaving</b>?', '¿Cuándo te vas?']]) +
+        W('Sin auxiliar la pregunta está mal: <i>«Where you live?»</i> ✗ → <i>Where <b>do</b> you live?</i> ✓') +
+        R('cuando <b>who / what</b> es el sujeto, no se usa do: <i>Who <b>lives</b> here?</i> (¿Quién vive aquí?).'),
+      q: [['«¿Dónde vives?» →', ['Where you live?', 'Where do you live?', 'Where live you?'], 1],
+          ['«¿Cuántos años tienes?» →', ['How many years have you?', 'How old are you?'], 1],
+          ['«¿Qué compraste?» →', ['What did you buy?', 'What you bought?'], 0]] },
+
+    { id: 'prep-tiempo', g: 'frase', t: 'Prepositions of time: at, on, in', es: 'Preposiciones de tiempo (at, on, in)', k: 'preposiciones tiempo at on in horas dias meses años',
+      b: T(['Preposición', 'Se usa con…', 'Ejemplos'], [
+            ['<b>at</b>', 'horas y momentos concretos', 'at 5 o\'clock, at night, at the weekend, at Christmas'],
+            ['<b>on</b>', 'días y fechas', 'on Monday, on 3rd May, on my birthday, on Saturday morning'],
+            ['<b>in</b>', 'meses, años, estaciones, partes del día, periodos', 'in July, in 2024, in summer, in the morning, in two weeks']]) +
+        E([['I get up <b>at</b> 7 <b>in</b> the morning.', 'Me levanto a las 7 de la mañana.'], ['See you <b>on</b> Friday!', '¡Hasta el viernes!'], ['She was born <b>in</b> 1990.', 'Nació en 1990.']]) +
+        W('Sin preposición: <i>next week, last year, this morning, tomorrow, yesterday, every day</i> → <i>I\'ll see you <b>next</b> week</i> (no «in next week»).') +
+        R('otras: <b>for</b> (durante: for two hours), <b>from … to / until</b> (de … a), <b>ago</b> (hace: two days ago — va detrás).'),
+      q: [['«El lunes» →', ['in Monday', 'on Monday', 'at Monday'], 1],
+          ['«En julio» →', ['in July', 'on July'], 0],
+          ['«La semana que viene» →', ['in next week', 'next week'], 1]] },
+
+    { id: 'prep-lugar', g: 'frase', t: 'Prepositions of place and movement', es: 'Preposiciones de lugar y movimiento', k: 'preposiciones lugar in on at next to between opposite under behind to into',
+      b: T(['Preposición', 'Significado', 'Ejemplo'], [
+            ['<b>in</b>', 'dentro de, en (ciudades, países)', 'in the box, in Barcelona, in the car'],
+            ['<b>on</b>', 'encima de, sobre (superficie)', 'on the table, on the wall, on the bus'],
+            ['<b>at</b>', 'en (un punto, un lugar concreto)', 'at home, at work, at school, at the station'],
+            ['<b>next to</b>', 'al lado de', 'next to the bank'], ['<b>between</b>', 'entre (dos)', 'between the café and the shop'],
+            ['<b>opposite</b>', 'enfrente de', 'opposite the park'], ['<b>in front of</b>', 'delante de', 'in front of the school'],
+            ['<b>behind</b>', 'detrás de', 'behind the door'], ['<b>under</b>', 'debajo de', 'under the bed']]) +
+        H('Movimiento') +
+        E([['I go <b>to</b> work by car.', 'Voy al trabajo en coche (to = dirección).'], ['Come <b>into</b> the kitchen.', 'Entra en la cocina.'], ['I\'m going <b>home</b>.', 'Me voy a casa (home sin to).'], ['by car / by bus / <b>on</b> foot', 'en coche / en autobús / a pie']]) +
+        W('«en» del español puede ser <b>in, on o at</b>: <i>in London</i>, <i>on the bus</i>, <i>at home</i>. Aprende las combinaciones.'),
+      q: [['«Estoy en casa» →', ["I'm in home", "I'm at home"], 1],
+          ['«Voy a Madrid» →', ['I go in Madrid', 'I go to Madrid'], 1],
+          ['«El libro está sobre la mesa» →', ['on the table', 'in the table'], 0]] },
+
+    { id: 'conectores', g: 'frase', t: 'Linking words', es: 'Conectores (and, but, because…)', k: 'conectores and but or because so then also too either although',
+      b: T(['Conector', 'Significado', 'Ejemplo'], [
+            ['and', 'y', 'I like tea <b>and</b> coffee.'], ['but', 'pero', 'It\'s small <b>but</b> nice.'], ['or', 'o', 'Tea <b>or</b> coffee?'],
+            ['because', 'porque', 'I\'m tired <b>because</b> I worked a lot.'], ['so', 'así que, por eso', 'It was late, <b>so</b> I went home.'],
+            ['then / after that', 'luego, después', 'I had a shower. <b>Then</b> I had breakfast.'], ['although', 'aunque', '<b>Although</b> it was cold, we went out.']]) +
+        H('También / tampoco') +
+        E([['I like it <b>too</b>. / I <b>also</b> like it.', 'A mí también me gusta (too al final; also delante del verbo).'], ['I don\'t like it <b>either</b>.', 'A mí tampoco me gusta.'], ['Me too! / Me neither!', '¡Yo también! / ¡Yo tampoco!']]) +
+        W('«because» (porque) ≠ «why» (por qué): <i>Why? — <b>Because</b>…</i>'),
+      q: [['«Yo tampoco» →', ['Me too', 'Me neither'], 1],
+          ['«Llovía, así que me quedé» →', ['It was raining, so I stayed', 'It was raining, because I stayed'], 0],
+          ['«A ella también le gusta» →', ['She likes it too', 'She too likes it'], 0]] },
+
+    // ---------------- ERRORES ----------------
+    { id: 'false-friends', g: 'err', t: 'False friends', es: 'Falsos amigos', k: 'falsos amigos actually embarrassed library carpet exit sensible assist',
+      b: P('Palabras que <b>parecen</b> españolas pero significan otra cosa:') +
+        T(['Inglés', 'Significa', 'No significa', 'Se dice…'], [
+            ['actually', 'en realidad', 'actualmente', 'currently / nowadays'], ['embarrassed', 'avergonzado', 'embarazada', 'pregnant'],
+            ['library', 'biblioteca', 'librería', 'bookshop'], ['carpet', 'alfombra', 'carpeta', 'folder'], ['exit', 'salida', 'éxito', 'success'],
+            ['sensible', 'sensato', 'sensible', 'sensitive'], ['constipated', 'estreñido', 'constipado', 'have a cold'], ['assist', 'ayudar', 'asistir (ir)', 'attend'],
+            ['realize', 'darse cuenta', 'realizar', 'carry out / do'], ['pretend', 'fingir', 'pretender', 'intend'], ['career', 'carrera profesional', 'carrera (estudios)', 'degree'],
+            ['discussion', 'conversación, debate', 'discusión (pelea)', 'argument'], ['fabric', 'tela', 'fábrica', 'factory'], ['parents', 'padres', 'parientes', 'relatives']]) +
+        R('si una palabra se parece mucho al español, compruébala en el diccionario antes de usarla.'),
+      q: [['«Estoy embarazada» →', ["I'm embarrassed", "I'm pregnant"], 1],
+          ['«Librería» (tienda de libros) →', ['library', 'bookshop'], 1],
+          ['«Actualmente vivo en Viladecans» →', ['Actually I live in Viladecans', 'Currently I live in Viladecans'], 1]] },
+
+    { id: 'errores', g: 'err', t: 'Common mistakes', es: 'Errores típicos de hispanohablantes', k: 'errores tipicos make do say tell explain depend people',
+      b: T(['❌ Incorrecto', '✅ Correcto', 'Español'], [
+            ['I have 30 years.', 'I\'m 30.', 'Tengo 30 años.'], ['People is…', 'People are…', 'La gente es…'], ['She have a car.', 'She has a car.', 'Ella tiene un coche.'],
+            ['Explain me.', 'Explain <b>to</b> me.', 'Explícame.'], ['It depends of…', 'It depends <b>on</b>…', 'Depende de…'], ['I am agree.', 'I agree.', 'Estoy de acuerdo.'],
+            ['I like very much…', 'I like … very much.', 'Me gusta mucho…'], ['The life is hard.', 'Life is hard.', 'La vida es dura.'], ['Is raining.', 'It\'s raining.', 'Llueve.'],
+            ['I go to home.', 'I go home.', 'Voy a casa.'], ['Married with', 'Married <b>to</b>', 'Casado con'], ['Arrive to Madrid', 'Arrive <b>in</b> Madrid / <b>at</b> the airport', 'Llegar a Madrid']]) +
+        H('Make o do') +
+        E([['<b>make</b>: crear, fabricar', 'make a cake, make a mistake, make a noise, make money, make a phone call'], ['<b>do</b>: tareas, actividades', 'do homework, do the shopping, do exercise, do the housework, do a job']]) +
+        H('Say o tell') +
+        E([['<b>say</b> something (to someone)', 'He said hello. She said (that) she was tired.'], ['<b>tell</b> <b>someone</b> something', 'He told me the truth. Tell me a story.']]),
+      q: [['«Estoy de acuerdo» →', ['I am agree', 'I agree'], 1],
+          ['«Cometer un error» →', ['do a mistake', 'make a mistake'], 1],
+          ['«Me dijo la verdad» →', ['He said me the truth', 'He told me the truth'], 1]] }
+    ];
+
+    // ===== INTERFÍCIE =====
+    const $ = id => document.getElementById(id);
+    const norm = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/·/g, '');
+    const strip = h => h.replace(/<[^>]+>/g, ' ');
+    const gName = g => (GROUPS.find(x => x[0] === g) || ['', ''])[1];
+    let DONE = {};
+    try { DONE = JSON.parse(localStorage.getItem('gram-en-done') || '{}'); } catch (e) {}
+    const saveDone = () => { try { localStorage.setItem('gram-en-done', JSON.stringify(DONE)); } catch (e) {} };
+    let cur = null;
+
+    // Voz en inglés (toca un ejemplo para escucharlo)
+    let voice = null;
+    function pickVoice() { try { const vs = speechSynthesis.getVoices(); voice = vs.find(v => /^en[-_]GB/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null; } catch (e) {} }
+    try { pickVoice(); speechSynthesis.addEventListener('voiceschanged', pickVoice); } catch (e) {}
+    function speak(t) {
+        try {
+            speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(t.split('→')[0].replace(/\//g, ', ').replace(/[✗✓]/g, ''));
+            u.lang = 'en-GB'; u.rate = 0.9; if (voice) u.voice = voice;
+            speechSynthesis.speak(u);
+        } catch (e) {}
+    }
+
+    function setView(v) {
+        $('grIndex').style.display = v === 'index' ? '' : 'none';
+        $('grPrintPanel').style.display = v === 'print' ? '' : 'none';
+        $('grTopic').style.display = v === 'topic' ? '' : 'none';
+        $('grIndexBtn').classList.toggle('lb-primary', v === 'index');
+        $('grPrintBtn').classList.toggle('lb-primary', v === 'print');
+    }
+
+    // ----- Índex -----
+    function renderIndex(filter) {
+        const f = norm(filter).trim();
+        let n = 0, html = '';
+        GROUPS.forEach(([g, name]) => {
+            const list = TOPICS.filter(t => t.g === g && (!f || norm(t.t + ' ' + t.es + ' ' + t.k + ' ' + (f.length > 2 ? strip(t.b) : '')).includes(f)));
+            if (!list.length) return;
+            html += '<div class="lb-idx-group">' + name + '</div>';
+            list.forEach(t => {
+                n++;
+                const num = TOPICS.indexOf(t) + 1;
+                html += '<button class="gr-idx-item" type="button" data-id="' + t.id + '">' +
+                    '<span class="lb-idx-id">' + num + '</span><span class="gr-idx-txt"><span class="lb-idx-name">' + t.t + '</span>' +
+                    '<span class="gr-idx-es">' + t.es + '</span></span>' + (DONE[t.id] ? '<span class="gr-done">✓</span>' : '') + '<span class="gr-arrow">›</span></button>';
+            });
+        });
+        if (!n) html = '<p class="lb-res-head">No se ha encontrado ningún tema para «' + filter + '». Prueba con otra palabra.</p>';
+        else if (f) html = '<p class="lb-res-head">' + n + ' tema' + (n > 1 ? 's' : '') + ' encontrado' + (n > 1 ? 's' : '') + '</p>' + html;
+        $('grIndex').innerHTML = html;
+        const done = TOPICS.filter(t => DONE[t.id]).length;
+        $('grProg').textContent = done + ' / ' + TOPICS.length + ' temas repasados';
+    }
+
+    // ----- Tema -----
+    function quizHtml(t, printMode) {
+        return '<div class="gr-quiz"><div class="gr-quiz-t">🎯 Compruébalo</div>' + t.q.map((q, i) =>
+            '<div class="gr-q" data-q="' + i + '"><div class="gr-q-t">' + (i + 1) + '. ' + q[0] + '</div><div class="lb-opts">' +
+            q[1].map((o, j) => printMode ? '<span class="lb-opt">' + String.fromCharCode(97 + j) + ') ' + o + '</span>'
+                : '<button class="lb-opt" type="button" data-o="' + j + '">' + o + '</button>').join('') + '</div></div>').join('') + '</div>';
+    }
+    function topicHtml(t, printMode) {
+        const num = TOPICS.indexOf(t) + 1;
+        return '<div class="gr-topic-head"><div class="lb-lesson-sub">' + gName(t.g) + ' · Tema ' + num + '</div>' +
+            '<div class="lb-lesson-title">' + t.t + '</div><div class="lb-lesson-goal">' + t.es + '</div></div>' +
+            '<div class="gr-body">' + t.b + '</div>';
+    }
+    function openTopic(id, scroll) {
+        const t = TOPICS.find(x => x.id === id); if (!t) return;
+        cur = t;
+        const i = TOPICS.indexOf(t), prev = TOPICS[i - 1], next = TOPICS[i + 1];
+        $('grTopic').innerHTML =
+            '<div class="gr-nav"><button class="lb-back" type="button" data-act="index">← Índice</button>' +
+            '<button class="lb-btn" type="button" data-act="print1">🖨️ Imprimir este tema</button></div>' +
+            '<div class="lb-card gr-card">' + topicHtml(t) + quizHtml(t) + '<div class="gr-qres" id="grQres"></div></div>' +
+            '<div class="gr-pn">' + (prev ? '<button class="lb-btn" type="button" data-go="' + prev.id + '">‹ ' + prev.t + '</button>' : '<span></span>') +
+            (next ? '<button class="lb-btn lb-primary" type="button" data-go="' + next.id + '">' + next.t + ' ›</button>' : '') + '</div>';
+        $('grTopic').querySelectorAll('.gr-ca').forEach(el => { el.title = 'Toca para escuchar'; });
+        setView('topic');
+        try { localStorage.setItem('gram-en-last', id); } catch (e) {}
+        if (scroll !== false) $('gramatica').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    function answer(btn) {
+        const qEl = btn.closest('.gr-q'); if (!qEl || qEl.dataset.ans) return;
+        const qi = +qEl.dataset.q, oi = +btn.dataset.o, ok = cur.q[qi][2];
+        qEl.dataset.ans = oi === ok ? 'ok' : 'bad';
+        qEl.querySelectorAll('.lb-opt').forEach(b => { b.disabled = true; if (+b.dataset.o === ok) b.classList.add('ok'); });
+        if (oi !== ok) btn.classList.add('bad');
+        const all = $('grTopic').querySelectorAll('.gr-q'), ans = [...all].filter(q => q.dataset.ans);
+        if (ans.length === all.length) {
+            const good = ans.filter(q => q.dataset.ans === 'ok').length;
+            $('grQres').innerHTML = (good === all.length ? '🎉 ¡Perfecto! ' : good ? '👍 ' : '💪 ') + good + ' / ' + all.length + ' correctas' +
+                ' <button class="lb-btn" type="button" data-act="retry">🔄 Repetir</button>';
+            if (good === all.length) { DONE[cur.id] = 1; saveDone(); }
+        }
+    }
+
+    // ----- Impressió per temes -----
+    function renderPrintPanel() {
+        let html = '<p class="lb-intro" style="display:block">Marca los temas que quieres imprimir. Puedes imprimir un bloque entero o temas sueltos.</p>' +
+            '<div class="gr-pr-opts"><label><input type="checkbox" id="grPrQuiz" checked> Incluir las preguntas de repaso (con soluciones al final)</label>' +
+            '<label><input type="checkbox" id="grPrBreak"> Cada tema en una página nueva</label></div>' +
+            '<div class="lb-actions"><button class="lb-btn" type="button" data-act="all">☑️ Todos</button><button class="lb-btn" type="button" data-act="none">⬜ Ninguno</button></div>';
+        GROUPS.forEach(([g, name]) => {
+            html += '<div class="gr-pr-group"><label class="gr-pr-gl"><input type="checkbox" data-group="' + g + '"> ' + name + '</label>';
+            TOPICS.filter(t => t.g === g).forEach(t => {
+                html += '<label class="gr-pr-item"><input type="checkbox" data-topic="' + t.id + '"> ' + (TOPICS.indexOf(t) + 1) + '. ' + t.t + ' <span class="gr-idx-es">— ' + t.es + '</span></label>';
+            });
+            html += '</div>';
+        });
+        html += '<div class="lb-actions"><button class="lb-btn lb-primary" type="button" data-act="printsel">🖨️ Imprimir seleccionados (<span id="grPrN">0</span>)</button></div>';
+        $('grPrintPanel').innerHTML = html;
+    }
+    function syncPrint() {
+        const panel = $('grPrintPanel');
+        GROUPS.forEach(([g]) => {
+            const boxes = [...panel.querySelectorAll('input[data-topic]')].filter(b => TOPICS.find(t => t.id === b.dataset.topic).g === g);
+            const gb = panel.querySelector('input[data-group="' + g + '"]'), c = boxes.filter(b => b.checked).length;
+            gb.checked = c === boxes.length; gb.indeterminate = c > 0 && c < boxes.length;
+        });
+        $('grPrN').textContent = panel.querySelectorAll('input[data-topic]:checked').length;
+    }
+    function doPrint(ids, withQuiz, pageBreak) {
+        if (!ids.length) { alertBox('Marca al menos un tema para imprimir.'); return; }
+        const list = TOPICS.filter(t => ids.includes(t.id));
+        let html = '<div class="gr-pr-title">Learn English · Gramática</div><div class="gr-pr-sub">' +
+            (list.length === 1 ? list[0].t : list.length + ' temas: ' + list.map(t => (TOPICS.indexOf(t) + 1) + '. ' + t.t).join(' · ')) + '</div>';
+        list.forEach((t, i) => {
+            html += '<section class="gr-pr-topic' + (pageBreak && i ? ' gr-pr-break' : '') + '">' + topicHtml(t, true) + (withQuiz ? quizHtml(t, true) : '') + '</section>';
+        });
+        if (withQuiz) {
+            html += '<section class="gr-pr-sol"><div class="gr-quiz-t">✅ Soluciones</div>' + list.map(t =>
+                '<div><b>' + (TOPICS.indexOf(t) + 1) + '. ' + t.t + ':</b> ' + t.q.map((q, i) => (i + 1) + String.fromCharCode(97 + q[2]) + ') ' + q[1][q[2]]).join(' · ') + '</div>').join('') + '</section>';
+        }
+        $('grPrint').innerHTML = html;
+        document.body.classList.add('gr-printing');
+        setTimeout(() => window.print(), 80);
+    }
+    function alertBox(msg) {
+        const el = $('grMsg'); el.textContent = msg; el.style.display = 'block';
+        clearTimeout(alertBox.t); alertBox.t = setTimeout(() => { el.style.display = 'none'; }, 2500);
+    }
+    window.addEventListener('afterprint', () => document.body.classList.remove('gr-printing'));
+
+    // ----- Esdeveniments -----
+    let ready = false;
+    function init() {
+        renderIndex('');
+        renderPrintPanel();
+        $('grSearch').addEventListener('input', e => { setView('index'); renderIndex(e.target.value); });
+        $('grIndexBtn').addEventListener('click', () => { $('grSearch').value = ''; renderIndex(''); setView('index'); });
+        $('grPrintBtn').addEventListener('click', () => { setView('print'); syncPrint(); });
+        $('grIndex').addEventListener('click', e => { const b = e.target.closest('.gr-idx-item'); if (b) openTopic(b.dataset.id); });
+        $('grTopic').addEventListener('click', e => {
+            const go = e.target.closest('[data-go]'); if (go) return openTopic(go.dataset.go);
+            const act = e.target.closest('[data-act]');
+            if (act) {
+                if (act.dataset.act === 'index') { renderIndex($('grSearch').value); setView('index'); }
+                else if (act.dataset.act === 'print1') doPrint([cur.id], true, false);
+                else if (act.dataset.act === 'retry') openTopic(cur.id, false);
+                return;
+            }
+            const opt = e.target.closest('button.lb-opt'); if (opt) return answer(opt);
+            const ca = e.target.closest('.gr-ca'); if (ca) speak(ca.textContent);
+        });
+        $('grPrintPanel').addEventListener('change', e => {
+            const g = e.target.dataset.group;
+            if (g) $('grPrintPanel').querySelectorAll('input[data-topic]').forEach(b => { if (TOPICS.find(t => t.id === b.dataset.topic).g === g) b.checked = e.target.checked; });
+            syncPrint();
+        });
+        $('grPrintPanel').addEventListener('click', e => {
+            const act = e.target.closest('[data-act]'); if (!act) return;
+            const boxes = $('grPrintPanel').querySelectorAll('input[data-topic]');
+            if (act.dataset.act === 'all') boxes.forEach(b => b.checked = true);
+            else if (act.dataset.act === 'none') boxes.forEach(b => b.checked = false);
+            else if (act.dataset.act === 'printsel') {
+                return doPrint([...boxes].filter(b => b.checked).map(b => b.dataset.topic), $('grPrQuiz').checked, $('grPrBreak').checked);
+            }
+            syncPrint();
+        });
+        setView('index');
+    }
+    window.renderGramaticaEn = function () { if (!ready) { ready = true; init(); } };
+    window.gramPrintCurrent = function () {
+        if (!ready) return window.print();
+        if ($('grTopic').style.display !== 'none' && cur) doPrint([cur.id], true, false);
+        else { setView('print'); syncPrint(); alertBox('Elige los temas que quieres imprimir y pulsa «Imprimir seleccionados».'); }
+    };
+})();
+</script>
+<div id="grPrint"></div>
 </body>
 </html>
