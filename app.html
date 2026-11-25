@@ -6572,7 +6572,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['What do you ___?', ['think']],
               ].map(([t, a]) => ({ t, a })) },
         ]},
-        { id: 'WB', title: 'Writing Bank y Communication', pages: 'pp. 104–119', ex: [
+        { id: 'WB', title: 'Writing Bank y Communication', pages: 'pp. 200–215', ex: [
             { title: 'Capital letters', instr: '¿Va con mayúscula en inglés?', type: 'choice', shuffle: true,
               opts: ['✅ Mayúscula', '❌ Minúscula'],
               items: [['monday',0],['january',0],['spanish (idioma)',0],['french (nacionalidad)',0],['poland',0],['king street',0],['i (pronombre yo)',0],['summer',1],['teacher',1],['morning',1],['breakfast',1],['city',1]].map(([q, i]) => ({ q, a: ['✅ Mayúscula', '❌ Minúscula'][i] })) },
@@ -6602,7 +6602,7 @@ window.addEventListener('DOMContentLoaded', () => {
             { title: 'Where are they from?', instr: 'Completa la pregunta.', type: 'gap',
               items: [["___'s Ali from? — He's from Türkiye.",['Where']],['Where ___ Türkiye? — Ankara.',['in']],['Is Bruno Mars his real ___? — No, it isn\'t.',['name']],['What\'s her real name? How do you ___ it?',['spell']]].map(([t, a]) => ({ t, a })) },
         ]},
-        { id: 'GB1-3', title: 'Grammar Bank 1–3', pages: 'pp. 132–137', ex: [
+        { id: 'GB1-3', title: 'Grammar Bank 1–3', pages: 'pp. 228–233', ex: [
             { title: 'am, is, are', instr: 'Completa con am, is o are.', type: 'gap',
               items: [['We ___ from Córdoba.',['are']],['He ___ early.',['is']],['They ___ teachers.',['are']],['Today ___ Wednesday.',['is']],['I ___ sorry.',['am']],['You ___ in room 402.',['are']],['My name ___ Carla.',['is']],['I ___ in a taxi.',['am']]].map(([t, a]) => ({ t, a })) },
             { title: 'Negativo y short answers', instr: 'Elige la forma correcta.', type: 'choice',
@@ -6659,7 +6659,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['', ['How do you say that in English?', 'How you say that in English?'], 0],
               ].map(([q, opts, i]) => ({ q: 'Elige:', opts: sh(opts), a: opts[i] })) },
         ]},
-        { id: 'GB4-6', title: 'Grammar Bank 4–6', pages: 'pp. 138–143', ex: [
+        { id: 'GB4-6', title: 'Grammar Bank 4–6', pages: 'pp. 234–239', ex: [
             { title: "Whose o Who's", instr: "Whose = de quién · Who's = Who is.", type: 'choice',
               items: [['___ book is this?','Whose'],['___ phone is that?','Whose'],['___ your favourite singer?',"Who's"],["___ Ethan's girlfriend?","Who's"],['___ bag is this?','Whose'],['___ their English teacher?',"Who's"],['___ the man with dark hair?',"Who's"],['___ charger is this?','Whose']].map(([q, a]) => ({ q, opts: ['Whose', "Who's"], a })) },
             { title: "Possessive 's", instr: 'Elige la forma correcta.', type: 'choice',
@@ -6716,7 +6716,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['How old ___ your father?', ['is']], ["He's 69, but he ___ want to retire.", ["doesn't"]], ['___ you watching TV?', ['Are']],
               ].map(([t, a]) => ({ t, a })) },
         ]},
-        { id: 'VB', title: 'Vocabulary Bank 1–2', pages: 'pp. 156–159', ex: [
+        { id: 'VB', title: 'Vocabulary Bank 1–2', pages: 'pp. 252–255', ex: [
             { title: 'Days of the week', instr: 'Escribe el día en inglés (con mayúscula).', type: 'gap',
               items: [['lunes',['Monday']],['martes',['Tuesday']],['miércoles',['Wednesday']],['jueves',['Thursday']],['viernes',['Friday']],['sábado',['Saturday']],['domingo',['Sunday']],['fin de semana',['the weekend','weekend']],['día laborable',['a weekday','weekday']]].map(([w, a]) => ({ t: w + ' → ___', a })) },
             { title: 'Numbers', instr: 'Escribe el número en letras.', type: 'gap',
@@ -6743,7 +6743,7 @@ window.addEventListener('DOMContentLoaded', () => {
                   return { q, opts: sh([a, a.startsWith('They') ? "It's a " + w + '.' : "They're " + w + 's.']), a };
               }) },
         ]},
-        { id: 'LIS', title: 'Listening y Writing: informal email', pages: 'pp. 120, 127–129', ex: [
+        { id: 'LIS', title: 'Listening y Writing: informal email', pages: 'pp. 216, 223–225', ex: [
             { title: 'An informal email: contractions', instr: 'Escribe la contracción.', type: 'gap',
               items: [['They are at university. → ___ at university.',["They're"]],['I am studying economics. → ___ studying economics.',["I'm"]],['He does not have a job. → He ___ have a job.',["doesn't"]],['We are not working today. → We ___ working today.',["aren't"]],['She is a doctor. → ___ a doctor.',["She's"]],['I do not like dancing. → I ___ like dancing.',["don't"]],["My name is Mateo. → My ___ Mateo.",["name's"]],["My father is an architect. → My ___ an architect.",["father's"]]].map(([t, a]) => ({ t, a })) },
             { title: "Mateo's email", instr: '¿Verdadero o falso?', type: 'choice',
@@ -6783,7 +6783,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ["How many coffees is this for B?", ['the fifth', 'the third', 'the first'], 0], ['Which floor is Lynn Mody on?', ['the sixth', 'the second', 'the sixteenth'], 0],
               ].map(([q, opts, i]) => ({ q, opts: sh(opts), a: opts[i] })) },
         ]},
-        { id: 'VB3-4', title: 'Vocabulary Bank: adjectives, verbs, jobs, family', pages: 'pp. 160–163', ex: [
+        { id: 'VB3-4', title: 'Vocabulary Bank: adjectives, verbs, jobs, family', pages: 'pp. 256–259', ex: [
             { title: 'Adjectives: opposites', instr: 'Escribe el contrario.', type: 'gap', shuffle: true,
               items: [['beautiful',['ugly']],['big',['small']],['cheap',['expensive']],['clean',['dirty']],['easy',['difficult']],['fast',['slow']],['full',['empty']],['good',['bad']],['high',['low']],['hot',['cold']],['light',['dark']],['long',['short']],['old (car)',['new']],['old (person)',['young']],['rich',['poor']],['right (✔)',['wrong']],['right (➡️)',['left']],['safe',['dangerous']],['the same',['different']],['strong',['weak']],['tall',['short']]].map(([w, a]) => ({ t: w + ' ↔ ___', a })) },
             { title: 'Adjectives: español → inglés', instr: 'Escribe el adjetivo.', type: 'gap', shuffle: true,
@@ -6813,7 +6813,7 @@ window.addEventListener('DOMContentLoaded', () => {
             { title: 'Family: plural words', instr: 'Escribe la palabra.', type: 'gap',
               items: [['my father and my mother = my ___',['parents']],["my wife's mother and father = my ___",['parents-in-law','parents in law','in-laws']],['my grandfather and my grandmother = my ___',['grandparents']],['my son and my daughter = my ___',['children','kids']],['a husband and wife = a married ___',['couple']],["my mother's new husband = my ___",['stepfather']],["my father's new wife = my ___",['stepmother']],["my husband's sister = my ___",['sister-in-law','sister in law']]].map(([t, a]) => ({ t, a })) },
         ]},
-        { id: 'VB5-6', title: 'Vocabulary Bank: routine, time, verbs, weather', pages: 'pp. 164–167', ex: [
+        { id: 'VB5-6', title: 'Vocabulary Bank: routine, time, verbs, weather', pages: 'pp. 260–263', ex: [
             { title: 'Daily routine: Sally y Robbie', instr: 'Escribe la expresión en inglés.', type: 'gap', shuffle: true,
               items: [['maquillarse',['put on make-up','put on makeup']],['revisar el correo',['check emails','check my emails']],['llegar al trabajo',['get to work']],['empezar a trabajar a las 8.30',['start work at 8.30']],['terminar de trabajar',['finish work']],['comer en el trabajo',['have lunch at work']],['llegar tarde a casa',['get home late']],['ir a trabajar en autobús',['go to work by bus']],['afeitarse',['have a shave']],['ir a casa pronto',['go home early']],['ir andando al trabajo',['walk to work']],['relajarse',['relax']],['bañarse',['have a bath']],['quedar con amigos',['see friends']],['dormir ocho horas',['sleep for eight hours']],['ir a clases de italiano',['go to Italian classes']]].map(([w, a]) => ({ t: w + ' → ___', a })) },
             { title: 'have', instr: '¿Qué uso de have es?', type: 'choice', shuffle: true,
@@ -6845,7 +6845,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ["My birthday's ___ February.", ['in', 'on', 'at'], 0], ['The meeting is ___ Friday 5th September.', ['on', 'in', 'at'], 0],
               ].map(([q, opts, i]) => ({ q, opts: sh(opts), a: opts[i] })) },
         ]},
-        { id: 'IRR', title: 'Irregular verbs y Sound Bank', pages: 'pp. 173–175', ex: [
+        { id: 'IRR', title: 'Irregular verbs y Sound Bank', pages: 'pp. 269–271', ex: [
             { title: 'Past simple (1)', instr: 'Escribe el pasado.', type: 'gap', shuffle: true,
               items: [['be (I)',['was']],['be (they)',['were']],['become',['became']],['begin',['began']],['break',['broke']],['bring',['brought']],['build',['built']],['buy',['bought']],['can',['could']],['catch',['caught']],['come',['came']],['cost',['cost']],['do',['did']],['drink',['drank']],['drive',['drove']],['eat',['ate']],['fall',['fell']],['feel',['felt']],['find',['found']],['fly',['flew']],['forget',['forgot']],['get',['got']],['give',['gave']],['go',['went']],['have',['had']],['hear',['heard']],['know',['knew']]].map(([w, a]) => ({ t: w + ' → ___', a })) },
             { title: 'Past simple (2)', instr: 'Escribe el pasado.', type: 'gap', shuffle: true,
