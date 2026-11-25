@@ -5072,7 +5072,7 @@ window.addEventListener('DOMContentLoaded', () => {
             { title: 'American → British', instr: 'Escribe la palabra en inglés británico.', type: 'gap', noArticle: true,
               items: [['zip code',['postcode']],['vacation',['holiday']],['elevator',['lift']],['color',['colour']],['center',['centre']],['theater',['theatre']],['favor',['favour']],['See you Friday. → See you ___ Friday.',['on']],['apartment',['flat']],['fries',['chips']],['cookie',['biscuit']],['subway',['underground','tube']],['cell phone',['mobile','mobile phone']],['movie',['film']],['pants',['trousers']],['gas',['petrol']],['candy',['sweets']]].map(([w, a]) => ({ t: w.includes('___') ? w : w + ' → ___', a })) },
         ]},
-        { id: '2C', title: "Don't worry. Be happy!", pages: 'pp. 20–21', ex: [
+        { id: '2C', title: "Don't worry. Be happy!", pages: 'pp. 28–29', ex: [
             { title: 'Feelings', instr: 'Elige el sentimiento de cada dibujo.', type: 'choice', shuffle: true,
               opts: ['angry', 'bored', 'cold', 'frightened', 'happy', 'hot', 'hungry', 'sad', 'stressed', 'thirsty', 'tired', 'worried'],
               items: [['😠','angry'],['🥱','bored'],['🥶','cold'],['😱','frightened'],['😊','happy'],['🥵','hot'],['🍴😋','hungry'],['😢','sad'],['😫','stressed'],['💧🥤','thirsty'],['😴','tired'],['😟','worried']].map(([q, a]) => ({ q, a })) },
@@ -5122,17 +5122,40 @@ window.addEventListener('DOMContentLoaded', () => {
             { title: 'Signs', instr: '¿Qué significa cada señal?', type: 'choice', shuffle: true,
               opts: ['Turn left.', "Don't smoke here.", "Don't eat or drink here.", 'Turn off your phone.', "Don't take photos.", "Don't go in here.", "Don't cross the road now.", 'Be careful!'],
               items: [['⬅️','Turn left.'],['🚭','Don\'t smoke here.'],['🚫🍔🥤',"Don't eat or drink here."],['📵','Turn off your phone.'],['🚫📷',"Don't take photos."],['⛔',"Don't go in here."],['🚷',"Don't cross the road now."],['⚠️','Be careful!']].map(([q, a]) => ({ q, a })) },
-            { title: 'Tips for a car journey', instr: 'Completa con una palabra: plan, check, map, petrol, phone, stop, water, traffic.', type: 'gap',
+            { title: 'The story: how do they feel?', instr: 'Lisa, Mel y Alfie van de viaje (2.12). Completa con el sentimiento.', type: 'choice',
+              opts: ['stressed', 'thirsty', 'hungry', 'hot', 'cold', 'frightened', 'tired'],
               items: [
-                ['___ your route before you go.', ['Plan']],
-                ['Listen to the ___ news on the radio.', ['traffic']],
-                ['Take a ___ in the car.', ['map']],
-                ['Take a big bottle of ___.', ['water']],
-                ["___ that everybody has their seat belt on.", ['Check']],
-                ['Check that the car has ___.', ['petrol','gas']],
-                ['After two hours, ___ for 15 minutes.', ['stop']],
-                ["Don't use your ___ when you drive.", ['phone']],
-              ].map(([t, a]) => ({ t, a })) },
+                ['Picture 1: Lisa and Mel are ___.', 'stressed'],
+                ["Picture 2: Lisa's ___.", 'thirsty'],
+                ['Picture 2: Mel and Alfie are ___.', 'hungry'],
+                ["Picture 3: Lisa's ___.", 'hot'],
+                ['Picture 3: Mel and Alfie are ___.', 'cold'],
+                ['Picture 3: Then Mel is ___.', 'frightened'],
+                ['Picture 4: Lisa and Alfie are ___.', 'tired'],
+              ].map(([q, a]) => ({ q, a })) },
+            { title: 'Imperatives and suggestions', instr: 'Completa el cuadro con las frases de la historia.', type: 'choice',
+              opts: ['Be', 'Look', "Don't", "Let's", "Let's not"],
+              items: [
+                ['Turn right. / ___ careful!', 'Be'],
+                ['___ for a hotel.', 'Look'],
+                ['___ turn left! / drive fast! / worry.', "Don't"],
+                ['___ stop at a café. / go there.', "Let's"],
+                ['___ stop.', "Let's not"],
+              ].map(([q, a]) => ({ q, a })) },
+            { title: 'Tips for a car journey', instr: 'Completa los diez consejos con una palabra de la lista.', type: 'choice',
+              opts: ['plan', 'car', 'traffic', 'map', 'water', 'tablets', 'check', 'petrol', 'stop', 'phone'],
+              items: [
+                ['1 ___ your journey.', 'plan'],
+                ['2 Check your ___.', 'car'],
+                ['3 Listen to ___ information on the radio.', 'traffic'],
+                ['4 Take a ___ with you in the car.', 'map'],
+                ['5 Take bottles of ___.', 'water'],
+                ['6 Take books, games, and ___ with you.', 'tablets'],
+                ['7 ___ that all the passengers in the car have their seat belt on.', 'check'],
+                ['8 Check that you have ___.', 'petrol'],
+                ['9 After driving for two hours, ___ for 15 minutes.', 'stop'],
+                ["10 Don't use your ___.", 'phone'],
+              ].map(([q, a]) => ({ q, a })) },
         ]},
         { id: 'R1-2', title: 'Revise and Check 1 & 2', pages: 'p. 30', ex: [
             { title: 'Grammar', instr: 'Elige la opción correcta.', type: 'choice',
@@ -5264,7 +5287,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['Do you ___ at the weekend?', ['work']], ['Do you ___ your job?', ['like']],
               ].map(([t, a]) => ({ t, a })) },
         ]},
-        { id: '3C', title: "Are you a 'dog person'?", pages: 'pp. 28–29', ex: [
+        { id: '3C', title: "Are you a 'dog person'?", pages: 'pp. 44–45', ex: [
             { title: 'Word order in questions', instr: 'Elige la pregunta bien ordenada.', type: 'choice',
               items: [
                 ['¿Cuántos años tiene Barry?', ['How old is Barry?', 'Barry is old how?', 'How is old Barry?'], 0],
@@ -5336,7 +5359,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['Do you want to go out sometime?', 'Me? Yes.'],
               ].map(([q, a]) => ({ q, a })) },
         ]},
-        { id: '4A', title: "Who's that in the photo?", pages: 'pp. 32–33', ex: [
+        { id: '4A', title: "Who's that in the photo?", pages: 'pp. 56–57', ex: [
             { title: "Possessive 's", instr: "Escribe la frase con 's (o solo ' si es plural).", type: 'gap',
               items: [
                 ['el coche de Ana → ___ car', ["Ana's"]], ['el hijo de mi hermano → my ___ son', ["brother's"]],
@@ -5611,7 +5634,7 @@ window.addEventListener('DOMContentLoaded', () => {
               opts: ['No seas avaricioso.', 'Escucha siempre a tu madre.', 'El cristal vale más que el oro.'],
               items: [["Don't be greedy.",'No seas avaricioso.'],['Always listen to what your mother says.','Escucha siempre a tu madre.'],['Glass is more valuable than gold.','El cristal vale más que el oro.']].map(([q, a]) => ({ q, a })) },
         ]},
-        { id: '6B', title: "I don't like Mondays", pages: 'pp. 50–51', ex: [
+        { id: '6B', title: "I don't like Mondays", pages: 'pp. 90–91', ex: [
             { title: 'Ordinal numbers', instr: 'Escribe el ordinal en letras.', type: 'gap',
               items: [['1st',['first']],['2nd',['second']],['3rd',['third']],['4th',['fourth']],['5th',['fifth']],['6th',['sixth']],['8th',['eighth']],['9th',['ninth']],['12th',['twelfth']],['13th',['thirteenth']],['20th',['twentieth']],['21st',['twenty-first','twenty first']],['30th',['thirtieth']],['31st',['thirty-first','thirty first']]].map(([t, a]) => ({ t: t + ' → ___', a })) },
             { title: '¿Qué ordinal oyes?', instr: 'Pulsa 🔊 y elige.', type: 'choice', shuffle: true,
