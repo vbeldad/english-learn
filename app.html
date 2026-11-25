@@ -1053,7 +1053,7 @@
     <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 0.4rem; color: var(--text-secondary);">ENGLISH FILE ELEMENTARY</h3>
     <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem;">Ejercicios de las lecciones del libro. Busca lo que quieres practicar, abre el índice o elige una lección. 🔊 lee en voz alta.</p>
     <div class="ef-tools">
-      <input id="efSearch" class="ef-search" type="search" placeholder="🔍 Buscar: verbos, la hora, familia, can, pasado…" autocomplete="off">
+      <input id="efSearch" class="ef-search" type="search" placeholder="🔍 Buscar: verbos, familia, can… o nº de página (28)" autocomplete="off">
       <button id="efIndexBtn" class="ef-btn ef-primary" type="button">📑 Índice</button>
       <button id="efSoluBtn" class="ef-btn" type="button" title="Ver todos los ejercicios resueltos y traducidos">📖 Ver resuelto</button>
     </div>
@@ -7033,10 +7033,35 @@ window.addEventListener('DOMContentLoaded', () => {
             const done = BEST[exKey(e.l, e.i)] === 'full' ? ' ✅' : '';
             return `<button class="ef-idx-ex" data-go="${e.l.id}" data-i="${e.i}"><div class="ef-idx-ex-t">${esc(e.ex.title)}${done}<span class="ef-tag">${TYPES[e.type]}</span></div><div class="ef-idx-ex-i">${esc(e.l.id)} · ${esc(e.ex.instr)}</div></button>`;
         }
+        // Páginas de una lección: 'pp. 28–29' / 'p. 23' / 'pp. 216, 223–225' → [[28,29]], [[23,23]], [[216,216],[223,225]]
+        const pageRanges = l => String(l.pages || '').replace(/^pp?\.\s*/, '').split(',').map(x => {
+            const m = x.trim().match(/^(\d+)(?:\s*[–-]\s*(\d+))?$/);
+            return m ? [+m[1], +(m[2] || m[1])] : null;
+        }).filter(Boolean);
+        const hasPage = (l, n) => pageRanges(l).some(([a, b]) => n >= a && n <= b);
+        function lessonBlock(l, pass, open) {
+            const es = ENTRIES.filter(e => e.l === l && pass(e));
+            if (!es.length) return '';
+            const done = l.ex.filter((x, i) => BEST[exKey(l, i)] === 'full').length;
+            return `<details class="ef-idx-lesson"${open ? ' open' : ''}><summary><span class="ef-idx-id">${esc(l.id)}</span><span class="ef-idx-name">${esc(lessonName(l))}</span><span class="ef-idx-prog">${done}/${l.ex.length}</span></summary>` +
+                `<div class="ef-idx-desc">${esc(lessonDesc(l))} <span style="opacity:.7">(${l.book || 'Student Book'} ${esc(l.pages)})</span></div>` +
+                `<button class="ef-btn ef-idx-open" data-go="${l.id}">Abrir lección completa →</button>` + es.map(exRow).join('') + '</details>';
+        }
         function renderIndex() {
             const box = document.getElementById('efIndex');
             const q = fold(document.getElementById('efSearch').value.trim());
             const pass = e => typeFilter === 'all' || e.type === typeFilter;
+            // Búsqueda por número de página: «28», «p 28», «pag. 28», «página 28»
+            const pm = q.match(/^(?:p|pp|pag|pagina|page)?\.?\s*(\d{1,3})$/);
+            if (pm) {
+                const n = +pm[1];
+                const ls = LESSONS.filter(l => hasPage(l, n));
+                box.innerHTML = `<div class="ef-res-head">📄 Página ${n} del libro: ${ls.length ? ls.length + ' lección' + (ls.length === 1 ? '' : 'es') : 'no encontrada'}</div>` +
+                    (ls.length ? ls.map(l => lessonBlock(l, pass, true)).join('')
+                        : `<div class="ef-idx-desc" style="padding-left:0">${n >= 104 && n <= 199 ? 'Esa página es de los Files 7–12, que todavía no están en la app.' : 'Ninguna lección de la app incluye esa página (puede ser una página de solo audio, fotos o ejercicios personales).'}</div>`);
+                box.querySelectorAll('[data-go]').forEach(b => b.onclick = () => goTo(b.dataset.go, b.dataset.i));
+                return;
+            }
             if (q) {
                 const terms = q.split(/\s+/);
                 let hits = ENTRIES.filter(e => pass(e) && terms.every(t => e.hayEx.includes(t)));
@@ -7049,14 +7074,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     const ls = LESSONS.filter(l => !used.has(l.id) && test(l.id));
                     ls.forEach(l => used.add(l.id));
                     if (!ls.length) return '';
-                    return `<div class="ef-idx-group">${g}</div>` + ls.map(l => {
-                        const es = ENTRIES.filter(e => e.l === l && pass(e));
-                        if (!es.length) return '';
-                        const done = l.ex.filter((x, i) => BEST[exKey(l, i)] === 'full').length;
-                        return `<details class="ef-idx-lesson"><summary><span class="ef-idx-id">${esc(l.id)}</span><span class="ef-idx-name">${esc(lessonName(l))}</span><span class="ef-idx-prog">${done}/${l.ex.length}</span></summary>` +
-                            `<div class="ef-idx-desc">${esc(lessonDesc(l))} <span style="opacity:.7">(${l.book || 'Student Book'} ${esc(l.pages)})</span></div>` +
-                            `<button class="ef-btn ef-idx-open" data-go="${l.id}">Abrir lección completa →</button>` + es.map(exRow).join('') + '</details>';
-                    }).join('');
+                    return `<div class="ef-idx-group">${g}</div>` + ls.map(l => lessonBlock(l, pass, false)).join('');
                 }).join('');
             }
             box.querySelectorAll('[data-go]').forEach(b => b.onclick = () => goTo(b.dataset.go, b.dataset.i));
