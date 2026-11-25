@@ -666,6 +666,13 @@
     .ef-opt.ok, .ef-gap.ok { background: #1a3320; border-color: #27ae60; color: #c8f7d4; }
     .ef-opt.bad, .ef-gap.bad { background: #2e1010; border-color: #c0392b; color: #f5c4c0; }
     .ef-fix, .ef-score.done { color: #4ade80; }
+    .ef-bank { background: var(--page-bg); border: 1px dashed #c9a84c70; border-radius: 0.7rem; padding: 8px 10px; margin: 6px 0 10px; }
+    .ef-bank-t { font-size: 11px; color: var(--gold); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+    .ef-bank-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ef-bank-o { background: var(--surface-1); color: var(--text-primary); border: 1px solid #c9a84c50; border-radius: 0.5rem; font-size: 14px; padding: 4px 9px; cursor: pointer; font-family: inherit; text-align: left; }
+    .ef-bank-o b { color: var(--gold); margin-right: 4px; }
+    .ef-bank-o.used { opacity: .4; text-decoration: line-through; }
+    .ef-bank-in { display: inline-block; max-width: 100%; vertical-align: baseline; margin: 2px 0; }
     .ef-filter, .ef-btn { border-radius: 2rem; }
     .ef-filter.on { color: var(--page-bg); }
     #printFab { background: var(--gold); color: var(--page-bg); }
@@ -693,6 +700,8 @@
         border-radius: 4px !important; padding: 2px 8px !important; margin: 2px 3px 2px 0 !important; font-size: 11pt !important; opacity: 1 !important;
       }
       .ef-opt.ok, .ef-gap.ok { background: #e3f6e8 !important; border-color: #2e7d32 !important; }
+      .ef-bank { background: #fff !important; border: 1px dashed #888 !important; }
+      .ef-bank-o { background: #fff !important; border: 1px solid #999 !important; }
       .ef-opt.bad, .ef-gap.bad { background: #fdecea !important; border-color: #c62828 !important; }
       .ef-gap {
         display: inline-block !important; background: #fff !important; border: none !important; border-bottom: 1px solid #333 !important;
@@ -6381,14 +6390,26 @@ window.addEventListener('DOMContentLoaded', () => {
             if (ex.shuffle) items = sh(items);
             const st = { right: 0, answered: 0, n: items.length };
             const mark = BEST[key] === 'full' ? ' ✅' : '';
-            let html = `<div class="ef-card-head"><span class="ef-card-title">${esc(ex.title)}${mark}</span><span class="ef-score">0 / ${items.length}</span></div><div class="ef-instr">${esc(ex.instr)}</div>`;
+            // Modo «banco»: las opciones comunes se muestran una sola vez arriba y en cada pregunta se escribe la respuesta
+            const bank = ex.type === 'choice' && ex.opts && ex.opts.length >= 2 && exType(ex) === 'choice' && items.every(it => !it.opts || it.opts === ex.opts);
+            const bankOpts = bank ? sh(ex.opts.slice()) : [];
+            const L = k => String.fromCharCode(65 + k);
+            const bankW = bank ? Math.min(240, Math.max(70, Math.max(...ex.opts.map(o => String(o).length)) * 9 + 26)) : 0;
+            const instr = bank ? ex.instr.replace(/\b([Ee])lige\b/g, (m, e) => e === 'E' ? 'Escribe' : 'escribe') + ' Escribe la respuesta (o la letra) en el cuadro; también puedes tocar una opción.' : ex.instr;
+            let html = `<div class="ef-card-head"><span class="ef-card-title">${esc(ex.title)}${mark}</span><span class="ef-score">0 / ${items.length}</span></div><div class="ef-instr">${esc(instr)}</div>`;
+            if (bank) html += `<div class="ef-bank"><div class="ef-bank-t">📋 Opciones</div><div class="ef-bank-list">${bankOpts.map((o, k) => `<button class="ef-bank-o" type="button" data-k="${k}"><b>${L(k)}</b>${esc(o)}</button>`).join('')}</div></div>`;
 
             items.forEach((it, j) => {
                 html += `<div class="ef-item" data-j="${j}">`;
                 const oj = typeof ex.items === 'function' ? -1 : ex.items.indexOf(it);
                 const es = oj >= 0 ? qEs(lesson, idx, oj) : '';
                 const esHtml = es ? `<span class="ef-qes">${esc(es)}</span>` : '';
-                if (ex.type === 'choice') {
+                if (bank) {
+                    const inp = `<input class="ef-gap ef-bank-in" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="width:${bankW}px">`;
+                    const q = String(it.q || '');
+                    html += (it.say ? sayBtn(it.say) : '') + (q.includes('___') ? q.split('___').map(esc).join(inp) : `<span class="ef-q">${esc(q)}</span> ` + inp) +
+                        '<span class="ef-fix"></span>' + esHtml;
+                } else if (ex.type === 'choice') {
                     const opts = it.opts || ex.opts;
                     html += (it.say ? sayBtn(it.say) : '') + `<span class="ef-q">${it.q ? esc(it.q) : 'Escucha…'}</span>` + esHtml;
                     html += `<div class="ef-opts">${opts.map(o => `<button class="ef-opt" data-o="${esc(o)}">${esc(o)}</button>`).join('')}</div>`;
@@ -6405,7 +6426,7 @@ window.addEventListener('DOMContentLoaded', () => {
             });
 
             html += '<div class="ef-actions">';
-            if (ex.type === 'gap') html += '<button class="ef-btn ef-primary ef-chk">Comprobar</button><button class="ef-btn ef-sol">Ver soluciones</button>';
+            if (ex.type === 'gap' || bank) html += '<button class="ef-btn ef-primary ef-chk">Comprobar</button><button class="ef-btn ef-sol">Ver soluciones</button>';
             html += '<button class="ef-btn ef-rst">Empezar de nuevo</button><button class="ef-btn ef-solbtn">📖 Solucionario</button></div>';
             card.innerHTML = html;
 
@@ -6434,7 +6455,51 @@ window.addEventListener('DOMContentLoaded', () => {
             solBtn.onclick = () => toggleSolu(!card.querySelector('.ef-solu'));
             if (SOLU_ALL) toggleSolu(true);
 
-            if (ex.type === 'choice' || ex.type === 'stress') {
+            if (bank) {
+                const inputs = [...card.querySelectorAll('.ef-bank-in')];
+                const chips = [...card.querySelectorAll('.ef-bank-o')];
+                const loose = t => fold(String(t)).replace(/[.,;:!?¿¡«»"()—–-]/g, '').replace(/\s+/g, ' ').trim();
+                const isLetter = t => /^[a-z]$/i.test(t.trim());
+                const resolve = v => {
+                    const t = v.trim();
+                    if (isLetter(t)) { const k = t.toUpperCase().charCodeAt(0) - 65; return bankOpts[k] !== undefined ? bankOpts[k] : null; }
+                    return bankOpts.find(o => loose(o) === loose(t)) || null;
+                };
+                const unique = new Set(items.map(it => it.a)).size === items.length;
+                const refreshUsed = () => {
+                    if (!unique) return;
+                    const used = new Set(inputs.map(i => resolve(i.value)).filter(Boolean));
+                    chips.forEach(c => c.classList.toggle('used', used.has(bankOpts[+c.dataset.k])));
+                };
+                const fixOf = inp => inp.parentElement.querySelector('.ef-fix');
+                const mark1 = (inp, j, showSol) => {
+                    const a = items[j].a, typed = inp.value.trim(), ok = resolve(typed) === a;
+                    inp.classList.toggle('ok', ok); inp.classList.toggle('bad', !ok);
+                    fixOf(inp).textContent = ok ? (typed !== a ? '✓ ' + a : '') : showSol ? '→ ' + L(bankOpts.indexOf(a)) + ') ' + a : '';
+                    return ok;
+                };
+                let lastFocus = null;
+                const check = () => {
+                    st.right = 0; st.answered = st.n;
+                    inputs.forEach((inp, j) => { if (mark1(inp, j, false)) st.right++; });
+                    update();
+                };
+                inputs.forEach((inp, j) => {
+                    inp.addEventListener('focus', () => { lastFocus = inp; });
+                    inp.addEventListener('input', () => { inp.classList.remove('ok', 'bad'); fixOf(inp).textContent = ''; refreshUsed(); });
+                    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (inputs[j + 1]) inputs[j + 1].focus(); else check(); } });
+                });
+                chips.forEach(c => c.onclick = () => {
+                    const target = (lastFocus && !lastFocus.value.trim()) ? lastFocus : (inputs.find(i => !i.value.trim()) || lastFocus);
+                    if (!target) return;
+                    target.value = bankOpts[+c.dataset.k];
+                    target.classList.remove('ok', 'bad'); fixOf(target).textContent = '';
+                    refreshUsed();
+                    lastFocus = inputs.find(i => !i.value.trim()) || target;
+                });
+                card.querySelector('.ef-chk').onclick = check;
+                card.querySelector('.ef-sol').onclick = () => inputs.forEach((inp, j) => mark1(inp, j, true));
+            } else if (ex.type === 'choice' || ex.type === 'stress') {
                 card.querySelectorAll('.ef-item').forEach(row => {
                     const it = items[+row.dataset.j];
                     const btns = row.querySelectorAll('.ef-opt');
