@@ -5030,7 +5030,7 @@ window.addEventListener('DOMContentLoaded', () => {
               opts: ['Sure.', 'Yes, I am.', "It's nice. I like it.", "No, I'm a student.", "You're welcome."],
               items: [['Can I take a photo?', 'Sure.'], ["You're American, right?", 'Yes, I am.'], ['What do you think of London?', "It's nice. I like it."], ['Are you on holiday?', "No, I'm a student."], ['Thank you.', "You're welcome."]].map(([q, a]) => ({ q, say: q, a })) },
         ]},
-        { id: '2A', title: 'Your desk and you', pages: 'pp. 16–17', ex: [
+        { id: '2A', title: 'Your desk and you', pages: 'pp. 24–25', ex: [
             { title: 'Things', instr: 'Escribe la palabra en inglés.', type: 'gap', noArticle: true,
               items: [['bolígrafo','pen'],['llaves','keys'],['gafas','glasses'],['cartera','wallet'],['monedero','purse'],['paraguas','umbrella'],['reloj (de pulsera)','watch'],['agenda','diary'],['portátil','laptop'],['impresora','printer'],['lámpara','lamp'],['planta','plant'],['cuaderno','notebook'],['diccionario','dictionary'],['auriculares','headphones'],['pañuelos de papel','tissues']].map(([es, a]) => ({ t: es + ' → ___', a: [a] })) },
             { title: 'a o an', instr: 'an delante de sonido vocálico.', type: 'choice', shuffle: true, opts: ['a', 'an'],
@@ -5043,7 +5043,7 @@ window.addEventListener('DOMContentLoaded', () => {
             { title: 'in, on, under', instr: 'Elige la preposición.', type: 'choice', opts: ['in', 'on', 'under'],
               items: [['The glasses are ___ the notebook.','on'],['The cards are ___ the wallet.','in'],['The bag is ___ the desk.','under'],['My keys are ___ my bag.','in'],['The picture is ___ the wall.','on'],['The shoes are ___ the bed.','under'],['The phone is ___ my pocket.','in'],['The computer is ___ the desk.','on']].map(([q, a]) => ({ q, a })) },
         ]},
-        { id: '2B', title: 'Made in the USA', pages: 'pp. 18–19', ex: [
+        { id: '2B', title: 'Made in the USA', pages: 'pp. 26–27', ex: [
             { title: 'Colours', instr: 'Escribe el color completo.', type: 'gap',
               items: [['r_d','red'],['wh_t_','white'],['bl_ _','blue'],['bl_ck','black'],['y_ll_w','yellow'],['gr_y','grey'],['_r_ng_','orange'],['br_wn','brown'],['p_nk','pink'],['gr_ _n','green'],['p_rpl_','purple'],['s_lv_r','silver'],['g_ld','gold']].map(([h, a]) => ({ t: h + ' → ___', a: [a] })) },
             { title: 'American icons', instr: 'Elige el nombre en inglés (adjetivo + nombre).', type: 'choice', shuffle: true,
@@ -5134,7 +5134,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ["Don't use your ___ when you drive.", ['phone']],
               ].map(([t, a]) => ({ t, a })) },
         ]},
-        { id: 'R1-2', title: 'Revise and Check 1 & 2', pages: 'pp. 22–23', ex: [
+        { id: 'R1-2', title: 'Revise and Check 1 & 2', pages: 'p. 30', ex: [
             { title: 'Grammar', instr: 'Elige la opción correcta.', type: 'choice',
               items: [
                 ["Hi, I'm Ana. ___ your name?", ["What's", 'What', 'What are'], 0],
@@ -5186,7 +5186,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['Use the old cable cars.', 'Travel around the city'],
               ].map(([q, a]) => ({ q, a })) },
         ]},
-        { id: '3A', title: 'Great Britain?', pages: 'pp. 24–25', ex: [
+        { id: '3A', title: 'Great Britain?', pages: 'pp. 40–41', ex: [
             { title: 'Verb phrases', instr: 'Escribe la expresión en inglés.', type: 'gap', shuffle: true,
               items: [['cocinar la cena',['cook dinner']],['tocar la guitarra',['play the guitar']],['beber agua mineral',['drink mineral water']],['ver la tele',['watch TV']],['hablar alemán',['speak German']],['gustarle los animales',['like animals']],['vivir en un piso',['live in a flat']],['trabajar en una oficina',['work in an office']],['llevar gafas',['wear glasses']],['tener hijos',['have children']],['leer el periódico',['read the newspaper']],['ir al gimnasio',['go to the gym']]].map(([w, a]) => ({ t: w + ' → ___', a })) },
             { title: 'Tercera persona: he / she / it', instr: 'Escribe el verbo con he / she / it.', type: 'gap',
@@ -5229,7 +5229,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ["Why don't they drink tea?", ["Because they prefer coffee.", 'Because they love tea.'], 0],
               ].map(([q, opts, i]) => ({ q, opts: sh(opts), a: opts[i] })) },
         ]},
-        { id: '3B', title: 'Goodbye to the office?', pages: 'pp. 26–27', ex: [
+        { id: '3B', title: 'Goodbye to the office?', pages: 'pp. 42–43', ex: [
             { title: 'Do / Does', instr: 'Completa la pregunta con Do o Does.', type: 'gap',
               items: [['___ you work from home?',['Do']],['___ he work long hours?',['Does']],['___ they live in London?',['Do']],['___ she like her job?',['Does']],['What ___ you do?',['do']],['What ___ he do?',['does']],['Where ___ she work?',['does']],['___ we need a uniform?',['Do']]].map(([t, a]) => ({ t, a })) },
             { title: 'Short answers', instr: 'Elige la respuesta corta correcta.', type: 'choice',
@@ -5309,7 +5309,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['What kind of music do you like?', ['like', 'of', 'do'], 0], ["Who's your favourite actor?", ['actor', 'your', "Who's"], 0],
               ].map(([q, opts, i]) => ({ q, say: q, opts: sh(opts), a: opts[i] })) },
         ]},
-        { id: 'PE2', title: 'Practical English · First weeks in London', pages: 'pp. 30–31', ex: [
+        { id: 'PE2', title: 'Practical English · First weeks in London', pages: 'pp. 46–47', ex: [
             { title: 'Telling the time', instr: 'Elige la hora en inglés.', type: 'choice', shuffle: true,
               opts: ["nine o'clock", 'quarter past nine', 'half past nine', 'quarter to ten', 'ten past three', 'twenty to five', 'five to eight', 'twenty-five past eleven'],
               items: [['🕘 9:00',"nine o'clock"],['9:15','quarter past nine'],['9:30','half past nine'],['9:45','quarter to ten'],['3:10','ten past three'],['4:40','twenty to five'],['7:55','five to eight'],['11:25','twenty-five past eleven']].map(([q, a]) => ({ q, a })) },
@@ -5369,7 +5369,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['___ this photo of my family.', ['Look at', 'Look like'], 0], ['You ___ your father!', ['look like', 'look at'], 0],
               ].map(([q, opts, i]) => ({ q, opts: sh(opts), a: opts[i] })) },
         ]},
-        { id: '4B', title: 'Eat, sleep, repeat', pages: 'pp. 34–35', ex: [
+        { id: '4B', title: 'Eat, sleep, repeat', pages: 'pp. 58–59', ex: [
             { title: 'Daily routine', instr: 'Escribe la expresión en inglés.', type: 'gap', shuffle: true,
               items: [['despertarse',['wake up']],['levantarse',['get up']],['ducharse',['have a shower']],['vestirse',['get dressed']],['desayunar',['have breakfast']],['ir al trabajo',['go to work']],['llegar a casa',['get home']],['hacer la cena',['make the dinner','make dinner','cook dinner']],['acostarse',['go to bed']],['hacer los deberes',['do homework','do my homework']],['ir de compras',['go shopping']],['sacar al perro',['take the dog for a walk','walk the dog']]].map(([w, a]) => ({ t: w + ' → ___', a })) },
             { title: 'In the morning', instr: '¿Qué va primero? Elige el orden lógico.', type: 'choice',
@@ -5405,7 +5405,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['There\'s nothing to do on Sunday.', 'bored'], ['My best friend lives in another country now.', 'sad'],
               ].map(([q, a]) => ({ q, a })) },
         ]},
-        { id: '4C', title: 'Blue Zones', pages: 'pp. 36–37', ex: [
+        { id: '4C', title: 'Blue Zones', pages: 'pp. 60–61', ex: [
             { title: 'Months', instr: 'Escribe el mes en inglés.', type: 'gap',
               items: [['enero',['January']],['febrero',['February']],['marzo',['March']],['abril',['April']],['mayo',['May']],['junio',['June']],['julio',['July']],['agosto',['August']],['septiembre',['September']],['octubre',['October']],['noviembre',['November']],['diciembre',['December']]].map(([w, a]) => ({ t: w + ' → ___', a })) },
             { title: 'Months: word stress', instr: 'Toca la sílaba acentuada.', type: 'stress', shuffle: true,
@@ -5430,7 +5430,7 @@ window.addEventListener('DOMContentLoaded', () => {
               opts: ['😊 healthy', '😟 unhealthy'],
               items: [['eat vegetables every day',0],['work in the garden',0],['visit friends often',0],['stop eating before you\'re full',0],['never have breakfast',1],['spend seven hours a day on your phone',1],['hardly ever eat fruit',1],['sleep for eight hours',0],['be always in a hurry',1]].map(([q, i]) => ({ q, a: ['😊 healthy', '😟 unhealthy'][i] })) },
         ]},
-        { id: 'R3-4', title: 'Revise and Check 3 & 4', pages: 'pp. 38–39', ex: [
+        { id: 'R3-4', title: 'Revise and Check 3 & 4', pages: 'p. 62', ex: [
             { title: 'Grammar', instr: 'Elige la opción correcta.', type: 'choice',
               items: [
                 ['I ___ like tea.', ["don't", 'not', "doesn't"], 0], ['Our flat ___ a small kitchen.', ['has', 'have', 'haves'], 0],
@@ -5465,7 +5465,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ['He finishes work very late at night.', ['✅ True', '❌ False'], 0],
               ].map(([q, opts, i]) => ({ q, opts, a: opts[i] })) },
         ]},
-        { id: '5A', title: 'Sing me a song', pages: 'pp. 40–41', ex: [
+        { id: '5A', title: 'Sing me a song', pages: 'pp. 72–73', ex: [
             { title: 'Verb phrases', instr: 'Elige el verbo que va con cada palabra.', type: 'choice', shuffle: true,
               opts: ['play', 'do', 'go', 'watch', 'have', 'listen'],
               items: [['___ the guitar','play'],['___ exercise','do'],['___ to the cinema','go'],['___ TV','watch'],['___ a coffee','have'],['___ to music','listen'],['___ tennis','play'],['___ yoga','do'],['___ shopping','go'],['___ a film','watch'],['___ a shower','have'],['___ to the radio','listen']].map(([q, a]) => ({ q, a })) },
@@ -5494,7 +5494,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ["Can he dance? — Yes, but not very ___.", ['well', 'good', 'nice'], 0],
               ].map(([q, opts, i]) => ({ q, opts: sh(opts), a: opts[i] })) },
         ]},
-        { id: '5B', title: 'What a noise!', pages: 'pp. 42–43', ex: [
+        { id: '5B', title: 'What a noise!', pages: 'pp. 74–75', ex: [
             { title: 'Noise: verbs', instr: 'Elige el verbo para cada ruido.', type: 'choice', shuffle: true,
               opts: ['cries', 'barks', 'argue', 'pings', 'practises the piano', 'have noisy parties', 'plays loud music', 'make a lot of noise'],
               items: [
@@ -5525,7 +5525,7 @@ window.addEventListener('DOMContentLoaded', () => {
               opts: ["She's playing the piano.", "He's studying.", "He's cooking.", "He's watching TV.", "They're dancing.", "The dog's barking."],
               items: [['🎹','She\'s playing the piano.'],['📚💻','He\'s studying.'],['🍳','He\'s cooking.'],['📺🛋️',"He's watching TV."],['💃🕺',"They're dancing."],['🐕💬',"The dog's barking."]].map(([q, a]) => ({ q, a })) },
         ]},
-        { id: '5C', title: 'I ♥ London', pages: 'pp. 44–45', ex: [
+        { id: '5C', title: 'I ♥ London', pages: 'pp. 76–77', ex: [
             { title: 'The weather', instr: 'Elige cómo está el tiempo.', type: 'choice', shuffle: true,
               opts: ["It's sunny.", "It's raining.", "It's cloudy.", "It's snowing.", "It's windy.", "It's foggy.", "It's hot.", "It's cold."],
               items: [['☀️',"It's sunny."],['🌧️',"It's raining."],['☁️',"It's cloudy."],['❄️',"It's snowing."],['💨',"It's windy."],['🌫️',"It's foggy."],['🥵 40°',"It's hot."],['🥶 −5°',"It's cold."]].map(([q, a]) => ({ q, a })) },
@@ -5561,7 +5561,7 @@ window.addEventListener('DOMContentLoaded', () => {
               opts: ['🚕 Driver', '🧳 Passenger'],
               items: [['Where do you want to go?',0],['Where are you from?',0],['Are you on holiday?',0],['Do you like London?',0],['Is it far?',1],['Can you stop here, please?',1],['How much is it?',1],['Can I pay by card?',1]].map(([q, i]) => ({ q, a: ['🚕 Driver', '🧳 Passenger'][i] })) },
         ]},
-        { id: 'PE3', title: 'Practical English · The real London', pages: 'pp. 46–47', ex: [
+        { id: 'PE3', title: 'Practical English · The real London', pages: 'pp. 78–79', ex: [
             { title: 'Clothes', instr: 'Elige la prenda.', type: 'choice', shuffle: true,
               opts: ['a jacket', 'jeans', 'a shirt', 'a T-shirt', 'a skirt', 'shoes', 'a sweater', 'trousers'],
               items: [['🧥 chaqueta','a jacket'],['👖 vaqueros','jeans'],['👔 camisa','a shirt'],['👕 camiseta','a T-shirt'],['👗 falda','a skirt'],['👞 zapatos','shoes'],['🧶 jersey','a sweater'],['👖 pantalones','trousers']].map(([q, a]) => ({ q, a })) },
@@ -5584,7 +5584,7 @@ window.addEventListener('DOMContentLoaded', () => {
               opts: ["Thanks. You too.", "It's your city. I'm a tourist. I'm in your hands.", 'Follow me.', 'Sure.', "OK, thanks. Say 'hi' to Rob and the kids."],
               items: [['Wow! You look great.','Thanks. You too.'],['So, where do you want to go?',"It's your city. I'm a tourist. I'm in your hands."],['Where are we going?','Follow me.'],['Do you want to go in?','Sure.'],['Have a great time, Ben.',"OK, thanks. Say 'hi' to Rob and the kids."]].map(([q, a]) => ({ q, a })) },
         ]},
-        { id: '6A', title: 'A traditional story', pages: 'pp. 48–49', ex: [
+        { id: '6A', title: 'A traditional story', pages: 'pp. 88–89', ex: [
             { title: 'Object pronouns', instr: 'Elige el pronombre objeto.', type: 'choice', shuffle: true,
               opts: ['me', 'you', 'him', 'her', 'it', 'us', 'them'],
               items: [['I → ___','me'],['you → ___','you'],['he → ___','him'],['she → ___','her'],['it → ___','it'],['we → ___','us'],['they → ___','them']].map(([q, a]) => ({ q, a })) },
@@ -5637,7 +5637,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 ["What's your favourite time of day?", ['Early morning, when it\'s quiet.', 'February.'], 0],
               ].map(([q, opts, i]) => ({ q, opts: sh(opts), a: opts[i] })) },
         ]},
-        { id: '6C', title: 'Making music', pages: 'pp. 52–53', ex: [
+        { id: '6C', title: 'Making music', pages: 'pp. 92–93', ex: [
             { title: 'Instruments', instr: 'Elige el instrumento.', type: 'choice', shuffle: true,
               opts: ['accordion', 'keyboard', 'violin', 'piano', 'saxophone', 'drums', 'guitar', 'trumpet', 'bass guitar'],
               items: [['🪗 acordeón','accordion'],['🎹 teclado eléctrico','keyboard'],['🎻 violín','violin'],['🎹 piano de cola','piano'],['🎷 saxofón','saxophone'],['🥁 batería','drums'],['🎸 guitarra acústica','guitar'],['🎺 trompeta','trumpet'],['🎸 bajo','bass guitar']].map(([q, a]) => ({ q, a })) },
@@ -6270,7 +6270,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 const BL = '_____________';
 
                 // Cabecera
-                text('English File Elementary · ' + l.id, 9, { color: [120, 120, 120], after: 1 });
+                text('English File A1/A2 (5th ed.) · ' + l.id, 9, { color: [120, 120, 120], after: 1 });
                 text(l.title, 18, { bold: true, after: 1 });
                 text(lessonName(l) + ' · Student Book ' + l.pages, 10, { color: [90, 90, 90], after: 2 });
                 text('Nombre: ______________________________     Fecha: ______________', 10, { after: 5 });
