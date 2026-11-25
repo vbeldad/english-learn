@@ -768,11 +768,17 @@
   .gr-pr-item { display: block; padding: 5px 0 5px 20px; font-size: 0.9rem; cursor: pointer; border-top: 1px solid #c9a84c15; }
   .gr-pr-opts input, .gr-pr-group input { accent-color: var(--gold); width: 16px; height: 16px; vertical-align: -3px; margin-right: 6px; }
   #grPrint { display: none; }
+  .gr-sel { background: var(--dark2, #2b1f0a); color: var(--cream, #f7f0e0); border: 1px solid #c9a84c60; border-radius: 0.4rem; padding: 3px 6px; font-family: inherit; font-size: 0.85rem; margin-left: 4px; }
 
   @media print {
     :root { color-scheme: light !important; }
     body.gr-printing > *:not(#grPrint) { display: none !important; }
-    body.gr-printing #grPrint { display: block !important; font-size: 10.5pt; line-height: 1.45; }
+    body.gr-printing #grPrint { display: block !important; font-size: 10.5pt; line-height: 1.45; width: auto !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
+    body.gr-printing #grPrint .gr-tw { margin: 6px 0; }
+    body.gr-printing #grPrint .gr-table { width: 100%; table-layout: auto; }
+    body.gr-printing #grPrint .gr-table td, body.gr-printing #grPrint .gr-table th { padding: 3px 6px; }
+    body.gr-printing #grPrint .gr-ex li { margin-bottom: 3px; }
+    body.gr-printing #grPrint .gr-note, body.gr-printing #grPrint .gr-warn { padding: 5px 9px; margin: 6px 0; }
     #grPrint .gr-pr-title { font-size: 16pt; font-weight: 700; margin-bottom: 2px; }
     #grPrint .gr-pr-sub { font-size: 9pt; color: #555 !important; margin-bottom: 10px; border-bottom: 1px solid #999; padding-bottom: 6px; }
     #grPrint .gr-pr-topic { margin-bottom: 14px; }
@@ -7408,7 +7414,7 @@ window.addEventListener('DOMContentLoaded', () => {
     function renderPrintPanel() {
         let html = '<p class="lb-intro" style="display:block">Marca los temas que quieres imprimir. Puedes imprimir un bloque entero o temas sueltos.</p>' +
             '<div class="gr-pr-opts"><label><input type="checkbox" id="grPrQuiz" checked> Incluir las preguntas de repaso (con soluciones al final)</label>' +
-            '<label><input type="checkbox" id="grPrBreak"> Cada tema en una página nueva</label></div>' +
+            '<label><input type="checkbox" id="grPrBreak"> Cada tema en una página nueva</label><label>Márgenes del papel: <select id="grPrMargin" class="gr-sel"><option value="normal">Normales (2 cm)</option><option value="wide">Amplios para archivador (izquierdo 3 cm)</option><option value="narrow">Estrechos (1,2 cm)</option></select></label></div>' +
             '<div class="lb-actions"><button class="lb-btn" type="button" data-act="all">☑️ Todos</button><button class="lb-btn" type="button" data-act="none">⬜ Ninguno</button></div>';
         GROUPS.forEach(([g, name]) => {
             html += '<div class="gr-pr-group"><label class="gr-pr-gl"><input type="checkbox" data-group="' + g + '"> ' + name + '</label>';
@@ -7442,6 +7448,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 '<div><b>' + (TOPICS.indexOf(t) + 1) + '. ' + t.t + ':</b> ' + t.q.map((q, i) => (i + 1) + String.fromCharCode(97 + q[2]) + ') ' + q[1][q[2]]).join(' · ') + '</div>').join('') + '</section>';
         }
         $('grPrint').innerHTML = html;
+        let m = 'normal'; try { m = localStorage.getItem('gram-margin') || 'normal'; } catch (x) {}
+        const M = { normal: '20mm 18mm 20mm 18mm', wide: '22mm 18mm 22mm 30mm', narrow: '12mm' }[m] || '20mm 18mm';
+        let st = $('grPageStyle');
+        if (!st) { st = document.createElement('style'); st.id = 'grPageStyle'; document.head.appendChild(st); }
+        st.textContent = '@media print { @page { size: A4 portrait; margin: ' + M + '; } }';
         document.body.classList.add('gr-printing');
         setTimeout(() => window.print(), 80);
     }
@@ -7449,13 +7460,14 @@ window.addEventListener('DOMContentLoaded', () => {
         const el = $('grMsg'); el.textContent = msg; el.style.display = 'block';
         clearTimeout(alertBox.t); alertBox.t = setTimeout(() => { el.style.display = 'none'; }, 2500);
     }
-    window.addEventListener('afterprint', () => document.body.classList.remove('gr-printing'));
+    window.addEventListener('afterprint', () => { document.body.classList.remove('gr-printing'); const st = $('grPageStyle'); if (st) st.remove(); });
 
     // ----- Esdeveniments -----
     let ready = false;
     function init() {
         renderIndex('');
         renderPrintPanel();
+        try { const m = localStorage.getItem('gram-margin'); if (m) $('grPrMargin').value = m; } catch (x) {}
         $('grSearch').addEventListener('input', e => { setView('index'); renderIndex(e.target.value); });
         $('grIndexBtn').addEventListener('click', () => { $('grSearch').value = ''; renderIndex(''); setView('index'); });
         $('grPrintBtn').addEventListener('click', () => { setView('print'); syncPrint(); });
@@ -7473,6 +7485,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const ca = e.target.closest('.gr-ca'); if (ca) speak(ca.textContent);
         });
         $('grPrintPanel').addEventListener('change', e => {
+            if (e.target.id === 'grPrMargin') { try { localStorage.setItem('gram-margin', e.target.value); } catch (x) {} return; }
             const g = e.target.dataset.group;
             if (g) $('grPrintPanel').querySelectorAll('input[data-topic]').forEach(b => { if (TOPICS.find(t => t.id === b.dataset.topic).g === g) b.checked = e.target.checked; });
             syncPrint();
