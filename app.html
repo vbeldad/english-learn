@@ -1051,7 +1051,7 @@
 
   <div id="englishFile" class="section">
     <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 0.4rem; color: var(--text-secondary);">ENGLISH FILE A1/A2 · 5th edition (Student Book + Workbook)</h3>
-    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem;">Ejercicios de las lecciones del libro. Busca lo que quieres practicar, abre el índice o elige una lección. 🔊 lee en voz alta. <span style="opacity:.6">· versión 27-nov (corrección al comprobar)</span></p>
+    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem;">Ejercicios de las lecciones del libro. Busca lo que quieres practicar, abre el índice o elige una lección. 🔊 lee en voz alta. <span style="opacity:.6">· versión 27-nov (corrección al momento)</span></p>
     <div class="ef-tools">
       <input id="efSearch" class="ef-search" type="search" placeholder="🔍 Buscar: verbos, familia, can… o nº de página (28)" autocomplete="off">
       <button id="efIndexBtn" class="ef-btn ef-primary" type="button">📑 Índice</button>
@@ -8280,8 +8280,15 @@ window.addEventListener('DOMContentLoaded', () => {
                     inputs.forEach((inp, j) => { if (mark1(inp, j, !!inp.value.trim())) st.right++; });
                     update();
                 };
+                // Corrección sobre la marcha: cada hueco contestado se corrige al pasar al siguiente
+                const live = () => {
+                    st.right = 0; st.answered = 0;
+                    inputs.forEach((inp, j) => { if (!inp.value.trim()) return; st.answered++; if (mark1(inp, j, true)) st.right++; });
+                    update();
+                };
                 inputs.forEach((inp, j) => {
                     inp.addEventListener('focus', () => { lastFocus = inp; });
+                    inp.addEventListener('change', live);
                     inp.addEventListener('input', () => { inp.classList.remove('ok', 'bad'); fixOf(inp).textContent = ''; refreshUsed(); });
                     inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (inputs[j + 1]) inputs[j + 1].focus(); else check(); } });
                 });
@@ -8290,7 +8297,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     if (!target) return;
                     target.value = bankOpts[+c.dataset.k];
                     target.classList.remove('ok', 'bad'); fixOf(target).textContent = '';
-                    refreshUsed();
+                    refreshUsed(); live();
                     lastFocus = inputs.find(i => !i.value.trim()) || target;
                 });
                 card.querySelector('.ef-chk').onclick = check;
@@ -8324,6 +8331,18 @@ window.addEventListener('DOMContentLoaded', () => {
                     });
                     update();
                 };
+                // Corrección sobre la marcha: al pasar a la siguiente pregunta se corrige la que acabas de contestar
+                const live = () => {
+                    st.right = 0; st.answered = 0;
+                    inputs.forEach((inp, j) => {
+                        if (!inp.value.trim()) return;
+                        const ok = isOk(inp, j); st.answered++; if (ok) st.right++;
+                        inp.classList.toggle('ok', ok); inp.classList.toggle('bad', !ok);
+                        inp.parentElement.querySelector('.ef-fix').textContent = ok ? '' : '→ ' + items[j].a.join(' / ');
+                    });
+                    update();
+                };
+                inputs.forEach(inp => inp.addEventListener('change', live));
                 card.querySelector('.ef-chk').onclick = check;
                 card.querySelector('.ef-sol').onclick = () => {
                     inputs.forEach((inp, j) => {
