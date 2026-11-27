@@ -8277,7 +8277,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 let lastFocus = null;
                 const check = () => {
                     st.right = 0; st.answered = st.n;
-                    inputs.forEach((inp, j) => { if (mark1(inp, j, false)) st.right++; });
+                    inputs.forEach((inp, j) => { if (mark1(inp, j, !!inp.value.trim())) st.right++; });
                     update();
                 };
                 inputs.forEach((inp, j) => {
@@ -8318,7 +8318,9 @@ window.addEventListener('DOMContentLoaded', () => {
                     inputs.forEach((inp, j) => {
                         const ok = isOk(inp, j);
                         inp.classList.toggle('ok', ok); inp.classList.toggle('bad', !ok);
-                        if (ok) { st.right++; inp.parentElement.querySelector('.ef-fix').textContent = ''; }
+                        if (ok) st.right++;
+                        // Si te equivocas, la respuesta correcta aparece al lado nada más comprobar
+                        inp.parentElement.querySelector('.ef-fix').textContent = ok || !inp.value.trim() ? '' : '→ ' + items[j].a.join(' / ');
                     });
                     update();
                 };
@@ -8330,9 +8332,12 @@ window.addEventListener('DOMContentLoaded', () => {
                         inp.parentElement.querySelector('.ef-fix').textContent = ok ? '' : '→ ' + items[j].a.join(' / ');
                     });
                 };
-                inputs.forEach((inp, j) => inp.addEventListener('keydown', e => {
-                    if (e.key === 'Enter') { e.preventDefault(); if (inputs[j + 1]) inputs[j + 1].focus(); else check(); }
-                }));
+                inputs.forEach((inp, j) => {
+                    inp.addEventListener('keydown', e => {
+                        if (e.key === 'Enter') { e.preventDefault(); if (inputs[j + 1]) inputs[j + 1].focus(); else check(); }
+                    });
+                    inp.addEventListener('input', () => { inp.classList.remove('ok', 'bad'); inp.parentElement.querySelector('.ef-fix').textContent = ''; });
+                });
             }
         }
 
