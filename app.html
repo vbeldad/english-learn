@@ -709,6 +709,47 @@
       }
       .ef-lesson-head { break-after: avoid; page-break-after: avoid; margin: 0 0 8px !important; }
     }
+  /* ===== VÍDEOS DE GRAMÁTICA ===== */
+  body:has(#videos.active) #printFab { display: none; }
+  #videos .vd-intro { font-size: 13px; color: var(--text-secondary); margin-bottom: 0.7rem; line-height: 1.5; }
+  #videos .vd-intro b { color: var(--gold); font-weight: 600; }
+  #videos .vd-tools { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+  #videos .vd-tools input { flex: 1 1 200px; min-width: 0; padding: 0.55rem 0.9rem; border-radius: 2rem; border: 1px solid #c9a84c60; background: #2b1f0a; color: #f7f0e0; font-size: 0.9rem; font-family: inherit; }
+  #videos .vd-btn { padding: 0.45rem 1rem; border-radius: 2rem; border: 1px solid var(--gold); background: transparent; color: var(--gold); font-size: 0.82rem; font-weight: 500; cursor: pointer; font-family: inherit; text-decoration: none; line-height: 1.3; }
+  #videos .vd-btn.on, #videos .vd-btn.vd-primary { background: var(--gold); color: #1a1208; }
+  #videos .vd-btn.vd-red { border-color: #c0392b; color: #e57368; }
+  #videos .vd-prog { font-size: 0.78rem; color: #a89060; margin: 4px 2px 6px; }
+  #videos .vd-group { font-size: 0.75rem; letter-spacing: .12em; color: var(--gold); margin: 16px 0 6px; text-transform: uppercase; }
+  #videos .vd-topic { background: #2b1f0a; border: 1px solid #c9a84c25; border-radius: 0.9rem; margin-bottom: 8px; overflow: hidden; }
+  #videos .vd-topic.open { border-color: #c9a84c70; box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
+  #videos .vd-head { width: 100%; display: flex; align-items: center; gap: 10px; padding: 0.7rem 0.9rem; background: none; border: none; color: inherit; text-align: left; cursor: pointer; font-family: inherit; }
+  #videos .vd-num { font-weight: 700; color: var(--gold); min-width: 1.5em; }
+  #videos .vd-txt { flex: 1; display: flex; flex-direction: column; }
+  #videos .vd-name { font-size: 0.92rem; color: #f7f0e0; }
+  #videos .vd-es { font-size: 0.78rem; color: #a89060; }
+  #videos .vd-count { font-size: 0.72rem; background: #c9a84c25; color: var(--gold); border-radius: 1rem; padding: 2px 8px; white-space: nowrap; }
+  #videos .vd-arrow { color: var(--gold); transition: transform .2s; }
+  #videos .vd-topic.open .vd-arrow { transform: rotate(90deg); }
+  #videos .vd-body { padding: 0 0.9rem 0.9rem; }
+  #videos .vd-actions { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 10px; }
+  #videos .vd-empty { font-size: 0.82rem; color: #a89060; margin: 4px 0 10px; line-height: 1.5; }
+  #videos .vd-item { margin-bottom: 12px; }
+  #videos .vd-player { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 0.7rem; overflow: hidden; background: #000; }
+  #videos .vd-player iframe, #videos .vd-player img { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+  #videos .vd-thumb { cursor: pointer; border: none; padding: 0; display: block; position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
+  #videos .vd-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 64px; height: 44px; border-radius: 12px; background: rgba(192,57,43,.92); color: #fff; font-size: 22px; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+  #videos .vd-item-bar { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+  #videos .vd-item-t { flex: 1; font-size: 0.84rem; color: #f7f0e0; line-height: 1.35; }
+  #videos .vd-mini { background: none; border: none; color: #a89060; font-size: 0.8rem; cursor: pointer; padding: 2px 4px; font-family: inherit; text-decoration: none; }
+  #videos .vd-add { background: #1a1208; border: 1px dashed #c9a84c60; border-radius: 0.7rem; padding: 0.7rem; margin-top: 6px; }
+  #videos .vd-add-t { font-size: 0.8rem; color: var(--gold); margin-bottom: 6px; }
+  #videos .vd-add input { width: 100%; margin-bottom: 6px; padding: 0.5rem 0.8rem; border-radius: 0.6rem; border: 1px solid #c9a84c40; background: #2b1f0a; color: #f7f0e0; font-size: 0.86rem; font-family: inherit; }
+  #videos .vd-backup { margin-top: 22px; padding: 0.8rem 0.9rem; border-radius: 0.9rem; border: 1px solid #c9a84c25; }
+  #videos .vd-backup-t { font-size: 0.85rem; color: var(--gold); margin-bottom: 4px; }
+  #videos .vd-backup p { font-size: 0.78rem; color: #a89060; line-height: 1.45; }
+  #videos .vd-msg { display: none; position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%); background: var(--gold); color: #1a1208; padding: 0.55rem 1.1rem; border-radius: 2rem; font-size: 0.85rem; z-index: 50; box-shadow: 0 6px 20px rgba(0,0,0,.4); max-width: 90vw; text-align: center; }
+  #videos .vd-none { font-size: 0.85rem; color: #a89060; margin: 12px 2px; }
+
   /* ===== GRAMÁTICA (mismo diseño que Aprèn Català) ===== */
   #gramatica, #grPrint { --dark: #1a1208; --dark2: #2b1f0a; --cream: #f7f0e0; --red: #c0392b; --green: #27ae60; }
   #gramatica .lb-intro { font-size: 13px; color: var(--text-secondary); margin-bottom: 0.6rem; line-height: 1.5; }
@@ -928,6 +969,7 @@
     <button class="nav-tab" onclick="switchSection('abecedario')">Abecedario</button>
     <button class="nav-tab" onclick="switchSection('englishFile')">📘 English File</button>
     <button class="nav-tab" onclick="switchSection('gramatica')">📐 Gramática</button>
+    <button class="nav-tab" onclick="switchSection('videos')">🎬 Vídeos</button>
   </div>
 
   <div class="stats" id="stats">
@@ -1076,6 +1118,27 @@
     <div id="grIndex"></div>
     <div id="grPrintPanel" style="display:none"></div>
     <div id="grTopic" style="display:none"></div>
+  </div>
+
+  <div id="videos" class="section">
+    <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 0.4rem; color: var(--text-secondary);">VÍDEOS - GRAMMAR TUTORIALS</h3>
+    <p class="vd-intro">Vídeos que explican cada norma de gramática, con los mismos temas que la pestaña 📐 Gramática. Abre un tema y pulsa <b>🔍 Buscar en YouTube</b>: la búsqueda ya va preparada con vídeos explicados en español. Si un vídeo te gusta, copia su enlace y pégalo en el tema. Así se queda guardado y lo verás aquí mismo.</p>
+    <div class="vd-tools">
+      <input id="vdSearch" type="search" placeholder="🔍 Buscar tema: pasado, some/any, preposiciones…" autocomplete="off">
+      <button id="vdOnly" class="vd-btn" type="button">⭐ Solo con vídeos</button>
+    </div>
+    <div class="vd-prog" id="vdProg"></div>
+    <div id="vdList"></div>
+    <div class="vd-backup">
+      <div class="vd-backup-t">💾 Copia de seguridad</div>
+      <p>Los vídeos se guardan en este móvil o navegador. Para pasarlos a otro, descarga la copia y luego cárgala allí.</p>
+      <div class="vd-actions">
+        <button class="vd-btn" type="button" id="vdExport">⬇️ Descargar copia</button>
+        <label class="vd-btn" for="vdImport" style="display:inline-block">⬆️ Cargar copia</label>
+        <input type="file" id="vdImport" accept=".json,application/json" style="display:none">
+      </div>
+    </div>
+    <div class="vd-msg" id="vdMsg"></div>
   </div>
 </div>
 
@@ -2278,6 +2341,7 @@ function switchSection(section) {
   document.getElementById(section).classList.add('active');
   document.body.classList.remove('gr-printing');
   if (section === 'gramatica' && window.renderGramaticaEn) renderGramaticaEn();
+  if (section === 'videos' && window.renderVideosEn) renderVideosEn();
   
   document.querySelectorAll('.nav-tab').forEach(tab => {
     tab.classList.remove('active');
@@ -9271,7 +9335,8 @@ window.addEventListener('DOMContentLoaded', () => {
         const i = TOPICS.indexOf(t), prev = TOPICS[i - 1], next = TOPICS[i + 1];
         $('grTopic').innerHTML =
             '<div class="gr-nav"><button class="lb-back" type="button" data-act="index">← Índice</button>' +
-            '<button class="lb-btn" type="button" data-act="print1">🖨️ Imprimir este tema</button></div>' +
+            '<span style="display:flex;gap:6px;flex-wrap:wrap"><button class="lb-btn" type="button" data-act="videos">🎬 Vídeos</button>' +
+            '<button class="lb-btn" type="button" data-act="print1">🖨️ Imprimir este tema</button></span></div>' +
             '<div class="lb-card gr-card">' + topicHtml(t) + quizHtml(t) + '<div class="gr-qres" id="grQres"></div></div>' +
             '<div class="gr-pn">' + (prev ? '<button class="lb-btn" type="button" data-go="' + prev.id + '">‹ ' + prev.t + '</button>' : '<span></span>') +
             (next ? '<button class="lb-btn lb-primary" type="button" data-go="' + next.id + '">' + next.t + ' ›</button>' : '') + '</div>';
@@ -9363,6 +9428,7 @@ window.addEventListener('DOMContentLoaded', () => {
             if (act) {
                 if (act.dataset.act === 'index') { renderIndex($('grSearch').value); setView('index'); }
                 else if (act.dataset.act === 'print1') doPrint([cur.id], true, false);
+                else if (act.dataset.act === 'videos') { if (window.vidOpenTopic) window.vidOpenTopic(cur.id); }
                 else if (act.dataset.act === 'retry') openTopic(cur.id, false);
                 return;
             }
@@ -9388,12 +9454,194 @@ window.addEventListener('DOMContentLoaded', () => {
         setView('index');
     }
     window.renderGramaticaEn = function () { if (!ready) { ready = true; init(); } };
+    window.GR_DATA = { TOPICS: TOPICS, GROUPS: GROUPS, open: function (id) { if (!ready) { ready = true; init(); } openTopic(id); } };
     window.gramPrintCurrent = function () {
         if (!ready) return window.print();
         if ($('grTopic').style.display !== 'none' && cur) doPrint([cur.id], true, false);
         else { setView('print'); syncPrint(); alertBox('Elige los temas que quieres imprimir y pulsa «Imprimir seleccionados».'); }
     };
 })();
+</script>
+<script>
+/* ===== VÍDEOS: tutoriales de gramática por temas ===== */
+(function () {
+    const $ = id => document.getElementById(id);
+    const KEY = 'en-videos';
+    // Búsqueda de YouTube preparada para cada tema (explicaciones en español)
+    const Q = {
+        'sonidos': 'pronunciación inglés sonidos difíciles para hispanohablantes',
+        'mayusculas': 'mayúsculas y puntuación en inglés explicación',
+        'contracciones': 'contracciones en inglés explicación en español',
+        'articulos': 'artículos a an the inglés explicación en español',
+        'plural': 'plural de los sustantivos en inglés explicación en español',
+        'contables': 'sustantivos contables e incontables inglés explicación en español',
+        'some-any': 'some any no inglés explicación en español',
+        'demostrativos': 'this that these those explicación en español',
+        'pronombres': 'pronombres personales sujeto y objeto inglés explicación en español',
+        'genitivo': 'genitivo sajón posesivo apóstrofe s inglés explicación en español',
+        'imperativo': 'imperativo y let\'s en inglés explicación en español',
+        'posesivos': 'adjetivos y pronombres posesivos inglés explicación en español',
+        'adjetivos': 'adjetivos en inglés posición explicación en español',
+        'comparativos': 'comparativos y superlativos inglés explicación en español',
+        'adverbios': 'adverbios de frecuencia inglés explicación en español',
+        'be': 'verbo to be inglés explicación en español',
+        'present-simple': 'presente simple inglés explicación en español',
+        'present-continuous': 'presente continuo inglés explicación en español',
+        'simple-vs-continuous': 'diferencia presente simple y presente continuo inglés en español',
+        'have-got': 'have y have got diferencia explicación en español',
+        'there-is': 'there is there are explicación en español',
+        'past-simple': 'pasado simple inglés verbos regulares e irregulares explicación en español',
+        'past-continuous': 'pasado continuo inglés explicación en español',
+        'present-perfect': 'present perfect inglés explicación en español',
+        'futuro': 'futuro will going to inglés diferencia explicación en español',
+        'modales': 'verbos modales can must should have to explicación en español',
+        'verbo-ing-to': 'verbos seguidos de ing o to infinitivo inglés explicación en español',
+        'condicionales': 'condicionales en inglés explicación en español',
+        'orden': 'orden de las palabras en inglés explicación en español',
+        'preguntas': 'cómo hacer preguntas en inglés explicación en español',
+        'prep-tiempo': 'preposiciones at on in tiempo inglés explicación en español',
+        'prep-lugar': 'preposiciones de lugar y movimiento inglés explicación en español',
+        'conectores': 'conectores en inglés and but because so explicación en español',
+        'false-friends': 'false friends falsos amigos inglés español',
+        'errores': 'errores comunes de hispanohablantes en inglés'
+    };
+    let V = {};
+    try { V = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { V = {}; }
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(V)); } catch (e) { msg('No se ha podido guardar en este navegador.'); } };
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const norm = t => String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const ytId = txt => { const m = String(txt).match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([A-Za-z0-9_-]{11})/); return m ? m[1] : (/^[A-Za-z0-9_-]{11}$/.test(String(txt).trim()) ? String(txt).trim() : null); };
+    const D = () => window.GR_DATA || { TOPICS: [], GROUPS: [] };
+    let onlySaved = false, openId = null, ready = false;
+
+    function msg(t) { const el = $('vdMsg'); el.textContent = t; el.style.display = 'block'; clearTimeout(msg.t); msg.t = setTimeout(() => { el.style.display = 'none'; }, 2600); }
+    function searchUrl(t) { return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(Q[t.id] || (t.es + ' inglés explicación en español')); }
+
+    function itemHtml(tid, v, i) {
+        return '<div class="vd-item"><div class="vd-player" id="vdp-' + tid + '-' + i + '">' +
+            '<button class="vd-thumb" type="button" data-play="' + tid + '|' + i + '" aria-label="Ver vídeo"><img loading="lazy" alt="" src="https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg"><span class="vd-play">▶</span></button></div>' +
+            '<div class="vd-item-bar"><span class="vd-item-t">' + esc(v.title || 'Vídeo de YouTube') + '</span>' +
+            '<a class="vd-mini" href="https://www.youtube.com/watch?v=' + v.id + '" target="_blank" rel="noopener">↗ YouTube</a>' +
+            '<button class="vd-mini" type="button" data-del="' + tid + '|' + i + '">🗑️ Quitar</button></div></div>';
+    }
+    function bodyHtml(t) {
+        const list = V[t.id] || [];
+        return '<div class="vd-body">' +
+            '<div class="vd-actions"><a class="vd-btn vd-primary" href="' + searchUrl(t) + '" target="_blank" rel="noopener">🔍 Buscar en YouTube</a>' +
+            '<button class="vd-btn" type="button" data-read="' + t.id + '">📖 Leer la norma</button></div>' +
+            (list.length ? list.map((v, i) => itemHtml(t.id, v, i)).join('')
+                : '<p class="vd-empty">Aún no has guardado ningún vídeo de este tema. Busca uno en YouTube, pulsa <b>Compartir → Copiar enlace</b> y pégalo aquí abajo.</p>') +
+            '<div class="vd-add"><div class="vd-add-t">➕ Guardar un vídeo en este tema</div>' +
+            '<input type="url" inputmode="url" placeholder="Pega aquí el enlace (https://youtu.be/…)" data-url="' + t.id + '">' +
+            '<input type="text" placeholder="Nombre para recordarlo (opcional)" data-name="' + t.id + '">' +
+            '<button class="vd-btn vd-primary" type="button" data-add="' + t.id + '">💾 Guardar vídeo</button></div></div>';
+    }
+    function render() {
+        const { TOPICS, GROUPS } = D();
+        const f = norm($('vdSearch').value).trim();
+        let html = '', n = 0;
+        GROUPS.forEach(([g, name]) => {
+            const list = TOPICS.filter(t => t.g === g && (!onlySaved || (V[t.id] || []).length) && (!f || norm(t.t + ' ' + t.es + ' ' + (t.k || '')).includes(f)));
+            if (!list.length) return;
+            html += '<div class="vd-group">' + name + '</div>';
+            list.forEach(t => {
+                n++;
+                const c = (V[t.id] || []).length, open = openId === t.id;
+                html += '<div class="vd-topic' + (open ? ' open' : '') + '" id="vdt-' + t.id + '"><button class="vd-head" type="button" data-open="' + t.id + '">' +
+                    '<span class="vd-num">' + (TOPICS.indexOf(t) + 1) + '</span><span class="vd-txt"><span class="vd-name">' + t.t + '</span><span class="vd-es">' + t.es + '</span></span>' +
+                    (c ? '<span class="vd-count">🎬 ' + c + '</span>' : '') + '<span class="vd-arrow">›</span></button>' + (open ? bodyHtml(t) : '') + '</div>';
+            });
+        });
+        if (!n) html = '<p class="vd-none">' + (onlySaved && !f ? 'Todavía no has guardado vídeos. Abre un tema y pulsa «🔍 Buscar en YouTube».' : 'No hay ningún tema con «' + esc($('vdSearch').value) + '». Prueba con otra palabra.') + '</p>';
+        $('vdList').innerHTML = html;
+        const withV = TOPICS.filter(t => (V[t.id] || []).length).length, total = Object.values(V).reduce((a, l) => a + l.length, 0);
+        $('vdProg').textContent = total + ' vídeo' + (total === 1 ? '' : 's') + ' guardado' + (total === 1 ? '' : 's') + ' · ' + withV + ' / ' + TOPICS.length + ' temas con vídeo';
+        $('vdOnly').classList.toggle('on', onlySaved);
+    }
+    function toggle(id, scroll) {
+        openId = openId === id ? null : id;
+        render();
+        if (openId && scroll !== false) { const el = $('vdt-' + id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    }
+    async function add(tid) {
+        const u = document.querySelector('#videos input[data-url="' + tid + '"]'), nm = document.querySelector('#videos input[data-name="' + tid + '"]');
+        const id = ytId(u.value);
+        if (!id) { msg('Ese enlace no es de un vídeo de YouTube. Cópialo con Compartir → Copiar enlace.'); u.focus(); return; }
+        const list = V[tid] = V[tid] || [];
+        if (list.some(v => v.id === id)) { msg('Ese vídeo ya está guardado en este tema.'); return; }
+        let title = nm.value.trim();
+        if (!title) {
+            try {
+                const r = await fetch('https://www.youtube.com/oembed?format=json&url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + id));
+                if (r.ok) { const j = await r.json(); title = (j.title || '') + (j.author_name ? ' · ' + j.author_name : ''); }
+            } catch (e) {}
+        }
+        list.push({ id: id, title: title || 'Vídeo de YouTube', added: new Date().toISOString().slice(0, 10) });
+        save(); render(); msg('✅ Vídeo guardado');
+    }
+    function play(tid, i) {
+        const v = (V[tid] || [])[i]; if (!v) return;
+        const box = $('vdp-' + tid + '-' + i);
+        box.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + v.id + '?autoplay=1&rel=0&playsinline=1" title="' + esc(v.title) + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+    }
+    function goTab(sec) { const b = document.querySelector('.nav-tab[onclick="switchSection(\'' + sec + '\')"]'); if (b) b.click(); }
+
+    function init() {
+        $('vdSearch').addEventListener('input', render);
+        $('vdOnly').addEventListener('click', () => { onlySaved = !onlySaved; render(); });
+        $('vdList').addEventListener('click', e => {
+            const b = e.target.closest('[data-open],[data-play],[data-del],[data-add],[data-read]'); if (!b) return;
+            const d = b.dataset;
+            if (d.open) toggle(d.open);
+            else if (d.play) { const [t, i] = d.play.split('|'); play(t, +i); }
+            else if (d.add) add(d.add);
+            else if (d.read) { goTab('gramatica'); if (window.GR_DATA) window.GR_DATA.open(d.read); }
+            else if (d.del) {
+                const [t, i] = d.del.split('|'), v = (V[t] || [])[+i];
+                if (v && confirmDel(b)) { V[t].splice(+i, 1); if (!V[t].length) delete V[t]; save(); render(); msg('Vídeo quitado'); }
+            }
+        });
+        $('vdList').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input[data-url],input[data-name]')) add(e.target.dataset.url || e.target.dataset.name); });
+        $('vdExport').addEventListener('click', () => {
+            const blob = new Blob([JSON.stringify({ app: 'learn-english-videos', v: 1, data: V }, null, 1)], { type: 'application/json' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'videos-gramatica-ingles.json';
+            document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        });
+        $('vdImport').addEventListener('change', e => {
+            const f = e.target.files[0]; if (!f) return;
+            const r = new FileReader();
+            r.onload = () => {
+                try {
+                    const j = JSON.parse(r.result), data = j.data || j; let n = 0;
+                    Object.keys(data).forEach(t => (data[t] || []).forEach(v => {
+                        if (!v || !ytId(v.id)) return;
+                        const l = V[t] = V[t] || [];
+                        if (!l.some(x => x.id === v.id)) { l.push({ id: v.id, title: v.title || 'Vídeo de YouTube', added: v.added || '' }); n++; }
+                    }));
+                    save(); render(); msg('✅ ' + n + ' vídeo' + (n === 1 ? '' : 's') + ' cargado' + (n === 1 ? '' : 's'));
+                } catch (x) { msg('Ese archivo no es una copia de vídeos válida.'); }
+                e.target.value = '';
+            };
+            r.readAsText(f);
+        });
+        render();
+    }
+    // Quitar sin ventanas emergentes: el primer toque pide confirmación
+    function confirmDel(b) {
+        if (b.dataset.sure) return true;
+        b.dataset.sure = '1'; b.textContent = '¿Seguro? Toca otra vez'; b.style.color = '#e57368';
+        setTimeout(() => { if (b.isConnected) { delete b.dataset.sure; b.textContent = '🗑️ Quitar'; b.style.color = ''; } }, 3000);
+        return false;
+    }
+
+    window.renderVideosEn = function () { if (!ready) { ready = true; init(); } else render(); };
+    window.vidOpenTopic = function (id) {
+        goTab('videos');
+        openId = null; $('vdSearch').value = ''; onlySaved = false;
+        toggle(id);
+    };
+})();
+
 </script>
 <div id="grPrint"></div>
 </body>
